@@ -1,0 +1,416 @@
+;; 6.001 Spring '98
+;; Problem Set 10 Solutions
+
+;; ========================================================================
+;; Computer Exercise 1
+;; ========================================================================
+
+(define-class <vector> <object> xcor ycor)
+
+(define-method + ((v1 <vector>) (v2 <vector>))
+  (make <vector> 
+	(xcor (+ (get-slot v1 'xcor) 
+		 (get-slot v2 'xcor)))
+	(ycor (+ (get-slot v1 'ycor) 
+		 (get-slot v2 'ycor)))))
+
+(define-method * ((v1 <vector>) (v2 <vector>))
+  (+ (* (get-slot v1 'xcor) 
+	(get-slot v2 'xcor))
+     (* (get-slot v1 'ycor) 
+	(get-slot v2 'ycor))))
+
+(define-method * ((v <vector>) (n <number>))
+  (make <vector>
+	(xcor (* n (get-slot v 'xcor)))
+	(ycor (* n (get-slot v 'ycor)))))
+
+(define-method * ((n <number>) (v <vector>))
+  (* v n))
+
+(define-generic-function length)
+
+(define-method length ((v <vector>))
+  (sqrt (+ (square (get-slot v 'xcor))
+	   (square (get-slot v 'ycor)))))
+
+(define-method length ((x <number>))
+  (if (< x 0)
+      (- x)
+      x))
+
+(define-method print ((v <vector>))
+  (print (cons (get-slot v 'xcor)
+	       (cons ","
+		     (cons (get-slot v 'ycor)
+			   false)))))
+
+;; ================================================================
+;; the following definitions could/should have been built into TOOL
+
+(define-generic-function square)
+
+(define-method square ((x <object>))
+  (* x x))
+
+(define-method - ((x <number>))
+  (- 0 x))
+
+;; ==========
+;; Some Tests
+
+Tool==> (define a (make <vector> (xcor 3) (ycor 4)))
+;;; Tool value: ok
+Tool==> (define b (make <vector> (xcor -2) (ycor 0)))
+;;; Tool value: ok
+Tool==> (print (+ a b))(1 , 4)
+;;; Tool value: #[unspecified-return-value]
+Tool==> (print (* a b))-6
+;;; Tool value: #[unspecified-return-value]
+Tool==> (print (* a 2))(6 , 8)
+;;; Tool value: #[unspecified-return-value]
+Tool==> (print (* 3 b))(-6 , 0)
+;;; Tool value: #[unspecified-return-value]
+Tool==> (length a)
+;;; Tool value: 5
+Tool==> (length b)
+;;; Tool value: 2
+Tool==> (length 45)
+;;; Tool value: 45
+Tool==> (length -35.2)
+;;; Tool value: 35.2
+
+;; ========================================================================
+;; Computer Exercise 2
+;; ========================================================================
+
+;; =============================
+;; These are all the say methods 
+;; [ result of (generic-function-methods say) ]
+
+;; (<cat> <object>)
+;; (<show-cat> <object>)
+;; (<cat> <number>)
+
+;; =========================================
+;; These are the APPLICABLE say methods for: 
+;;         (say socks 37) => (<house-cat> <number>)
+;; [ result of filtering with method-applies-to-classes? predicate ]
+
+;; (<cat> <object>)        <house-cat> subclass of <cat>
+;;                         <number> subclass of <object>
+;; (<cat> <number>)        <house-cat> subclass of <cat>
+;;                         <number> subclass of <number>
+
+;; <house-cat> NOT a subclass of <show-cat> 
+
+;; =============================================
+;; This is the sorted list of applicable methods
+;; [ result of sorting with method-more-specific? procedure ]
+
+;; (<cat> <number>)
+;; (<cat> <object>)      because <number> is a subclass of <object>
+
+;; so we apply the (<cat> <number>) method
+
+;; ========================================================================
+;; Computer Exercise 3
+;; ========================================================================
+
+;; We chose to bind the generic-function in the "current" environment,
+;; where we are defining the method.  This is because we assume this to be
+;; simply a shortcut for:
+
+;; (define-generic-function x)   
+;; immediately followed by 
+;; (define-method x ...)
+
+;; Another way: always define the generic function in the global environment.  
+;; This would "save" a forgetful programmer who meant to define all his
+;; generic-functions in the global environment.
+
+;; =======================================================================
+;; This procedure works just like lookup-variable-value, except it doesn't 
+;; throw an error if it can't find it.  It returns #t if the variable is 
+;; bound to a generic-function in some frame of the environment, signals
+;; an error if the variable is bound to something other than a generic 
+;; function, and #f if it is not bound in the environment at all.
+
+(define (generic-function-bound? var env)
+  (define (env-loop env)
+    (define (scan vars vals)
+      (cond ((null? vars)
+             (env-loop (enclosing-environment env)))
+            ((eq? var (car vars))
+	     
+	     (if (generic-function? (car vals))
+		 ;; return #t iff var is bound to a generic-function
+		 #t
+		 (error var " is not a generic function in this environment.")))
+	    
+            (else (scan (cdr vars) (cdr vals)))))
+    (if (eq? env the-empty-environment)
+	#f
+        (let ((frame (first-frame env)))
+          (scan (frame-variables frame)
+                (frame-values frame)))))
+  (env-loop env))
+
+;; ================================================
+;; Here is the new definition of eval-define-method
+
+(define (eval-define-method exp env)
+  (let ((name (method-definition-generic-function exp)))
+    (if (generic-function-bound? name env)
+	'already-defined
+	;; we can't find the generic-function!
+	;; so lets make it in the current environment
+	(define-variable! name (make-generic-function name) env))
+    (let ((gf (tool-eval name env)))
+      ;; now do the rest as before
+      (let ((params (method-definition-parameters exp)))
+	(install-method-in-generic-function
+	 gf
+	 (map (lambda (p) (paramlist-element-class p env))
+	      params)
+	 (make-procedure (map paramlist-element-name params)
+			 (method-definition-body exp)
+			 env))
+	(list 'added 'method 'to 'generic 'function:
+	      (generic-function-name gf))))))  
+
+;; ====================================
+;; We get the following weird behavior:
+
+(initialize-tool)
+Tool==> (define-class <cat> <object> size breed)
+;;; Tool value: (defined class: <cat>)
+Tool==> (define my-cat (make <cat> (size 6) (breed 'abyssinan)))
+;;; Tool value: ok
+
+;; We define a method that when called defines a foo method for cats.
+;; If there is no foo method in the global environment, it does a 
+;; define generic in the procedure's frame.
+
+Tool==> (define-method square ((input <cat>))
+	  (define-method foo ((x <cat>))
+	    'foo-with-cat)
+	  (foo input))
+;;; Tool value: (added method to generic function: square)
+Tool==> (square my-cat)
+;;; Tool value: foo-with-cat
+
+;; Next we define a method foo for objects in the global frame.
+;; If we foo a cat in the global frame, we use the foo for objects
+;; method.
+
+Tool==> (define-method foo ((x <object>))
+	  'foo-with-object)
+;;; Tool value: (added method to generic function: foo)
+Tool==> (foo my-cat)
+;;; Tool value: foo-with-object
+
+;; Now for this call to square (which defines a foo method for
+;; cat, we do find a generic-function foo in the global environment,
+;; and we add the method to that function instead of creating a
+;; generic function in the local frame.
+
+Tool==> (square my-cat)
+;;; Tool value: foo-with-cat
+Tool==> (foo my-cat)
+;;; Tool value: foo-with-cat
+
+;; It's more difficult to specifically create new frames & environments 
+;; with this limited version of Scheme because we can't use let or lambda.
+
+;; ========================================================================
+;; Computer Exercise 4
+;; ========================================================================
+
+(define (eval-define-class exp env)
+  (let ((superclass (tool-eval (class-definition-superclass exp)
+                               env)))
+    (if (not (class? superclass))
+        (error "Unrecognized superclass -- MAKE-CLASS >> "
+               (class-definition-superclass exp))
+        (let* ((name (class-definition-name exp))
+	       (new-slots (class-definition-slot-names exp))
+	       (all-slots (collect-slots
+                          new-slots
+                          superclass)))
+          (let ((new-class (make-class name superclass all-slots)))
+            (define-variable! name new-class env)
+	    ;; define a method foreach of the slots
+	    (foreach (lambda (slot)
+		       (eval-define-method
+			(make-define-slot-method-exp name slot)
+			env))
+		     new-slots)
+	    (list 'defined 'class: name))))))
+
+;; This procedure makes an expression that will define the slot method
+(define (make-define-slot-method-exp class-name slot-name)
+  (list 'define-method slot-name 
+	(list (list 'self class-name)) 
+	(list 'get-slot 'self 
+	      (list 'quote slot-name))))
+
+(define (foreach proc lst)
+  (if (null? lst)
+      'done
+      (begin
+	(proc (car lst))
+	(foreach proc (cdr lst)))))
+
+Tool==> (define-class <cat> <object> size breed)
+;;; Tool value: (defined class: <cat>)
+Tool==> (define-class <house-cat> <cat> address)
+;;; Tool value: (defined class: <house-cat>)
+Tool==> (define socks (make <house-cat> (size 'medium) (address 'White_house)))
+;;; Tool value: ok
+Tool==> (size socks)
+;;; Tool value: medium
+Tool==> (address socks)
+;;; Tool value: white_house
+Tool==> (breed socks)
+;;; Tool value: *undefined*
+
+;; ========================================================================
+;; Computer Exercise 5
+;; ========================================================================
+
+;; "be creative"
+
+;; ========================================================================
+;; Computer Exercise 6
+;; ========================================================================
+
+;; Multiple Superclasses
+
+;; =============================================
+;; NEW SYNTAX (same as suggested in problem set)
+
+(define-class <new-class-name> (<super-class-1> ... <super-class-n>))
+
+;; ========================================
+;; SLOTS an instance gets when it's created
+
+When an instance is created, it gets all the slots of all its superclasses.
+Problems will arise if two or more superclasses have a slot of the same 
+name.  
+
+OPTIONS:
+
+1.  Disallow it!  Return an error if there are conflicting slot names
+    
+    + simple
+    + always works
+    + helps programmer avoid name conflicts and nasty bugs
+    - may not care about the duplicate slots, could be
+      inheriting for other attributes of the classes
+    - less power for programmer
+
+2.  Always use slot from first superclass listed
+
+    + gives some power back to programmer
+    - this suggests that one class is more important than others,
+      when in reality we may not want to resolve all name conflicts
+      with the same super-class
+
+3.  Specify which class to inherit from (if there is a name clash)
+
+    new syntax:
+
+    (define-class <new-class-name> 
+      (<super-class-1> ... <super-class-n>)
+      ((<slot-name-1> <class-to-inherit-slot-1-from>)
+       ...
+       (<slot-name-m> <class-to-inherit-slot-m-from>)))
+   
+    + best power for programmer (could be a -)
+    - requires the programmer to know about the clashes
+    - adds complexity
+
+    If they forget to specify how to resolve a name clash
+    (see above)
+
+    1.  Error
+    2.  Choose first super-class
+
+;; =======================
+;; HOW is a METHOD chosen?
+
+Multiple inheritance will not change the way we find all applicable methods.
+What we need to modify is how we sort those applicable methods.
+Before, we looked at the first parameter and found the method with the
+"closest parentage" to the actual argument.
+
+Here is an example illustrating how it works in the single-inheritance
+system.  Here is a class hierarchy:
+
+ A          B                 
+ |          |
+ AA         BB
+ |          |
+ AAA        BBB
+
+We have a method "foo" that takes two parameters.  We want to apply
+"foo" to an instance of AAA and an instance of BBB.  This is how the
+system would sort applicable methods:
+
+   1) (AAA, BBB)
+   2) (AAA, BB)
+   3) (AAA, B)
+   4) (AA, BBB)
+   5) (AA, BB) 
+   6) (AA, B)
+   7) (A, BBB)
+   8) (A, BB)
+   9) (A, B)
+
+This is in a sense a "depth-first search."
+
+Now let's turn to a multiple-inheritance example:
+
+ A          B                 
+ |          |
+ AA         BB
+ |          |
+ AAA        BBB
+     \   /
+       C
+
+Now suppose that the method "bar" takes one parameter and we want to
+apply it to an instance of C.  If we again used a depth-first search
+we would end up with this order:
+
+   1) C
+   2) AAA
+   3) AA
+   4) A
+   5) BBB
+   6) BB
+   7) B
+
+Thus we are consistent if we order multiple parents using the same depth-first
+strategy that we use for ordering multiple parameters.  With multiple
+parameters, we always ordered the branches left-to-right as listed in
+the method definition, searching the leftmost first.  What ordering
+should we use for multiple parents? As with slots, we could order them
+left-to-right as they are declared in the class definition's
+superclass list.
+
+We could also do a "breadth-first search", producing:
+
+   1) C
+   2) AAA
+   3) BBB
+   4) AA
+   5) BB
+   6) A
+   7) B
+
+If we did so we may even want to change the search strategy that
+orders multiple method parameters to use breadth-first as well.  Using
+breadth-first search could become very complicated very quickly.
+

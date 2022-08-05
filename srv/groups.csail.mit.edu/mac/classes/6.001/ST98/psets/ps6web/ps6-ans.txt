@@ -1,0 +1,278 @@
+;;6.001 Spring 98 
+;; Problem Set 6 solutions
+
+This is my first time sending pgp encrypted email, so tell me if I got
+it right, please.
+
+Tut 1
+
+(define (make-manitored f)
+  (let ((x 0))
+    (lambda (a)
+      (if (eq? a 'how-many-calls?)
+	  x
+	  (begin
+	    (set! x (+ x 1))
+	    (f a))))))
+
+Tut 2
+
+(define (make-df-strategy-2 start goal? neighbors)
+  (let ((*to-be-visited* '()))
+;; The above line was moved to fix the problem
+	(define (where-next? here)
+	  (set! *to-be-visited*
+		(append (neighbors here) *to-be-visited*))
+	  (cond ((goal? here) #t)
+		((null? *to-be-visited*) #f)
+		(else
+		 (let ((next (car *to-be-visisted*)))
+		   (set! *to-be-visited* (cdr *to-be-visited*))
+		   next))))
+  where-next?))
+
+Tut 3
+
+The graph has cycles in it, where as test data does now. Since
+make-df-strategy-1 does not keep track of nodes it has visited, it
+will revisit the same nodes multiple times, forever looping.
+
+;; Computer Exercises
+;Ex 1
+
+(define (make-bf-strategy-1 goal? neighbors)
+  (let ((*to-be-visited* '()))
+    (define (where-next? here)
+      (set! *to-be-visited* (append *to-be-visited* (neighbors here)))
+      (cond ((goal? here) #t)
+            ((null? *to-be-visited*) #f)
+            (else
+             (let ((next (car *to-be-visited*)))
+               (set! *to-be-visited* (cdr *to-be-visited*))
+               next))))
+    where-next?))
+
+;This does a breathfirst search because you make sure you 
+;visit all the neightbors of the start node before going to 
+;search the newly added nodes.  This effect is created by 
+;the swapping of the arguments to append.
+
+;Ex 2
+
+
+(define (make-mark-procedures)
+  (let ((visited '()))
+    (define (deja-vu? node)
+      (not (null? (memq node visited))))
+    (define (node-visited! node)
+      (set! visited (cons node visited))
+      visited)
+    (list deja-vu? node-visited!)))
+
+(search web make-df-strategy 'http://mit.edu/6.001 (lambda (node) #f))
+(start http://mit.edu/6.001)
+(from http://mit.edu/6.001 to http://mit.edu/6.001/schemeimplementations)
+(from http://mit.edu/6.001/schemeimplementations to http://mit.edu/6.001/getting-help)
+(from http://mit.edu/6.001/getting-help to http://mit.edu/6.001/lab-use)
+(from http://mit.edu/6.001/lab-use to *the-goal*)
+(from *the-goal* to http://mit.edu/6.001/psets)
+
+
+(define (make-bf-strategy goal? neighbors)
+  (let ((mark-procedures (make-mark-procedures)))
+    (let ((deja-vu? (car mark-procedures))
+          (note-visited! (cadr mark-procedures))
+          (*to-be-visited* '()))
+      (define (try-node candidates)
+        (cond ((null? candidates) #f)
+              ((deja-vu? (car candidates)) (try-node (cdr candidates)))
+              (else (set! *to-be-visited* (cdr candidates)) 
+		    (car candidates))))
+      (define (where-next? here)
+        (note-visited! here)
+        (set! *to-be-visited* (append *to-be-visited* (neighbors here)))
+        (if (goal? here)
+            #t
+            (try-node *to-be-visited*)))
+      where-next?)))
+
+(search web make-bf-strategy 'http://mit.edu/6.001 (lambda (node) (eq? node '*not-in-graph*)))
+(start http://mit.edu/6.001)
+(from http://mit.edu/6.001 to http://mit.edu/6.001/schemeimplementations)
+(from http://mit.edu/6.001/schemeimplementations to http://mit.edu/6.001/psets)
+(from http://mit.edu/6.001/psets to http://mit.edu/6.001/getting-help)
+(from http://mit.edu/6.001/getting-help to http://mit.edu/6.001/lab-use)
+(from http://mit.edu/6.001/lab-use to *the-goal*)
+
+;Ex 3
+
+;; Answers can vary here
+;; One might include sorting to the index, 
+;; taking advantage of order to help in the searches 
+;
+;; The following answer makes sure a word only appears once
+;; in the index
+
+(define (make-index-procs)
+  (let ((index '()))
+    (define (initialize-index!)
+      (set! index '())
+      '())
+    (define (add-to-index! url list-of-words)
+      (if (null? list-of-words)
+	  #f
+	  (let ((word-pair (assq (car list-of-words) index)))
+	    (if (null? word-pair)
+		(set! index (cons (cons (car list-of-words)
+					(list url)) index))
+		(set-cdr! word-pair (cons url (cdr word-pair))))
+	    (add-to-index! url (cdr list-of-words)))))
+    (define (find-in-index word)
+      (let ((word-pair (assq word index)))
+	(if (null? word-pair)
+	    #f
+	    (cdr word-pair))))
+    (list initialize-index! add-to-index! find-in-index)))
+
+(define index-procs (make-index-procs))
+
+(define initialize-index! (car index-procs))
+
+(define add-to-index! (cadr index-procs))
+
+(define find-in-index (caddr index-procs))
+
+(initialize-index!)
+;Value: #f
+
+((index-document! web) 'http://mit.edu/6.001)
+;Value: #f
+
+(find-in-index 'help)
+;Value: (http://mit.edu/6.001)
+
+(find-in-index '*magic)
+;Value: #f
+
+;Ex 4: 
+
+
+(define (make-web-index web url)
+  (let ((searcher
+	 (make-bf-strategy (lambda (node) #f) (node->neighbors web))))
+    (define (loop node)
+      (let ((next-node (searcher node)))
+	(cond ((eq? next-node #F)
+	       find-in-index)
+		  (else
+		   ((index-document! web) node)
+		   (loop next-node)))))
+    (loop url)))
+	      
+(initialize-index!)
+;Value: #f
+
+(define find-documents
+  (make-web-index web 'http://mit.edu/6.001))
+;Value: "find-documents --> #[compound-procedure 68 find-in-index]"
+
+(find-documents 'collaborative)
+;Value: (http://mit.edu/6.001/psets http://mit.edu/6.001)
+
+;Ex 5:
+
+(define (search-any web start-node word)
+  (let ((searcher
+	 (make-bf-strategy (lambda (node) #f) (node->neighbors web))))
+    (define (loop node)
+      (let ((next-node (searcher node)))
+	(cond ((eq? next-node #f)
+	       #f)
+	      ((memq word ((node->text web) node))
+	       node)
+	      (else
+	       (loop next-node)))))
+    (loop start-node)))
+	      
+(define (search-all web start-node word)
+  (let ((searcher
+	 (make-bf-strategy (lambda (node) #f) (node->neighbors web))))
+    (define (loop node result)
+      (let ((next-node (searcher node)))
+	(cond ((eq? next-node #f)
+	       result)
+	      ((memq word ((node->text web) node))
+	       (loop next-node (cons node result)))
+	      (else
+	       (loop next-node result)))))
+    (loop start-node nil)))
+
+(search-all web 'http://mit.edu/6.001 'collaborative)
+;Value: (http://mit.edu/6.001/psets http://mit.edu/6.001)
+
+(search-any web 'http://mit.edu/6.001 'collaborative)
+;Value: http://mit.edu/6.001
+
+;web of size 10
+
+(timed search-any web10 '*start* 'help)
+;Value: (0. http://mit.edu/6.001/response)
+
+(timed search-any web10 '*start* 'checkvest)
+;Value: (9.999999999990905e-3 #f)
+
+(timed search-all web10 '*start* 'help)
+;Value: (1.0000000000019327e-2 (http://mit.edu/6.001/staffed http://mit.edu/6.001/transferring http://mit.edu/6.001/response))
+
+(initialize-index!)
+;Value: #f
+
+(timed make-web-index web10 '*start*)
+;Value: (.6699999999999875 #[compound-procedure 6 find-in-index])
+
+(define find-document (make-web-index web10 '*start*))
+;Value: "find-document --> #[compound-procedure 6 find-in-index]"
+
+(timed find-document 'help)
+;Value: (0. (http://mit.edu/6.001/staffed http://mit.edu/6.001/transferring http://mit.edu/6.001/response http://mit.edu/6.001/staffed http://mit.edu/6.001/transferring http://mit.edu/6.001/response))
+
+(timed find-document 'chuckvest)
+;Value: (9.999999999990905e-3 #f)
+
+
+(timed search-any web160 '*start* 'help)
+(timed search-any web160 '*start* 'chuckvest)
+(timed search-all web160 '*start* 'help)
+(timed make-web-index web160 '*start*)
+(define find-document
+	 (make-web-index web160 '*start*))
+(timed find-document 'help)
+(timed find-document 'chuckvest)
+
+;Value: (0. http://mit.edu/6.001/administrative)
+
+;Value: (4.0000000000020464e-2 #f)
+
+;Value: (.03999999999999204 (http://mit.edu/6.001/verson http://mit.edu/6.001/which http://mit.edu/6.001/doing http://mit.edu/6.001/subject http://mit.edu/6.001/guidelines http://mit.edu/6.001/attention http://mit.edu/6.001/administrative))
+
+;Value: (1.5699999999999932 #[compound-procedure 6 find-in-index])
+
+;Value: find-document
+
+;Value: (0. (http://mit.edu/6.001/verson http://mit.edu/6.001/which http://mit.edu/6.001/doing http://mit.edu/6.001/subject http://mit.edu/6.001/guidelines http://mit.edu/6.001/attention http://mit.edu/6.001/administrative http://mit.edu/6.001/verson http://mit.edu/6.001/which http://mit.edu/6.001/doing http://mit.edu/6.001/subject http://mit.edu/6.001/guidelines http://mit.edu/6.001/attention http://mit.edu/6.001/administrative http://mit.edu/6.001/staffed http://mit.edu/6.001/transferring http://mit.edu/6.001/response http://mit.edu/6.001/staffed http://mit.edu/6.001/transferring http://mit.edu/6.001/response))
+
+;Value: (0. #f)
+
+                    10        20       40        80         160
+----------------------------------------------------------------
+search-any-#t       0         0        0         0          0 
+search-any-#f      0.01     0.04      0.09      0.22      0.73
+search-all-#t      0.01     0.04      0.09      0.21      0.71
+make-web           0.67     1.57      2.94      6.32      10.63
+find-doc-#t         0         0        0        0.01        0
+find-doc #f        0.01       0        0         0          0
+
+
+;You can either form an index intially which will take a while and then
+;all your searches are really fast... 
+

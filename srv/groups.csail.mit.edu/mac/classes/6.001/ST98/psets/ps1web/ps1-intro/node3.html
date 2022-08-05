@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:22 GMT -->
+<HEAD>
+<TITLE>3. Programming assignment: Procedures and pictures</TITLE>
+<META NAME="description" CONTENT="3. Programming assignment: Procedures and pictures">
+<META NAME="keywords" CONTENT="ps1-intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps1-intro.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html47" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html45" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html39" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html48" HREF="node4.html">4. The Debugging Tools</A>
+<B>Up:</B> <A NAME="tex2html46" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html40" HREF="node2.html">2. Tutorial Exercises</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Programming assignment: Procedures and pictures</A></H1>
+<P>
+Now that you have gained some experience with Scheme,
+you are ready to work on the programming assignment.  When you are finished
+with this section write up and hand in the numbered
+computer exercises below.  Take a look on the web site, in the problem
+sets section, at the information labeled by
+<A NAME="tex2html7" HREF="http://swissnet.ai.mit.edu/6.001/writeup.html">``How
+should I write up my problem
+set?''</A> to see what we
+are looking for.
+<P>
+<H2><A NAME="SECTION00031000000000000000">Shading patterns</A></H2>
+<P>
+Scheme comes with many built-in primitive procedures, including simple
+numeric procedures such as <TT>sin</TT> and <TT>cos</TT> which take as
+argument a number in radians, and return the sine and cosine of that
+argument respectively.  One way to visualize numeric procedures is to
+graph them as functions of their arguments.  For one-argument
+procedures, one can use ordinary graphs.  For
+two-argument procedures, it is often convenient to display the values
+as pictures.  That is, we can let <I>b</I>(<I>x</I>,<I>y</I>) be interpreted as a brightness value,
+and then create a two-dimensional display showing the value of <I>b</I> as
+a brightness pattern.
+<P>
+In this problem set, we'll play with these two-dimensional
+graphs.<A NAME="tex2html8" HREF="footnode.html#239"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>  We have provided you with some
+utilities.  When you load this problem set (using <TT>M-x
+load-problem-set</TT>), the system will create three graphics display
+windows on your screen and give them the names <TT>g1, g2</TT> and <TT>
+g3</TT>.  Each window is 128 wide and 128 high: the points in the
+window have integer <I>x</I> and <I>y</I> coordinates that range between 0 and
+127.  (These are ``logical coordinates''--the physical size of the
+window in pixels may be different from <IMG WIDTH=72 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline709" SRC="img2.gif">.)
+<P>
+You can display pictures with the <TT>picture-display</TT> procedure,
+which takes two arguments: a window and a picture.  <TT>
+Picture-display</TT> finds the minimum and maximum values in the picture,
+scales those values so that the minimum value appears as black and the
+maximum as white, and then displays the result in the window.  You can
+supply two additional optional arguments to <TT>picture-display</TT> that
+set the minimum and maximum display values: any value in the picture
+below the specified minimum will be displayed as black; any value in
+the picture above the specified maximum will be displayed as white.
+<P>
+One way to create a picture is as the ``graph'' of a two-argument
+function, using
+
+<PRE> (procedure-&gt;picture x y b)</PRE> 
+Here <TT>x</TT> and <TT>y</TT> specify the width and height of the picture
+to be created. <TT>x</TT> and <TT>y</TT> must be integers, and <TT>b</TT> must
+be a function of two arguments, whose values will be used to create
+the picture.  For example, evaluating 
+<PRE>(picture-display g1 (procedure-&gt;picture 128 128 +))</PRE>
+
+will fill window <TT>g1</TT> with a shaded gray pattern whose brightness
+at each point (<I>x</I>,<I>y</I>) is <I>x</I>+<I>y</I>.  Thus, the brightness increases
+uniformly as you move diagonally from black near (0,0) to white near
+(128,128).
+<P>
+<H4><A NAME="SECTION00031010000000000000">Computer exercise 1:</A></H4>
+ Draw a shaded pattern (a) that
+looks like the one above, only upside down; (b) where the brightness
+increases uniformly as you move horizontally from left to right; (c)
+where the brightness increases uniformly as you move outwards from the
+center of the window.  Turn in the expressions you evaluated to obtain
+each pattern.  There are lots of different correct answers to this
+problem.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00032000000000000000">Sinusoidal gratings</A></H2>
+<P>
+Creating a simple cosine grating: Use a procedure of two arguments
+whose returned value is the cosine of the second argument,
+transform that to a picture, and display the result:
+
+<PRE>(define pic1 (procedure-&gt;picture 128 128 (lambda (x y) (cos y))))
+
+(picture-display g1 pic1)</PRE>
+ <B>Note on naming pictures:</B> Whenever you create a picture, you
+use up memory space. If you give the picture a name using <TT>
+define</TT>, that space cannot be reused, and if you create and name too
+many pictures, you may fill up Scheme's memory.  It is a good idea to
+only use a few names for pictures and reuse these names as needed.
+For example, we could just use <TT>pic1, pic2</TT> and <TT>pic3</TT>.
+<P>
+<H4><A NAME="SECTION00032010000000000000">Computer exercise 2:</A></H4>
+ The code above creates a cosine
+grating of a particular width.  To change the width,
+use <IMG WIDTH=55 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline719" SRC="img3.gif"> rather than <IMG WIDTH=35 HEIGHT=17 ALIGN=MIDDLE ALT="tex2html_wrap_inline721" SRC="img4.gif">, where <I>f</I>
+specifies the frequency of the cosine wave.  Define a procedure
+called <TT>cosine-y-grate</TT> that takes <I>f</I> as an argument and returns
+the appropriate cosine grating.  If your procedure is defined
+correctly, you ought to be able to evaluate:
+
+<PRE>(picture-display g2 (cosine-y-grate .3))</PRE>
+
+to draw a wide-spaced grating in window <TT>g2</TT>.  Turn in your
+procedure definition.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00032020000000000000">Computer exercise 3:</A></H4>
+ Define a procedure <TT>
+cosine-x-grate</TT> like the one for exercise 2, but where the bands run
+vertically.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00032030000000000000">Computer exercise 4:</A></H4>
+ Define a procedure like the one for
+exercise 2, but where the bands in the grating run diagonally.  (Hint:
+Instead of using the cosine of <I>x</I> or <I>y</I>, use the cosine of
+<IMG WIDTH=18 HEIGHT=2 ALIGN=BOTTOM ALT="tex2html_wrap_inline693" SRC="img1.gif">.)
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00033000000000000000">Operations on pictures</A></H2>
+<P>
+We've provided a procedure called <TT>picture-map</TT> that enables you
+to operate on pictures and to combine pictures.  You use it as follows:
+
+<PRE>(picture-map proc picture1 picture2 ... picturen)</PRE>
+
+Here <TT>proc</TT> is some procedure of <I>n</I> arguments, and <TT>picture1,
+picture2, ..., picturen</TT> are <I>n</I> pictures, all of the same size.  The
+result is a new picture, where each value in the picture is the result
+of applying <TT>proc</TT> to the corresponding values of the <I>n</I>
+pictures.  For example, if <TT>pic</TT> is a picture, then
+
+<PRE>(picture-map (lambda (val) (- val)) pic)</PRE>
+
+returns a picture whose values are the negatives of the values of <TT>pic</TT>;
+and if <TT>pic1</TT> and <TT>pic2</TT> are pictures, then 
+
+<PRE>(picture-map + pic1 pic2)</PRE>
+
+returns a picture whose value at each point (<I>x</I>,<I>y</I>) is the sum of the
+corresponding values of <TT>pic1</TT> and <TT>pic2</TT> (i.e., the
+superposition of the two pictures).
+<P>
+<TT>Picture-map</TT> illustrates an important concept called <EM>
+operating on aggregates</EM>, namely, the idea of expressing operations
+directly in terms of compound data structures, rather than in terms of
+the individual components of those structures.  We'll look at this
+idea in detail later in the semester, starting with lecture on
+February 24.
+<P>
+<H4><A NAME="SECTION00033010000000000000">Computer exercise 5:</A></H4>
+ Define a procedure that takes two
+arguments <IMG WIDTH=14 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline741" SRC="img5.gif"> and <IMG WIDTH=14 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline743" SRC="img6.gif"> and returns a picture whose value at (<I>x</I>,<I>y</I>)
+is <IMG WIDTH=107 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline747" SRC="img7.gif">.  Define the procedure two different ways: (a)
+directly in terms of the point values, using <TT>procedure-&gt;picture</TT>;
+(b) using <TT>picture-map</TT> together with your answers to exercises
+2 and 3.  Be sure to draw the pictures produced by the two
+methods to confirm that they give the same result.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00034000000000000000">Predefined pictures</A></H2>
+<P>
+A second way of getting pictures into your
+system, rather than constructing them from numeric functions, is to
+load some previously stored pictures.  If you evaluate:
+<P>
+<PRE>(define pic1 (pgm-file-&gt;picture &quot;fovnder.pgm&quot;))</PRE>
+
+you'll get a picture of William Barton Rogers, the beloved <font size=-1><small>FOVNDER</small></font> and first president of MIT.  He looks pretty dour, doesn't
+he?  Maybe you can improve his disposition by combining him with some
+of your sinusoidal gratings from the previous exercises.  Try this.
+<P>
+<H2><A NAME="SECTION00035000000000000000">All mixed up</A></H2>
+<P>
+We're sure you've heard the rumors floating around campus that,
+despite repeated denials, the MIT
+administration has a secret plan to require all freshmen to live on
+campus beginning next fall, which they will announce later this
+spring.  The 6.001 staff has a mole in the office of the Dean of
+Undergraduate Education, and--the rumors may very well be true!
+According to our information, Dean Rozz Williams is about to appoint a
+new Director of Freshman Housing.  We've even obtained a
+picture that her office has constructed of the ideal candidate.  The
+picture appears in figure&nbsp;<A HREF="node3.html#figmix">1</A>, and you can get a copy of it
+by evaluating
+<P>
+<PRE>(define pic1 (pgm-file-&gt;picture &quot;mix-sp98.pgm&quot;))</PRE>
+
+The word is that the new Freshman Housing Director must be a perfect
+blend--someone who can really empathize with the incoming students,
+and yet be tough enough to handle all the flack.  You can see,
+however, that the picture is still foggy (perhaps a reflection of
+the state of the housing policy?).  To decode the picture you need to
+understand how it was made.
+<P>
+<P><A NAME="295">&#160;</A><A NAME="figmix">&#160;</A><IMG WIDTH=237 HEIGHT=205 ALIGN=BOTTOM ALT="figure293" SRC="img8.gif"><BR>
+<STRONG>Figure 1:</STRONG> MIT's ideal Director of Freshman Housing<BR>
+<P>
+<P>
+Consider two functions <I>a</I>(<I>x</I>,<I>y</I>) and <I>b</I>(<I>x</I>,<I>y</I>).  We can
+create a combined function
+known as a <EM>convex blend</EM> by using
+<BR><IMG WIDTH=377 HEIGHT=17 ALIGN=BOTTOM ALT="displaymath749" SRC="img9.gif"><BR>
+Typically <I>r</I> is a constant, but we can make it a function of <I>x</I> and
+<I>y</I> as well:
+<BR><IMG WIDTH=417 HEIGHT=17 ALIGN=BOTTOM ALT="displaymath750" SRC="img10.gif"><BR>
+In this way, we can blend two pictures <I>a</I> and <I>b</I> to
+create a new picture <I>c</I>.
+<P>
+In general, knowing the values of <I>r</I>(<I>x</I>,<I>y</I>) and <I>c</I>(<I>x</I>,<I>y</I>) is not enough
+to allow us to recover <I>a</I>(<I>x</I>,<I>y</I>) or <I>b</I>(<I>x</I>,<I>y</I>).  But there are particular
+choices for <I>r</I> for which we can recover the original unblended functions.
+Suppose we choose <I>r</I> to be a sinusoidal grating
+<BR><IMG WIDTH=356 HEIGHT=35 ALIGN=BOTTOM ALT="displaymath751" SRC="img11.gif"><BR>
+where <I>f</I> is a frequency and <I>t</I> is some function of <I>x</I> and <I>y</I>.  We
+can take advantage of the structure of <I>r</I> to approximately recover
+the original unblended functions.
+<P>
+In particular, suppose we want to recover as much of <I>a</I> as we can.
+Notice that <I>r</I> takes on values between 0 and 1.  At places where <I>r</I>
+is close to 0, there is not much of <I>a</I> in <I>c</I> (assuming that in
+general <I>a</I> and <I>b</I> have roughly similar ranges of values).  On the
+other hand, when <I>r</I> is close to 1, then <I>c</I> is mostly
+<I>a</I>.  So if we could find a way to multiply points in <I>c</I> (which is
+what we have our hands on) with values near 1 when <I>r</I> is near
+1 and with values near 0 when <I>r</I> is near zero, then we could get
+back a partial approximation to <I>a</I>.  But of course, this suggests
+that we just multiply the values of <I>c</I> by <I>r</I> itself.
+<P>
+To verify this, 
+write a procedure that prints the values of
+<BR><IMG WIDTH=500 HEIGHT=118 ALIGN=BOTTOM ALT="eqnarray300" SRC="img12.gif"><BR>
+for some sampled values of <I>u</I> between 0 and <IMG WIDTH=18 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline839" SRC="img13.gif">.  You should
+observe that when <I>r</I> is near 1, then <IMG WIDTH=14 HEIGHT=15 ALIGN=BOTTOM ALT="tex2html_wrap_inline845" SRC="img14.gif"> is near 1 and <I>r</I>(1-<I>r</I>)
+is near 0, and when <I>r</I> is near 0, both <IMG WIDTH=14 HEIGHT=15 ALIGN=BOTTOM ALT="tex2html_wrap_inline845" SRC="img14.gif"> and <I>r</I>(1-<I>r</I>) are near
+0.
+<P>
+As a consequence, if we can find the underlying sinusoidal grating
+used to mix the two pictures, then by multiplying the mixture by the
+grating, we should get back a result that is approximately one of the
+original pictures: at points where <I>c</I> is mostly <I>a</I> we will get
+approximately <I>a</I> as a result, and in places where <I>c</I> is mostly <I>b</I>,
+we will get values near 0 as a result (i.e. a black picture).  If we
+subtract that approximation from <I>c</I> we should get the other picture
+<I>b</I>.
+<P>
+<H4><A NAME="SECTION00035010000000000000">Computer exercise 6:</A></H4>
+ Extract the two personalities who
+blend to form the ideal freshman housing director, and see if you can
+recognize who they are.  In order to do the extraction, you'll need to
+identify the sinusoidal grating that was used to construct the
+mixture.  As hint, we'll tell you that it really does use a grating
+<I>r</I>(<I>x</I>,<I>y</I>) of the form described above, where <I>t</I>(<I>x</I>,<I>y</I>) is an appropriate
+function (which you ought to be able to guess) and the frequency <I>f</I>
+is a small integer multiple of 1/2.  (Note that this grating is not
+exactly the gratings you created in the exercises above, since you
+need to add one to the cosine and divide by 2.)  Turn in a two or
+three sentence description of how you performed the extraction
+together with any procedures you wrote to help you in the course of
+doing so.<A NAME="tex2html10" HREF="footnode.html#413"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=computer-ex-06">
+Check the 6.001 discussion forum for computer-ex-06</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<P><P>
+<P>
+Turn in answers to the following questions along with your answers to
+the questions in the problem set:
+<P>
+<OL>
+<LI> About how much time did you spend on this homework assignment?
+(Reading and preparing the assignment plus computer work.)
+<LI> Which scheme system(s) did you use to do this assignment (for
+example: 6.001 lab, your own NT machine, your own Win95 machine, your
+own Linux machine)?
+<LI>
+We encourage you to work with others on problem sets as long as you
+acknowledge it (see the 6.001 General Information handout).
+<UL>
+<LI> If you cooperated with other students, LA's, or others, or found portions
+of your answers for this problem set in references other than the
+text (such as some of the archives), please indicate your
+consultants' names and your references.  Also,
+explicitly label all text and code you are submitting which is the same as
+that being submitted by one of your collaborators.
+<LI> Otherwise, write ``I worked alone using only the reference
+materials,'' and sign your statement.
+</UL></OL><HR><A NAME="tex2html47" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html45" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html39" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html48" HREF="node4.html">4. The Debugging Tools</A>
+<B>Up:</B> <A NAME="tex2html46" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html40" HREF="node2.html">2. Tutorial Exercises</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Jan 31 15:55:15 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:35 GMT -->
+</HTML>

@@ -1,16 +1,23 @@
-# Template for Redbean Projects
+# Mirror of SICP problem sets
 
-## Features:
+The website's contents can be found in `srv/`. Point any webserver at it to
+serve the contents.
 
-- Build.sh
-  - TODO:
-    - **INIT**: `build.sh init [-s for sqlite] []`
-      - [ ] Fetch Redbean, save as read-only stock build. Also fetch zip and 
-            optionally sqlite
-      - [ ] *Verify checksums for known versions/generate checksums for new
-            ones*
-    - **BUILD** (default with no arguments)
-      - [ ] force copy stock redbean to writable file. Zip contents of `srv/`
-            into zip
-      - [ ] *if sqlite.com and `default.sqlite` exist, force copy
-            `default.sqlite` to `db.sqlite`*
+It is an amalgamation of the website rip provided by httrack and wget. httrack
+correctly links to the pdfs on the FTP site, but fails to download them; wget
+correctly downloads them, but fails to link them.
+
+## Redbean
+**x86_64 machine required, Windows/MacOS/Linux/BSD compatible.**
+
+To put in a Redbean that you can serve from anywhere:
+``` sh
+# Download Cosmo binaries
+./build.sh init
+# Pack srv/ into sicp-psets.com
+./build.sh pack
+# sicp-psets.com is a now portable webserver containing the mirror!
+# Move it to any compatible computer you want to serve from.
+# To serve sandboxed:
+./sicp-psets.com -SSS
+```

@@ -1,0 +1,310 @@
+;; 6.001 Spring 1998
+;; Problem Set 7
+;; Solutions
+
+; Computer Excercise 1
+; ====================
+
+; There are many ways to get lost in NE43, but eventually
+; you get to NE43-725 and find the-goal in that room. If you 
+; did Tutorial #3 correctly , finding the-goal was easy.
+
+(setup 'ben-bitdiddle)
+---Tick 0---
+You are in a wild long corridor 
+You see nothing in here. 
+The exits are: up in-408 in-430 in-429 in-428 . 
+;Value: ready
+
+(ask me 'go 'up)
+---Tick 1---
+You are in a bright long corridor 
+You see nothing in here. 
+The exits are: down in-711 in-725 . 
+;Value: ok
+
+(ask 'go 'up)
+;The object go is not applicable.
+;Type D to debug error, Q to quit back to REP loop: q
+;Quit!
+
+(ask me 'go 'up)
+You cannot go up from ne43-7th 
+;Value: #f
+
+(ask me 'look-around)
+;Value: #f
+
+(ask me 'go 'in-711)
+ben-bitdiddle says -- Hi jill 
+---Tick 2---
+You are in a busy secretarial office 
+You see nothing in here. 
+The exits are: out . 
+;Value: ok
+
+(ask me 'go 'out)
+ben-bitdiddle says -- Hi jill eric 
+---Tick 3---
+You are in a bright long corridor 
+You see: jill . 
+The exits are: down in-711 in-725 . 
+;Value: ok
+
+(ask me 'go 'in-725)
+ben-bitdiddle says -- Hi eric 
+---Tick 4---
+You are in a carefully appointed office 
+You see: ps8 eric sicp the-goal . 
+The exits are: out . 
+;Value: ok
+
+(ask me 'take (thing-named 'the-goal))
+ben-bitdiddle says -- I take the-goal 
+;Value: #t
+
+(ask me 'go 'out)
+ben-bitdiddle says -- Hi jill 
+---Tick 5---
+You are in a bright long corridor 
+You see: the-goal jill . 
+The exits are: down in-711 in-725 . 
+;Value: ok
+
+(ask me 'lose (thing-named 'the-goal))
+ben-bitdiddle says -- I lose the-goal 
+;Value: #t
+
+
+; Computer Exercise 2
+; ===================
+
+; First we get a set of marking procedures.
+
+(define mark-procs (make-mark-procedures))
+(define mark (cadr mark-procs))
+(define check (car mark-procs))
+
+; Then we start searching. To make life easier, we define a helper
+; procedure
+
+(define (go-and-check direction)
+  (let ((rev-exit (reverse-exit (ask me 'location) direction)))
+    (ask me 'go direction)
+    (newline)
+    (if (check (ask me 'location))
+	(display "Seen this place before!")
+	(mark (ask me 'location)))
+    (newline)
+    (display (list "reverse exit is " rev-exit))))
+
+;
+; This allows us to navigate the small maze by immediately knowing
+; how to go back where we came from, and where we've been before.
+;
+
+(ask me 'go 'dis)
+---Tick 1---
+You are in a maze of twisty little passages, all alike. 
+You see nothing in here. 
+The exits are: sid hole-in-roof down up climb-rope . 
+;Value: ok
+
+(go-and-check 'up)
+---Tick 2---
+You are in a maze of twisty little passages, all alike. 
+You see nothing in here. 
+The exits are: down . 
+
+(reverse exit is  down)
+;Value: #[unspecified-return-value]
+
+(go-and-check 'down)
+---Tick 3---
+You are in a maze of twisty little passages, all alike. 
+You see nothing in here. 
+The exits are: sid hole-in-roof down up climb-rope . 
+
+(reverse exit is  up)
+;Value: #[unspecified-return-value]
+
+(go-and-check 'down)
+---Tick 4---
+You are in a maze of twisty little passages, all alike. 
+You see nothing in here. 
+The exits are: climb-rope hole-in-floor up . 
+
+(reverse exit is  hole-in-floor)
+;Value: #[unspecified-return-value]
+
+(go-and-check 'hole-in-floor)
+---Tick 5---
+You are in a maze of twisty little passages, all alike. 
+You see nothing in here. 
+The exits are: sid hole-in-roof down up climb-rope . 
+Seen this place before!
+(reverse exit is  hole-in-roof)
+;Value: #[unspecified-return-value]
+
+(go-and-check 'climb-rope)
+---Tick 6---
+You are in a maze of twisty little passages, all alike. 
+You see: diamond . 
+The exits are: hole-in-roof low-passage hole-in-floor scary-pit . 
+
+(reverse exit is  scary-pit)
+;Value: #[unspecified-return-value]
+
+(ask me 'take (thing-named 'diamond))
+ben-bitdiddle says -- I take diamond 
+;Value: #t
+
+(go-and-check 'scary-pit)
+---Tick 7---
+You are in a maze of twisty little passages, all alike. 
+You see: diamond . 
+The exits are: sid hole-in-roof down up climb-rope . 
+Seen this place before!
+(reverse exit is  climb-rope)
+;Value: #[unspecified-return-value]
+
+(go-and-check 'sid)
+---Tick 8---
+You are in a wild long corridor 
+You see: diamond . 
+The exits are: dis up in-408 in-430 in-429 in-428 . 
+
+(reverse exit is  dis)
+;Value: #[unspecified-return-value]
+
+
+; Computer Exercise 3
+; ===================
+
+; Each pebble must have an identifying ID number
+; which allows us to know whether which search a
+; pebble corresponds to.
+; To make things easier, and to make sure we don't tie
+; the id of the pebble to its name, we add the message
+; ID, to which a pebble responds by giving its id number.
+
+(define (make-pebble id place)
+  (let ((thing (make-thing id place)))
+    (lambda(message)
+      (case message
+	((PEBBLE?) (lambda(self) #t))
+	((ID) (lambda(self) id))
+	(else (get-method message thing))))))
+
+(define construct-pebble
+  (make-constructor make-pebble))
+
+(define (pebble? object)
+  (is-a object 'PEBBLE?))
+
+; At this point, we need to define a new set of marking and checking
+; procedures. To make this work, make-mark-procedures must return a
+; different ID number inside each marking/checking procedure.
+
+(define make-mark-procedures
+  (let ((current-id 0))
+    (lambda()
+      ; Increment the count of the search by 1, so that
+      ; old pebbles won't interfere with this new search.
+      (set! current-id (1+ current-id))
+      (define (deja-vu? place)
+	(let ((things (ask place 'things)))
+	  (let ((pebbles (filter pebble? things)))
+	    (let ((right-pebbles (filter (lambda(peb) 
+					   (= current-id 
+					      (ask peb 'id)))
+					 pebbles)))
+	      (not (null? right-pebbles))))))
+      (define (node-visited! place)
+	; don't dump too many pebbles.
+	; If this place is already marked
+	; don't add a pebble.
+	(if (deja-vu? place)
+	    'ok
+	    ; The construction of the pebble
+	    ; automatically installs it in the room.
+	    (construct-pebble current-id place)))
+      (list deja-vu? node-visited!))))
+
+;
+; These new marking procedures work in the same exact way 
+; as the old ones, satisfying the abstraction we've set for
+; ourselves.
+;
+
+; Computer Exercise 4
+; ===================
+
+; Nothing to turn in.
+
+
+; Computer Exercise 5
+; ===================
+
+; Here we need to make the robot come back.
+; To accomplish this, our robot should have an additional
+; state. It already knows two things:
+; - searching
+; - idle
+; We add the following:
+; - go home.
+; Thus, when the search procedure indicates that the goal
+; object has been found, the robot must take the goal
+; object, and get into the go-home state.
+; The go-home state consists in simply using the go-back! 
+; procedure, which traces back the path from the root node,
+; and allows the robot to return to it.
+
+
+
+;;;************ This part of the solution has been intentionally omitted
+;;;************ until after the quiz.
+
+
+
+; We create a new robot, and start the search, then
+; run the clock long enough for the robot to go and
+; come back.
+
+(set! robot (construct-robot 'bens-robot (ask me 'location)))
+(start-robot-searching-and-return! robot 'magic-scroll)
+(run-clock 50)
+
+; We then take the magic scroll from the robot, and take it 
+; to Jill's office NE43-711, where we can read it.
+
+(ask (thing-named 'magic-scroll) 'READ)
+
+; Ben Bitdiddle's ID number is, of course 000-00-0000,
+; as he is the first MIT student ever (and the last).
+; Ben can get extra points on the quiz using his password:
+;
+; ZXGCTFXFYXPPPFWK
+
+
+; Exercise #6
+; ===========
+
+; This poltergeist will definitely screw things up. It might pick up
+; the magic scroll and take it to another place in the labyrinth when
+; the robot is "not looking", or by another path, and take it to a
+; place that the robot has already visited. This would effectively 
+; make the robot think that it searched everywhere without seeing
+; the magic scroll.
+
+; Furthermore, the poltergeist can also move pebbles, which will screw
+; up the searching procedure: the robot will mistake new rooms for 
+; rooms it already visited, and vice-versa. 
+
+; If the pebbles were constructed as a subclass of named-object,
+; it would definitely prevent them from ever being moved, which would
+; solve a large part of the Poltergeist problem. The magic scroll,
+though,
+; can still be moved around, which still allows for some possibility of
+; a screwup.
+

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps8web/ps8-speech/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:23 GMT -->
+<HEAD>
+<TITLE>1. Background</TITLE>
+<META NAME="description" CONTENT="1. Background">
+<META NAME="keywords" CONTENT="ps8-speech">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps8-speech.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html16" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html14" HREF="ps8-speech.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html8" HREF="ps8-speech.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html17" HREF="node2.html">2. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html15" HREF="ps8-speech.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html9" HREF="ps8-speech.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">1. Background</A></H1>
+<P>
+In this problem set, you will experiment with an idealized system for
+speech-recognition, with the primary aim of seeing how stream
+processing can be a powerful tool for manipulating certain kinds of
+data.  We are going to make several simplifying assumptions (after
+all, we don't really expect you to build a state-of-the-art speech
+recognition system in one week).
+<P>
+First, we'll not worry about converting actual sounds to phonemes.
+Instead, we'll use a program that simulates the operation of a
+``front end'' to the speech processor by taking a stream of symbols
+that represent phonemes and putting out a stream of results.  Since
+speech signals are noisy, our simulation will produce, for each input
+``phoneme'' a list of possible phonemes this ``sounds like,'' together
+with a probability that this is the actual phoneme that was ``heard.''
+For example, the front end might determine that a phoneme is either an
+``s'' with probability .8, or an ``sh'' with probability .15, or a
+``c'' with probability .05.  Our simulator will include a parameter
+that reflects the amount of noise--phoneme identification becomes less
+reliable as the noise increases.
+<P>
+Our second simplification is that we'll assume that the ordinary
+English spelling of words can be used as their phonetic spelling
+(which is false).  In the speech-recognition community, phonemes
+correspond to specific speech sounds, and they are notated in a system like
+the International Phonetic alphabet.  To keep things simple, we will
+approximate this by using substrings of words as phonemes.  Thus, the
+word ``finish'' might be represented by the sequence ``f'' ``i'' ``n''
+``i'' ``sh''.  Overall, we'll use the following set of ``phonemes'':
+<P>
+
+<PRE>a b c ch d e ee f h i j k l ll m n o p qu r s sh ss t th u v w wh x y z</PRE>
+
+<P>
+The following table shows, for our simple model, which phonemes can
+get mistaken for other phonemes by our (simulated) front-end processor:
+<P>
+
+<PRE>(define *confusion-list*
+  '((a o u) (b p d t g) (c k ch t) (ch s sh) (d th) (e i o a) (ee i o a) (f v)
+    (g j ch) (h wh) (i e a o) (j g) (k c) (l r) (ll r) (m n) (n m) (o a)
+    (p b t d) (qu k) (r l) (s sh) (sh s ch) (ss sh ch) (t d b p) (th d b p)
+    (u o) (v f) (w u) (wh h) (x z s) (y i) (z s x)))</PRE>
+
+<P>
+The interpretation of this table is that an input ``a'' could be heard
+as an ``a'' or an ``o'' or a ``u''; an input ``b'' as a ``b'', ``p'',
+``d'', ``t'', or ``g'', and so on.
+<P>
+Our third and most important simplifying assumption is to assume that
+individual words in the input stream are clearly separated by
+silences, which we'll notate in the input stream by stars.  Thus,
+the phrase ``the cat looked at the fish'' would appear as input to the
+font-end processor as
+<P>
+
+<PRE>th e * c a t * l oo k e d * a t * th e * f i sh</PRE>
+
+<P>
+In accordance with <TT>*confusion-list*</TT>, the front-end processor
+would report that the first phoneme is ``th'' or ``d'' or ``b'' or
+``p'', the second phoneme is ``e'' or ``i'' or ``o'' or ``a'', and so
+on.  Observe that these confusions are unrealistic: we'd do much
+better if we used real phonetic spellings.
+<P>
+In order to disambiguate the possible phoneme choices produced by the
+front end, our system will need to know which sequences of phonemes
+correspond to sounds.  To do this, we'll use a dictionary that gives
+the ``phonetic spellings'' of common words.  In our simplified
+approach, the phonetic spelling is the same as the real spelling, so
+to look up a sequence of phonemes, we'll concatenate the phonemes and
+see if this produces a word in the dictionary, which is a list of
+about a thousand common English words.
+<P>
+Our goal in this problem is to use these components to produce a
+system that can decode a noisy stream of phonemes into words and thus
+recognize what is being ``said.''
+<P>
+<HR><A NAME="tex2html16" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html14" HREF="ps8-speech.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html8" HREF="ps8-speech.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html17" HREF="node2.html">2. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html15" HREF="ps8-speech.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html9" HREF="ps8-speech.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Fri Mar 27 14:32:25 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps8web/ps8-speech/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:23 GMT -->
+</HTML>

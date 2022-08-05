@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-solutions/node9.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:16 GMT -->
+<HEAD>
+<TITLE> Computer Exercise 6</TITLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" link="#8e0000" vlink="#0000FF" >
+
+<BODY>
+<meta name="description" value=" Computer Exercise 6">
+<meta name="keywords" value="solutions">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html103 HREF="node10.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.ai.mit.edu/latex2html/next_motif.gif"></A>   <A NAME=tex2html101 HREF="solutions.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.ai.mit.edu/latex2html/up_motif.gif"></A>   <A NAME=tex2html95 HREF="node8.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.ai.mit.edu/latex2html/previous_motif.gif"></A>         <BR>
+<B> Next:</B> <A NAME=tex2html104 HREF="node10.html"> Computer Exercise 7</A>
+<B>Up:</B> <A NAME=tex2html102 HREF="solutions.html">
+       Pset2 Solutions </A>
+<B> Previous:</B> <A NAME=tex2html96 HREF="node8.html"> Computer Exercise 5</A>
+<BR> <HR> <P>
+<H1><A NAME=SECTION00060000000000000000> Computer Exercise 6</A></H1>
+<P>
+<b>Let's find out the time to crack the 4-digit code:</b>
+<P>
+<PRE>(timed crack-public-key pk-ex-5)
+;Value: (.2300000000000182 (19079 362 107 6843))
+</PRE>
+<P>
+<b>Now let's run it a few more times and compute an average time
+to break a 4-digit code:</b>
+<P>
+<PRE>(timed crack-public-key (key-system-&gt;public-key (generate-key-system 4)))
+;Value: (4.160000000000025 (7727 7516 1245 7162))
+
+(timed crack-public-key (key-system-&gt;public-key (generate-key-system 4)))
+;Value: (8.689999999999998 (17027 10018 2184 3365))
+
+(timed crack-public-key (key-system-&gt;public-key (generate-key-system 4)))
+;Value: (15.850000000000023 (6779 273 4374 4566))
+
+(timed crack-public-key (key-system-&gt;public-key (generate-key-system 4)))
+;Value: (7.600000000000023 (3203 1766 2371 1475))
+
+(timed crack-public-key (key-system-&gt;public-key (generate-key-system 4)))
+;Value: (4.400000000000034 (13163 11261 1224 13125))
+
+(/ (+ .23 4.16 8.68 15.85 7.6 4.4) 
+   6)
+;Value: 6.819999999999999
+</PRE>
+<P>
+<b>So it looks like, on average it takes about 7 seconds to crack
+a 4-digit key. For the purpose of simplying our math, let's 
+assume it takes about 10 seconds to crack a 4-digit key. As 
+discussed on page 6 of the problem set, for every digit added
+to the key, we can expect the time to crack it to increase by 
+a <em> factor</em> of 10.  So a key of 5 digits will take 10 times 
+longer a 4-digit key, and a key of 6 digits will take 10 * 10, 
+or 100, times longer to crack, and so on.</b>
+
+<P>
+<b>Extrapolating, we can compute the factor increases for a 50-
+and 100-digit key as</b>
+<P>
+<PRE>(define 50-digit-factor (expt 10 (- 50 4)))
+(define 100-digit-factor (expt 10 (- 100 4)))
+</PRE>
+<P>
+<b>Now, defining some other constants,</b>
+<P>
+<PRE>(define 4-digit-seconds 10)
+(define computation-speedup 1000000)
+(define seconds-in-a-year (* 365 24 60 60))
+</PRE>
+<P>
+<b>..the number to years to crack 50- and 100-digit
+keys can be computed as:</b>
+<P>
+<PRE>(define years-to-crack-50-digits (/ (* 4-digit-seconds 50-digit-factor)
+                                    computation-speedup
+                                    seconds-in-a-year))
+
+years-to-crack-50-digits
+;Value: 3.170979198376459e33
+
+
+(define years-to-crack-100-digits (/ (* 4-digit-seconds 100-digit-factor)
+                                     computation-speedup
+                                     seconds-in-a-year))
+
+years-to-crack-100-digits
+;Value: 3.170979198376459e83
+</PRE>
+<P>
+<b>Let's compare these years in terms of the age of the universe,
+which is 15 billion years:</b>
+<P>
+<PRE>(define age-of-universe (* 15 (expt 10 9)))
+
+(/ years-to-crack-50-digits age-of-universe)
+;Value: 2.1139861322509725e23
+
+(/ years-to-crack-100-digits age-of-universe)
+;Value: 2.1139861322509726e73
+</PRE>
+<P>
+<H5> Wow!</H5>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Tony Ezzat <BR>
+Mon Feb  9 20:47:53 EST 1998</I>
+</ADDRESS>
+</BODY>

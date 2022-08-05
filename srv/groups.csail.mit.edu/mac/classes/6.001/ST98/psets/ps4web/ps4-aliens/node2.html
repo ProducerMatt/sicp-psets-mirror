@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps4web/ps4-aliens/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:34 GMT -->
+<HEAD>
+<TITLE>2. Tutorial Exercises</TITLE>
+<META NAME="description" CONTENT="2. Tutorial Exercises">
+<META NAME="keywords" CONTENT="ps4-aliens">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps4-aliens.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html27" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html25" HREF="ps4-aliens.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html19" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html28" HREF="node3.html">3. Programming assignment: So </A>
+<B>Up:</B> <A NAME="tex2html26" HREF="ps4-aliens.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html20" HREF="node1.html">1. Representing housing preferences</A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. Tutorial Exercises</A></H1>
+<P>
+We strongly suggest that you do all of the tutorial exercises before
+starting work on the computer exercises.  This will give you valuable
+practice thinking in terms of aggregate operations. There's also some
+important design work that you'll need to do before diving into
+programming.
+<P>
+<H4><A NAME="SECTION00020010000000000000">Tutorial exercise 1:</A></H4>
+<P>
+Do exercises 2.33 and 2.35 of the textbook.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020020000000000000">Tutorial exercise 2:</A></H4>
+<P>
+Do exercise 2.53 of the textbook.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020030000000000000">Tutorial exercise 3:</A></H4>
+<P>
+Consider the following sequence of evaluations
+<P>
+
+<PRE>(define *table* (make-empty-table))
+
+(define *table*
+  (add-to-table 'hexapod1 *table* '(methane 260K-270K infrared random)))
+
+(define *table* 
+  (add-to-table 'hexapod2 *table* '(methane 260K-270K infrared random)))</PRE>
+<P>
+Using box-and pointer notation, trace through the creation of the
+table, showing the calls to <TT>add-to-table</TT> and <TT>
+insert-in-branches</TT> at each step of the construction.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=tutorial-ex-03">
+Check the 6.001 discussion forum for tutorial-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020040000000000000">Tutorial exercise 4:</A></H4>
+<P>
+Alien freshthings, even though they are MIT students, are sometimes
+not very careful about following directions.  (Several faculty members
+have described them as ``spacey.'')  In particular, the Housing Office
+is concerned that some of them might not be careful about listing
+their preferences in decreasing order of importance, not skipping any
+categories.  Describe how present system behaves if some freshthings
+violate this constraint.  What happens, for example, if incoming
+student cxthlogtl lists its preferences as <EM>(night, sulfur,
+ultraviolet)</EM>?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=tutorial-ex-04">
+Check the 6.001 discussion forum for tutorial-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020050000000000000">Tutorial exercise 5:</A></H4>
+<P>
+Design a procedure called <TT>canonicalize-input</TT>, which takes an
+input a freshthing in some more flexible form and cleans up the
+result, generating a list that could be used for that freshthing in
+the <TT>install</TT> procedure.  There is no single correct answer here.
+You will need to define the format of the input and the range of
+inputs you'll permit.  For example, you might have each freshthing
+supply a list of a name followed by pairs indicating the preferences,
+such as:<A NAME="tex2html2" HREF="footnode.html#184"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+
+<PRE>(cxthlogtl (cycle night) (atmosphere sulfur) (spectrum ultraviolet))</PRE>
+<P>
+For this exercise, you needn't implement the procedure--just design
+it.  In tutorial, be prepared to say what the input format your
+program will accept and describe how you will convert this to a valid
+input for our system.  For example, how will you handle an input where
+that skips a category or lists things out of order?  Describe your
+program as clearly and as elegantly as possible.  Remember that
+programs like these are often elegantly written using <TT>map</TT>, <TT>
+filter</TT>, <TT>accumulate</TT> aggregate operations.  Assume that the
+overall order of importance of categories is specified in the housing
+system by the list <TT>*order*</TT>: 
+<PRE>(define *order* '(atmosphere temperature spectrum cycle))</PRE>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=tutorial-ex-05">
+Check the 6.001 discussion forum for tutorial-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html27" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html25" HREF="ps4-aliens.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html19" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html28" HREF="node3.html">3. Programming assignment: So </A>
+<B>Up:</B> <A NAME="tex2html26" HREF="ps4-aliens.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html20" HREF="node1.html">1. Representing housing preferences</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Mon Feb 23 08:27:27 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps4web/ps4-aliens/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:35 GMT -->
+</HTML>

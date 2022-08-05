@@ -1,0 +1,435 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps8web/ps8-speech/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:31 GMT -->
+<HEAD>
+<TITLE>3. Programming Assignment</TITLE>
+<META NAME="description" CONTENT="3. Programming Assignment">
+<META NAME="keywords" CONTENT="ps8-speech">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps8-speech.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html36" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html34" HREF="ps8-speech.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html28" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html37" HREF="node4.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html35" HREF="ps8-speech.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html29" HREF="node2.html">2. Tutorial Exercises</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Programming Assignment</A></H1>
+<P>
+Begin by loading the code for problem set 8.  The first thing to try
+is to see how Scheme deals with streams of inputs you type from the
+keyboard.  The code for the problem set includes a procedure <TT>
+input-stream</TT> that generates a stream of the expressions you type, and
+also a procedure <TT>stream-pp</TT> that pretty-prints a stream one
+element at a time.
+<P>
+Try evaluating <TT>(stream-pp (input-stream))</TT>.  If
+you are in the <TT>*scheme*</TT> buffer, you should see a prompt at the
+bottom of the screen requesting input.  Type an expression followed by
+<font size=-1><small>ENTER</small></font>.  Scheme will pretty-print the expression and request more
+input.  This input stream is a potentially infinite stream: you can
+keep entering expressions for as long as you like.  To terminate the
+stream type a period.  Alternatively, you can break out the input by
+typing <TT>C-g</TT> (i.e., <font size=-1><small>CTRL</small></font>-<TT>g</TT>).
+<P>
+You'll be using <TT>input-stream</TT> to enter streams of phonemes.  As
+an alternative to always entering items one at a time at the keyboard,
+you can also use the procedure <TT>list-&gt;stream</TT>, which converts a
+list of elements into a stream of elements.  Try evaluating
+<P>
+
+<PRE>(stream-pp (list-&gt;stream '(th e * c a t * l oo k e d * a t * th e * f i sh)))</PRE>
+
+<P>
+and then produce the same printed response using <TT>input-stream</TT>.
+<P>
+<H2><A NAME="SECTION00031000000000000000">Simulating the front-end processor</A></H2>
+<P>
+The problem set code includes a procedure <TT>make-random-confusion</TT>
+that takes as arguments a (supposedly spoken) phoneme and a noise
+level and returns a list of possible phonemes this might be, together
+with a weight (probability) to assign to that phoneme choice.  For
+example
+<P>
+
+<PRE>(make-random-confusion 'a .2)
+;Value: ((u .54) (a .32) (o .14))</PRE>
+
+<P>
+produces a list that says that the result is ``u'' with likelihood .54,
+``a'' with likelihood .32, and ``o'' with likelihood .14.  (Note that
+the actual input was ``a''.)
+<P>
+We'll call such a result a list of <EM>weighted elements</EM>.  A
+weighted element consists of some data and an associated weight.  
+The problem set code provides a constructor <TT>make-weighted</TT> and
+selectors <TT>weighted-data</TT> and <TT>weighted-weight</TT> for handling
+weighted elements.
+<P>
+<TT>Make-random-confusion</TT> is designed so that the weights
+of the elements it returns sum to 1 and the elements are listed in
+order from largest to smallest weight.  The procedure uses randomness
+to simulate the noise, so calling it repeatedly will give different
+results.
+<P>
+The second argument to <TT>make-random-confusion</TT> represents a noise
+level, which should be between 0 and 1.  With noise level 0, the
+``real'' phoneme will (over many evaluations) tend to have a weight
+five times as large as that of the alternatives.  With noise level 1
+(very noisy) all the choices will tend to have the same weight--the
+phoneme that was actually input will not be preferred to any of the
+alternatives.
+<P>
+<H4><A NAME="SECTION00031010000000000000">Computer exercise 1:</A></H4>
+<P>
+Write a procedure <TT>simulate-front-end</TT> that takes a stream of
+phonemes and a noise level as arguments and maps <TT>
+make-random-confusion</TT> along the stream to produce the stream of
+weighted alternatives.  Using this, implement procedures <TT>
+phoneme-input-stream</TT> and <TT>noisy-phoneme-input-stream</TT> that
+simulate the operation of the front-end processor on a stream of
+phonemes you type at the keyboard.  (Use noise levels of 0 and 1 for
+the two streams.)
+Try these out and observe the
+results.  Also implement <TT>phoneme-stream-from-list</TT> and <TT>
+noisy-phoneme-stream-from-list</TT> that simulate the front-end processor
+operating on a given list of phonemes.  Turn in listings of your
+definitions, and also the result of evaluating
+
+<PRE>(stream-pp (noisy-phoneme-stream-from-list '(p i g)))</PRE>
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00032000000000000000">Splitting the stream into ``words''</A></H2>
+<P>
+Now that we can simulate streams of phoneme alternatives coming from
+the front-end processor, let's split these into words so we can try to
+identify them.  The procedure <TT>split-stream</TT>, included in the
+problem set code, takes as arguments a stream and a predicate.  It
+divides the stream into chunks, producing a stream of lists, where
+each list is a chunk of consecutive elements of the stream.  Stream
+elements that satisfy the predicate are assumed to be markers that
+signal the beginning of a new chunk.  These markers are not included
+in any of the chunks.
+<P>
+<H4><A NAME="SECTION00032010000000000000">Computer exercise 2:</A></H4>
+<P>
+Using <TT>split-stream</TT>, implement a procedure <TT>
+split-stream-at-silences</TT> that chunks the stream into ``words'' by
+splitting the stream at the stars.  Demonstrate your
+procedure by using <TT>stream-pp</TT> to look at the result of splitting
+a <TT>phoneme-input-stream</TT> where you input a short phrase such as
+<P>
+
+<PRE>a * p i g * l oo k e d * a t * th e * b i g * d o g</PRE>
+
+You should see your output printed a word at a time, so you won't
+see anything printed until you type a star.  (Note: When <TT>
+make-random-confusion</TT> is given a ``phoneme'' symbol that is not in
+its table (e.g., a star) it returns a weighted object with that symbol
+as data and a weight of 1.  So to test for a star, you should test
+whether the data part of the object is the symbol <TT>*</TT>.)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00033000000000000000">Finding real words</A></H2>
+<P>
+Now that we have the stream divided into chunks, we need to decipher
+each chunk into possible words.  We'll start by generating all
+possible choices of phoneme sequences for each chunk,
+using the procedure <TT>all-choices</TT> which you reviewed for tutorial.
+We'll then filter these choices to find the ones
+that correspond to words in the dictionary.
+<P>
+To permit you to do the filtering, the problem set code includes a
+procedure called <TT>word-in-dictionary?</TT> that takes a list of
+phonemes and checks whether this is a word in the dictionary.  (In our
+idealized implementation, this amounts to simply concatenating the
+phonemes and checking whether this produces a word in the dictionary.)
+<P>
+<H4><A NAME="SECTION00033010000000000000">Computer exercise 3:</A></H4>
+<P>
+Implement this plan. First, to provide some test data, create a
+``chunk'' of phonemes corresponding to a single word:
+<P>
+
+<PRE>(define one-chunk
+     (stream-car
+      (split-stream-at-silences
+       (phoneme-stream-from-list '(c a t)))))</PRE>
+
+<P>
+Note that the chunk here is a list--<TT>split-stream-at-silences</TT>
+produces a stream of lists, and you are taking the first element in
+that stream.  Since <TT>one-chunk</TT> is a list you can look at it by
+pretty printing it with <TT>pp</TT> (not <TT>stream-pp</TT>).  You should
+find that there are 4 choices for the first phoneme (``c'' and three
+others), 3 choices for the second, and 4 choices for the third. Now
+generate the list of all choices.  How many choices are there?
+<P>
+Next, implement a procedure called <TT>sensible?</TT> that takes
+a list of weighted phonemes and uses <TT>word-in-dictionary?</TT>  to see
+if this is in the dictionary.  (<TT>Word-in-dictionary?</TT> expects just
+the phoneme data, not the weights, so you'll have to extract these
+from the weighted phonemes.)
+<P>
+Having done this, you should be able to filter the list of choices to find the
+sensible ones, e.g.,
+<P>
+
+<PRE>(pp (filter sensible? (all-choices one-chunk)))</PRE>
+
+<P>
+You should find four possibilities that match words in our
+dictionary.  What are these?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00033020000000000000">Computer exercise 4:</A></H4>
+<P>
+Your result in exercise 3 should produce ``words'' that are lists of
+weighted phonemes.  For further processing, it will be convenient to
+combine these weights to get an overall weight for the word
+rather than preserving the weights of the individual phonemes.  Write a
+procedure <TT>combine-weighted</TT> that accomplishes this by taking a
+list of weighted elements and producing a single weighted element.
+The data part of the result should be a list of the data items of the
+individual weighted elements in the argument list, and the weight part
+of the result should be the product of the individual weights.  Here's
+an example:
+<P>
+
+<PRE>(combine-weighted '((c .6) (a .74) (t .5)))
+;Value: ((c a t) .222)</PRE>
+
+<P>
+By mapping <TT>combine-weighted</TT> down the list of results in exercise
+3, you should get a list of possible words, each with a weight.
+You can now pass this result to a procedure called <TT>normalize-weights</TT>,
+which is supplied with the problem set code.  <TT>
+Normalize-weights</TT> takes a list of weighted elements and normalizes
+the weights so that the sum of the weights is 1, and hence weights
+can be interpreted as probabilities.  It also orders the list from
+largest to smallest weight.
+<P>
+Finally, define a procedure called <TT>possible-words</TT>, which
+performs all the operations that you did here and in exercise 3.
+Namely, <TT>possible-words</TT> should take as argument a chunk of output
+from the front-end processor, i.e., a list each of whose elements is a
+list of weighted phonemes.  The procedure should generate all choices
+of phoneme sequences, filter these to find sequences in the
+dictionary, map <TT>combine-weighted</TT> down the resulting list, and
+finally normalize the weights.
+<P>
+Test your implementation of <TT>possible-words</TT> by applying it to
+<TT>one-chunk</TT> from exercise 3.  Also try evaluating
+<P>
+
+<PRE>(stream-pp
+ (stream-map possible-words
+             (split-stream-at-silences
+              (phoneme-input-stream))))</PRE>
+
+<P>
+and typing a stream of phonemes (with words separated by stars) to see
+the stream of possible words for each phoneme sequence you enter.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00033030000000000000">Computer exercise 5:</A></H4>
+  Suppose you enter a phoneme sequence
+for which there are no possible words in the dictionary.  This should
+appear in your output from exercise 4 as an empty list.  To make this
+more uniform with the other lists of possible words, it would be good
+to replace this with a list containing an actual weighted element.
+Write such a procedure, <TT>flag-unrecognized</TT>, which simply returns
+its argument, unless its argument is the empty list, in which case it
+returns a list of one weighted word whose data is the symbol <TT>
+*unrecognized*</TT> and whose weight is 1.  Try your test from the end of
+exercise 4 again, only this time also stream-mapping the result
+through <TT>flag-unrecognized</TT>, and see what happens if you type a
+mixture of words and gibberish.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00033040000000000000">Computer exercise 6:</A></H4>
+<P>
+Now put all this processing together by defining a procedure called
+<TT>recognize</TT>, which takes a phoneme stream (with words delineated
+by stars) and returns the stream of weighted choices for words.
+Namely, <TT>recognize</TT> should split the stream at silences, stream
+map <TT>possible-words</TT> along the result, and stream map this through
+<TT>flag-unrecognized</TT>.  Test your procedure by trying it on <TT>
+phoneme-input-stream</TT> and <TT>noisy-phoneme-input-stream</TT>.  For
+experimentation, you can find the definition of the dictionary in the
+file <TT>dict.scm</TT>.  Feel free to add more words.  Turn in some
+sample results.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-06">
+Check the 6.001 discussion forum for computer-ex-06</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00034000000000000000">From words to phrases</A></H2>
+<P>
+With <TT>recognize</TT> from exercise 6 in hand, we're now in an
+analogous position to where we started with the results of the
+front-end processor.  Rather than a stream of lists of weighted
+phoneme choices to assemble into words, we now have a stream of lists
+of weighted word choices.  Can we perform the analogous
+operation--comb through the possible choices of words to produce
+phrases and sentences?
+<P>
+Let's start by simply generating all possible choices:  Take a stream
+of word possibilities generated by <TT>recognize</TT>, transform this to
+a list (assume this is a finite stream), pass the result to <TT>
+all-choices</TT> and combine the weights and normalize them.  As an
+example, try the following
+<P>
+
+<PRE>(define (possible-phrases phoneme-stream)
+  (normalize-weights
+   (map
+    combine-weighted
+    (all-choices (stream-&gt;list (recognize phoneme-stream))))))</PRE>
+
+<P>
+<H4><A NAME="SECTION00034010000000000000">Computer exercise 7:</A></H4>
+<P>
+Try the above approach.  As test cases, use
+<PRE>(phoneme-stream-from-list '(a * b i g * p i g * r a n * b y * th e * d o g))</PRE>
+and also <TT>phoneme-input-stream</TT>. (Notice that you won't get any
+result printed here until you type a period to terminate the input
+stream.)  Also try using <TT>noisy-phoneme-stream-from-list</TT> and <TT>
+noisy-phoneme-input-stream</TT>.  Just as with the original problem of
+assembling phonemes into words, you should find that there are many
+potential sequences of words, only a few of which are sensible
+phrases.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-07">
+Check the 6.001 discussion forum for computer-ex-07</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00035000000000000000">Making the system smarter</A></H2>
+<P>
+We're not going to ask you to take the next step and produce
+meaningful phrases from the combinations of words.  That would take us
+into the realm of ongoing research in speech recognition, which would
+be a little intense for a one-week problem set (even in 6.001!).
+<P>
+<H4><A NAME="SECTION00035010000000000000">Computer exercise 8:</A></H4>
+<P>
+Write a brief paragraph, describing how you think you might approach
+the problem of reducing the word choices to extract ``meaning''.
+Think back to the demonstration in lecture on March 31 of the work of
+the Lab for Computer Science's Spoken Language Systems Group and say
+how one might begin building a system of that type.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=computer-ex-08">
+Check the 6.001 discussion forum for computer-ex-08</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<P><P>
+<P>
+Turn in answers to the following questions along with your answers to
+the questions in the problem set:
+<P>
+<OL>
+<LI> About how much time did you spend on this homework assignment?
+(Reading and preparing the assignment plus computer work.)
+<LI> Which scheme system(s) did you use to do this assignment (for
+example: 6.001 lab, your own NT machine, your own Win95 machine, your
+own Linux machine)?
+<LI>
+We encourage you to work with others on problem sets as long as you
+acknowledge it (see the 6.001 General Information handout).
+<UL>
+<LI> If you cooperated with other students, LA's, or others, or found portions
+of your answers for this problem set in references other than the
+text (such as some of the archives), please indicate your
+consultants' names and your references.  Also,
+explicitly label all text and code you are submitting which is the same as
+that being submitted by one of your collaborators.
+<LI> Otherwise, write ``I worked alone using only the reference
+materials,'' and sign your statement.
+</UL></OL><HR><A NAME="tex2html36" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html34" HREF="ps8-speech.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html28" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html37" HREF="node4.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html35" HREF="ps8-speech.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html29" HREF="node2.html">2. Tutorial Exercises</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Fri Mar 27 14:32:25 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps8web/ps8-speech/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:31 GMT -->
+</HTML>

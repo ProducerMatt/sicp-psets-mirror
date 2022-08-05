@@ -1,0 +1,320 @@
+6.001 Spril 98
+PSet3 Solutions
+-------------------
+
+Tutorial Exercise 1
+-------------------
+
+(define (make-vect x y)
+  (cons x y))
+(define (xcor-vect v)
+  (car v))
+(define (ycor-vect v)
+  (cdr v))
+
+(define (add-vect v1 v2)
+  (make-vect (+ (xcor-vect v1) (xcor-vect v2))
+	     (+ (ycor-vect v1) (ycor-vect v2))))
+
+(define (sub-vect v1 v2)
+  (make-vect (- (xcor-vect v1) (xcor-vect v2))
+	     (- (ycor-vect v1) (ycor-vect v2))))
+
+(define (scale-vect s v)
+  (make-vect (* (xcor-vect v) s)
+	     (* (ycor-vect v) s)))
+
+(define (make-frame origin edge1 edge2)
+  (cons origin (cons edge1 edge2)))
+
+(define (origin-frame frame)
+  (car frame))
+
+(define (edge1-frame frame)
+  (cadr frame))
+
+(define (edge2-frame frame)
+  (cddr frame))
+
+(define (make-segment v1 v2)
+  (cons v1 v2))
+
+(define (start-segment s)
+  (car s))
+
+(define (end-segment s)
+  (cdr s))
+
+
+Computer Exercise 2
+-------------------
+Actual answers will vary.  Below are just examples of possible 
+correct answers.
+
+
+(define graylight (number->painter 90))
+
+(define mid-gray (number->painter 127))
+
+(define shade
+    (procedure->painter
+     (lambda (x y) (* 255 (+ (square x) (- y) .5)))))
+
+(define concentric-shading (procedure->painter 
+			    (lambda (x y) 
+			      (- 255
+				 (* 255 
+				    (+ (square (- x .5))
+
+(define my-star-painter
+  (segments->painter
+   (list
+    (make-segment (make-vect .5 1) (make-vect .4 .6))
+    (make-segment (make-vect .5 1) (make-vect .6 .6))
+    (make-segment (make-vect .4 .6) (make-vect 0 .6))
+    (make-segment (make-vect .6 .6) (make-vect 1 .6))
+    (make-segment (make-vect 0 .6) (make-vect .35 .4))
+    (make-segment (make-vect 1 .6) (make-vect .65 .4))
+    (make-segment (make-vect .25 0) (make-vect .35 .4))
+    (make-segment (make-vect .75 0) (make-vect .65 .4))
+    (make-segment (make-vect .25 0) (make-vect .5 .28))
+    (make-segment (make-vect .75 0) (make-vect .5 .28))
+    )))
+
+(define taj (pgm-file->painter "tajmahal"))
+
+
+
+
+Computer Exercise 3
+-------------------
+
+(define (flip-horiz painter)
+  (transform-painter painter
+		     (make-vect 1.0 0.0)
+		     (make-vect 0.0 0.0)
+		     (make-vect 1.0 1.0)))
+
+(define (rotate180 painter)
+  (transform-painter painter
+		     (make-vect 1.0 1.0)
+		     (make-vect 0.0 1.0)
+		     (make-vect 1.0 0.0)))
+
+(define (rotate270 painter)
+  (transform-painter painter
+		     (make-vect 0.0 1.0)
+		     (make-vect 0.0 0.0)
+		     (make-vect 1.0 1.0)))
+
+
+Computer Exercise 4
+-------------------
+
+(define (below painter1 painter2)
+  (let ((split-point (make-vect 0.0 0.5)))
+    (let ((paint-bottom
+	   (transform-painter painter1
+			      (make-vect 0.0 0.0)
+			      (make-vect 1.0 0.0)
+			      split-point))
+	  (paint-top
+	   (transform-painter painter2
+			      split-point
+			      (make-vect 1.0 0.5)
+			      (make-vect 0.0 1.0))))
+      (lambda (frame)
+	(paint-bottom frame)
+	(paint-top frame)))))
+
+
+(define (below painter1 painter2)
+  (rotate90 (beside (rotate270 painter1)
+		    (rotate270 painter2))))
+
+
+
+
+Computer Exercise 5
+-------------------
+
+(define (up-split painter n)
+  (if (= n 0)
+      painter
+      (let ((smaller (up-split painter (- n 1))))
+	(below painter (beside smaller smaller)))))
+
+
+
+Computer Exercie 6
+------------------
+
+Answers will vary.  Below are some examples of possible answers.
+
+(define (squash-outwards painter)
+  (transform-painter painter
+                     (make-vect 0.0 0.0)
+                     (make-vect 1.35 -0.35)
+                     (make-vect -0.35 1.35)))
+
+(define (crazy-squash painter)
+  (transform-painter painter
+                     (make-vect 0.5 0.5)
+                     (make-vect 0.8 0.2)
+                     (make-vect 0.4 0.9)))
+
+(define (squash-and-rotate painter)
+  (transform-painter painter
+		     (make-vect 0.0 0.9)
+		     (make-vect 0.25 0.25)
+		     (make-vect 0.75 0.75)))
+
+
+
+Computer Exercise 7
+-------------------
+
+Nothing to turn in.
+
+
+
+Computer Exercise 8
+-------------------
+
+This procedure works in the same way as the definition of the 
+original right-split procedure given in the book, with the
+exception that it now allows users to determine how the windows
+are split.  
+
+
+(define (split splitterA splitterB)
+  (lambda (painter n)
+    (if (= n 0)
+	painter
+	(let ((smaller ((split splitterA splitterB)
+			painter (- n 1))))
+	  (splitterA painter (splitterB smaller smaller))))))
+
+(define new-right-split (split beside below))
+(define new-up-split (split below beside))
+
+
+
+Computer Exercise 9
+-------------------
+
+Answers will vary.  Below are some interesting patterns that the
+TAs have come up with.
+
+Example 1: Given two picture, the squarify painter will create a
+grid with the pictures placed in alternating positions.
+
+(define (horizontal-line painter1 painter2 number)
+  (if (= number 0)
+      (beside painter1 painter2)
+      (let ((half-line 
+	     (horizontal-line painter1 painter2 (- number 1))))
+	(beside half-line half-line))))
+
+(define (vertical-line painter1 painter2 number)
+  (if (= number 0)
+      (below painter1 painter2)
+      (let ((half-line 
+	     (vertical-line painter1 painter2 (- number 1))))
+	(below half-line half-line))))
+
+(define (squarify painter1 painter2 number)
+  (horizontal-line (vertical-line painter1 painter2 number)
+		   (vertical-line painter2 painter1 number)
+		   number))
+
+
+
+Example 2: A combination of up-split and right-split.
+
+(define (weird painter1 painter2)
+    (beside (up-split painter1 4)
+            (right-split painter2 4)))
+
+
+(define (combined-corner-split painter1 painter2 n)
+  (if (= n 0)
+      painter1
+      (let ((up1 (combined-up-split painter2 painter1 (- n 1)))
+	    (up2 (combined-up-split painter1 painter2 (- n 1)))
+	    (right1 (combined-right-split painter2 painter1 (- n 1)))
+	    (right2 (combined-right-split painter1 painter2 (- n 1))))
+	(let ((up (beside up1 up1))
+	      (right (below right1 right2))
+	      (corner (combined-corner-split painter2 painter1 (- n 1))))
+	  (below (beside painter1 right)
+		 (beside up corner))))))
+
+
+Example 3: An interesting variant of corner-split
+
+(define (switched painter1 painter2)
+  (below (beside painter1 painter2)
+	 (beside painter2 painter1)))
+
+(define (combined-up-split painter1 painter2 n)
+  (if (= n 0)
+      (beside painter1 painter2)
+      (let ((smaller1 (combined-up-split painter2 painter1 (- n 1)))
+	    (smaller2 (combined-up-split painter1 painter2 (- n 1))))
+      (below (beside painter1 painter2) (beside smaller1 smaller2)))))
+
+(define (combined-right-split painter1 painter2 n)
+  (if (= n 0)
+      (below painter1 painter2)
+      (let ((smaller1 (combined-right-split painter2 painter1 (- n 1)))
+	    (smaller2 (combined-right-split painter1 painter2 (- n 1))))
+	(beside (below painter1 painter2) (below smaller1 smaller2)))))
+
+(define (combined-corner-split painter1 painter2 n)
+  (if (= n 0)
+      painter1
+      (let ((up1 (combined-up-split painter2 painter1 (- n 1)))
+	    (up2 (combined-up-split painter1 painter2 (- n 1)))
+	    (right1 (combined-right-split painter2 painter1 (- n 1)))
+	    (right2 (combined-right-split painter1 painter2 (- n 1))))
+	(let ((up (beside up1 up1))
+	      (right (below right1 right2))
+	      (corner (combined-corner-split painter2 painter1 (- n 1))))
+	  (below (beside painter1 right)
+		 (beside up corner))))))
+
+
+
+Computer Exercise 10
+--------------------
+
+Again, answers will vary.  Here are some possible examples of
+higher order procedures.
+
+Example 1:
+
+(define (combined-split oper1 oper2)
+  (define (split-aux painter1 painter2 n)
+    (if (= n 0)
+	painter1
+	(let ((smaller1 (split-aux painter2 painter1 (- n 1)))
+	      (smaller2 (split-aux painter1 painter2 (- n 1))))
+	  (oper1 painter1 (oper2 smaller1 smaller1 n) n))))
+  
+  (lambda (painter1 painter2 n)
+    (split-aux painter1 painter2 n)))
+
+
+Example 2:
+
+(define (recursify painter base-pattern number)
+  (if (= 0 number)
+      (base-pattern painter)
+      (base-pattern (recursify painter base-pattern (- number 1)))))
+
+
+
+
+
+

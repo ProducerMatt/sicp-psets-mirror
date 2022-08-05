@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-solutions/node8.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:16 GMT -->
+<HEAD>
+<TITLE> Computer Exercise 5</TITLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" link="#8e0000" vlink="#0000FF" >
+
+<BODY>
+<meta name="description" value=" Computer Exercise 5">
+<meta name="keywords" value="solutions">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html93 HREF="node9.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.ai.mit.edu/latex2html/next_motif.gif"></A>   <A NAME=tex2html91 HREF="solutions.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.ai.mit.edu/latex2html/up_motif.gif"></A>   <A NAME=tex2html85 HREF="node7.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.ai.mit.edu/latex2html/previous_motif.gif"></A>         <BR>
+<B> Next:</B> <A NAME=tex2html94 HREF="node9.html"> Computer Exercise 6</A>
+<B>Up:</B> <A NAME=tex2html92 HREF="solutions.html">
+       Pset2 Solutions</A>
+<B> Previous:</B> <A NAME=tex2html86 HREF="node7.html"> Code</A>
+<BR> <HR> <P>
+<H1><A NAME=SECTION00050000000000000000> Computer Exercise 5</A></H1>
+<P>
+<PRE>(define (find-discrete-log y g p)
+  (define (internal-x-iter x)
+    (cond ((&gt; x (- p 2)) false)
+          ((= (modulo y p) (expmod g x p)) x)
+          (else
+	    (internal-x-iter (+ x 1)))))
+  (internal-x-iter 2))
+</PRE>
+<P>
+<b>Now let's crack a 4-digit code and see if we can 
+decrypt some sample messages:</b>
+<P>
+<PRE>(define cracked-key (crack-public-key pk-ex-5))
+;Value: cracked-key
+
+cracked-key
+;Value: (19079 362 107 6843)
+
+
+(decrypt (encrypt &quot;This is a test!!&quot; (key-system-&gt;public-key cracked-key))
+	 cracked-key)
+;Value: &quot;This is a test!!&quot;
+</PRE>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Tony Ezzat <BR>
+Mon Feb  9 20:47:53 EST 1998</I>
+</ADDRESS>
+</BODY>

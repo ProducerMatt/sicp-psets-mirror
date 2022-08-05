@@ -1,0 +1,8 @@
+https://groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ +ftp://ftp.ai.mit.edu/* -O srv/ -c128 -%c128 -%I
+File generated automatically on Sat, 06 Aug 2022 17:58:26, do NOT edit
+
+To update a mirror, just launch httrack without any parameters
+The existing cache will be used (and modified)
+To have other options, retype all parameters and launch HTTrack
+To continue an interrupted mirror, just launch httrack without any parameters
+

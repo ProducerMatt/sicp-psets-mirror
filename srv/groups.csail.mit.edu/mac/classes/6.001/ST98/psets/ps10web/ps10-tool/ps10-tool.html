@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/ps10-tool.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:00:23 GMT -->
+<HEAD>
+<TITLE>No Title</TITLE>
+<META NAME="description" CONTENT="No Title">
+<META NAME="keywords" CONTENT="ps10-tool">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps10-tool.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html7" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif">   <BR>
+<B> Next:</B> <A NAME="tex2html8" HREF="node1.html">1. Classesinstances, and </A>
+<BR> <P>
+<P>
+<center>
+MASSACHVSETTS INSTITVTE OF TECHNOLOGY <BR> 
+Department of Electrical Engineering and Computer Science <BR> 
+6.001--Structure and Interpretation of Computer Programs <BR> 
+Spring Semester, 1998 <BR> 
+<P>
+<B>Problem Set 10</B>
+</center>
+
+<P>
+<UL>
+<LI> Issued:  Tuesday, April 10, 1998
+<LI> Tutorial preparation - NOT! Due to the holiday on April 20 and
+21, there are no tutorials next week.
+<LI> Written solutions due: Friday, April 24 in recitation
+<LI> Reading: Study section 4.1 before starting on this assignment.
+Read chapter sections 4.2 and 4.3 before coming to lecture on April
+23.
+<LI> Code:  The following code (attached) should be studied as part
+      of this problem set:
+       <UL>
+<LI> <TT>tool.scm</TT>--the TOOL interpreter
+        </UL></UL>
+<P>
+<B>Languages for Object-oriented programming</B>
+
+<P>
+<P>
+<P>
+This problem set is probably the most difficult one of the semester,
+but paradoxically, the one that asks you to write the least amount of
+code, and for which you should have to spend the least time
+programming, <EM>provided that you prepare before you start</EM>.  In
+particular, you will need to gain a good mastery of the metacircular
+evaluator in section 4.1 of the notes--this material is critical, not
+only to this problem set, but to all of the material for the remainder
+of the semester.
+<P>
+This problem set has been designed so that the interpreter you will be
+dealing with is an extension of the metacircular evaluator.  The
+implementation below is described with reference to the programs in
+the book.  So in order to understand what is going on, it will be
+necessary to work through section 4.1 before starting on this
+assignment.
+<P>
+Instead of asking you to do a lot of implementation in this problem
+set, we are asking you to assume the role of language designer, and to
+think about and discuss some issues in the design of languages for
+object-oriented programming.  Note especially that there is a
+significant part of this problem set to be completed <EM>after</EM> you
+have finished with the programming assignment.
+<P>
+<P>
+<P>
+Although Object-Oriented programming has become very popular, the
+design of languages to support Object-Oriented programming is still an
+area of active research.  In this problem set, you will be dealing
+with issues that are not well-understood, and around which there are
+major disagreements among language designers.  The questions in this
+problem set will not ask you to supply ``right answers.''  Instead,
+they will ask you to make reasonable design choices, and to be able to
+defend these choices.  We hope you will appreciate that, once you have
+come to grips with the notion of an interpreter, you are in a position
+to address major issues in language design, even issues that are at
+the forefront of current research.<A NAME="tex2html1" HREF="footnode.html#380"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+We've already seen two different approaches to implementing generic
+operations.  One is <I>data-directed programming</I>, which relies on a
+table to dispatch based on the types of arguments.  The second method,
+<I>message-passing</I>, represents objects as procedures with local
+state.  As we saw in problem set 7, these objects can be arranged in
+complex <I>inheritance</I> relationships, such as ``a robot is a kind
+of person.''
+<P>
+One drawback with both of these approaches is that they make a
+distinction between generic operations and ordinary procedures, or
+between message-passing objects and ordinary data.  This makes it
+awkward, for example, to extend an ordinary procedure so that it also
+works as a generic operation on new types of data.  For instance, we
+might like to extend the addition operator <TT>+</TT> so that it can add
+two vectors, rather than having to define a separate <TT>vector-add</TT>
+procedure.
+<P>
+Object-oriented languages have attempted to integrate objects into the
+core of the language, rather than building an object system as an
+extension of a non-object language.  In these object-oriented
+languages, every data type (object) belongs to a class, and there
+aren't really stand-alone procedures--but rather methods that are
+shared by various classes.  This integrated approach was pioneered in
+the language <EM>Smalltalk</EM>, which was developed at Xerox PARC
+starting in 1971.  This is also the approach used in <EM>Java</EM>.
+<P>
+The language we will implement in this problem set is called <EM>MIT
+TOOL</EM> (Tiny Object Oriented Language).  It is most closely related to
+<EM>Dylan</EM>, a language developed at the at the (former) Apple
+Research Center in Cambridge.  Dylan received a lot of attention when
+it was introduced in 1991, but its fortunes have waned (along with
+Apple's).  MIT Tool is a very simplified version of Dylan, and it is
+designed to make the implementation an easy extension of the
+metacircular evaluator of chapter 4.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html9" HREF="node1.html#SECTION00010000000000000000">1. Classes, instances, and generic functions</A>
+<LI> <A NAME="tex2html10" HREF="node2.html#SECTION00020000000000000000">2. The TOOL Interpreter</A>
+<LI> <A NAME="tex2html11" HREF="node3.html#SECTION00030000000000000000">3. Programming assignment</A>
+<LI> <A NAME="tex2html12" HREF="node4.html#SECTION00040000000000000000">4. Multiple Superclasses: To do AFTER you are done programming</A>
+<LI> <A NAME="tex2html13" HREF="node5.html#SECTION00050000000000000000">  About this document ... </A>
+</UL>
+<HR><A NAME="tex2html7" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif">   <BR>
+<B> Next:</B> <A NAME="tex2html8" HREF="node1.html">1. Classesinstances, and </A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Apr 11 16:28:40 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/ps10-tool.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:00:30 GMT -->
+</HTML>

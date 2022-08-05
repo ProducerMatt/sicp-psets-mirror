@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:23 GMT -->
+<HEAD>
+<TITLE>4. Multiple Superclasses: To do AFTER you are done programming</TITLE>
+<META NAME="description" CONTENT="4. Multiple Superclasses: To do AFTER you are done programming">
+<META NAME="keywords" CONTENT="ps10-tool">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps10-tool.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html52" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html50" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html44" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html53" HREF="node5.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html51" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html45" HREF="node3.html">3. Programming assignment</A>
+<BR> <P>
+<H1><A NAME="SECTION00040000000000000000">4. Multiple Superclasses: To do AFTER you are done programming</A></H1>
+<P>
+This final question asks you to consider a tricky issue in language
+design.  We are not requiring you to actually implement your design.
+Nevertheless, we do expect you to think carefully about the issues
+involved and to give a careful description of the solution you come up
+with.  Don't think that this is a straightforward exercise--designers
+of object-oriented languages are still arguing about it.
+<P>
+The major way in which TOOL is simpler than other object-oriented
+languages is that each class has only <I>one</I> immediate superclass.
+As illustrated with message-passing systems (lecture on March 19),
+there are cases where it is convenient to have a class inherit
+behavior from more than one kind of class.<A NAME="tex2html6" HREF="footnode.html#386"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+This will involve some changes to TOOL.  As a start, the syntax for
+<TT>define-class</TT> must be modified to accept a list of superclasses
+rather than a single superclass.  Let's assume that <TT>define-class</TT>
+now takes a list of superclasses.  For instance, going back to our
+original example about cats, we might have:
+<P>
+<PRE>(define-class &lt;fancy-house-cat&gt; (&lt;house-cat&gt; &lt;show-cat&gt;))</PRE>
+
+<P>
+This new class should inherit from both <TT>&lt;house-cat&gt;</TT> and <TT>
+&lt;show-cat&gt;</TT>.  In general, when the new class is constructed, it should
+inherit methods and slots from <I>all</I> its superclasses (and their
+ancestors).
+<P>
+However, it's not obvious what inheritance should mean.  For example,
+suppose we have a generic function <TT>eat</TT> and we define methods as
+follows:
+<P>
+<PRE>(define-method eat ((c &lt;house-cat&gt;))
+   (print '(yum: I'm hungry)))
+
+(define-method eat ((c &lt;show-cat&gt;))
+   (print '(I eat only caviar)))</PRE>
+
+<P>
+What should happen when we ask a fancy-house-cat (which is
+both a show-cat and a house-cat) to eat?  More generally, what is the
+``most specific method'' that should be used when a generic function
+is applied to its arguments, given that some of the arguments may have
+multiple superclasses?  What are the new kinds of choices that arise?
+How should the language give the user the ability to control these
+choices?  (Or maybe it <I>shouldn't</I> give the user this level of
+control.)
+<P>
+<H4><A NAME="SECTION00040010000000000000">Post-computer exercise 6:</A></H4>
+ You are now a language designer.
+Your task is to design an extension to TOOL so that it handles
+classes with multiple superclasses.  Three of the issues you have to
+deal with are: (a) What should be the syntax for defining classes?
+(b) What slots does a class get when it is defined?  (c) How is a
+method chosen when a generic function is applied to its arguments?
+Prepare a design writeup that has three parts:
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps10&amp;key=computer-ex-06">
+Check the 6.001 discussion forum for computer-ex-06</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<OL>
+<LI> Write a clear 2-3 page description of your language extension.
+This description should be geared toward the <I>user</I> of the
+language.  It should include a simple, but realistic and non-trivial
+example of a program that involves multiple superclasses.  The
+example should illustrate how your language handles each of the
+three issues (a), (b), and (c).  You should also explain how the
+language deals with each of these issues in general.
+<LI> For each of design choices you illustrated in part 1, give an
+<I>alternative</I> choice you could have made, and explain briefly why
+you think your choice is better.  If you can't think of any other
+choice you might have made, then say so.
+<LI> As carefully as you can (but without actually writing any code)
+specify the procedure that the evaluator should follow in choosing
+which method to select when applying a generic function to a given
+set of arguments.  Your description should be clear enough so that
+someone could implement this procedure based upon your specification.
+<P>
+</OL><H4><A NAME="SECTION00040020000000000000">Optional extra credit</A></H4>
+  Implement your design for multiple
+superclasses in TOOL and demonstrate that it works.  The TOOL
+interpreter was designed to make this not too difficult, but it will
+involve a considerable number of small changes to the code and is
+likely to be time-consuming.
+<P>
+<HR><A NAME="tex2html52" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html50" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html44" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html53" HREF="node5.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html51" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html45" HREF="node3.html">3. Programming assignment</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Apr 11 16:28:40 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:23 GMT -->
+</HTML>

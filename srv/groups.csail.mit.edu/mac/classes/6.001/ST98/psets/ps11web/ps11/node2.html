@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps11web/ps11/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+<HEAD>
+<TITLE>Programming with AMB</TITLE>
+<META NAME="description" CONTENT="Programming with AMB">
+<META NAME="keywords" CONTENT="ps11">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps11.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html25" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html23" HREF="ps11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html17" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html26" HREF="node3.html">Understanding the Interpreter.</A>
+<B>Up:</B> <A NAME="tex2html24" HREF="ps11.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html18" HREF="node1.html">Nondeterministic Computing</A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">Programming with AMB</A></H1>
+<P>
+In this problem set we will be using a search evaluator written in
+Scheme.  The file <TT>ambeval.scm</TT> contains an interpreter for
+AMBScheme--Scheme augmented with <TT>amb</TT>.  The interpreter is a
+procedure-tree interpreter, that separates analysis from execution.
+It has the same basic structure as the one in SICP section 4.1.7, but
+there are major differences.  The AMBScheme evaluator is explained in
+section 4.3.
+<P>
+The user interface (ha!) to the AMBScheme system is pretty crude.  To
+initialize the evaluator use the incantation <TT>(define
+the-global-environment (setup-environment))</TT>.  If you then type <TT>
+(driver-loop)</TT>, you will find yourself typing at the driver loop.
+Please note that AMBScheme running in Scheme has no error system of
+its own.  If you hit an error or if you interrupt your program, you
+will bounce back into Scheme.
+<P>
+The driver loop uses the prompt <TT>;;; Amb-Eval input:</TT> instead of the
+ordinary Scheme prompt.
+<P>
+Start up the interpreter and try a few simple expressions.  If you
+bounce out into Scheme, you should quit out of the error and re-enter
+the interpreter by typing <TT>(driver-loop)</TT>.  If you get hopelessly
+fouled up, you can reinitialize your global environment, but you will
+lose any definitions you have made.
+<P>
+Loading problem set 11 will get a working evaluator loaded.  If you
+start the AMBScheme evaluator and then load up the example program,
+<TT>puzz.scm</TT>, using <TT>ambload</TT>, you should obtain the following
+behavior:
+<P>
+<PRE>(ambload &quot;puzz.scm&quot;)
+;Value: done
+
+(driver-loop)
+
+;;; Amb-Eval input:
+(multiple-dwelling)
+;;; Starting a new problem 
+;;; Amb-Eval value:
+((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1))
+
+;;; Amb-Eval input:
+try-again
+;;; There are no more values of
+(multiple-dwelling)
+
+;;; Amb-Eval input:</PRE>
+<P>
+When doing the programming problems for code to be executed by the AMB
+evaluator, a good strategy is to edit the file <TT>puzz.scm</TT>, adding
+your new code.  You can then reload the file and restart the evaluator
+to do your tests.
+<P>
+Warning: Searching can take a long time. We could have made things
+much faster by compiling the AMB evaluator, but we left it uncompiled
+to faciliate error checking.  Depending on the speed of your
+computer, the multiple-dwelling example above could take a miniute or
+two to produce an answer.
+<P>
+<H4><A NAME="SECTION00020010000000000000">Computer Exercise 1.</A></H4>
+ (Exercise 4.38 on p.419)
+Run the program to get the result shown above.  Then, prepare a
+modified version that relaxes the requirement that Smith does not live
+on a floor adjacent to Fletcher's.  Run your modified program.  Is the
+solution still unique?  If not, how many solutions are now possible?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps11&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020020000000000000">Computer Exercise 2a.</A></H4>
+ (Exercise 4.39 on p.419)
+Does the order of the restrictions affect the
+answer? the time to find an answer?  If you think it matters,
+demonstrate a faster program obtained from the given one by reordering
+the restrictions.  If you think it does not matter, argue your case.
+<P>
+<H4><A NAME="SECTION00020030000000000000">Computer Exercise 2b.</A></H4>
+ (Exercise 4.40 on p.419)
+Write and demonstrate a very efficient search procedure for this
+problem based upon only generating those possibilities that are not
+already ruled out by previous filtrations.  Hint: This will require a
+nest of <TT>let</TT> expressions.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps11&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020040000000000000">Computer Exercise 3.</A></H4>
+ Do Exercise 4.43 (p.420)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps11&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html25" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html23" HREF="ps11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html17" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html26" HREF="node3.html">Understanding the Interpreter.</A>
+<B>Up:</B> <A NAME="tex2html24" HREF="ps11.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html18" HREF="node1.html">Nondeterministic Computing</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Apr 18 20:50:01 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps11web/ps11/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+</HTML>

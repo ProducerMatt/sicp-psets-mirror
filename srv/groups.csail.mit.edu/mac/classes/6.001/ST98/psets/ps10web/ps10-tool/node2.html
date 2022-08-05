@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+<HEAD>
+<TITLE>2. The TOOL Interpreter</TITLE>
+<META NAME="description" CONTENT="2. The TOOL Interpreter">
+<META NAME="keywords" CONTENT="ps10-tool">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps10-tool.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html32" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html30" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html24" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html33" HREF="node3.html">3. Programming assignment</A>
+<B>Up:</B> <A NAME="tex2html31" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html25" HREF="node1.html">1. Classesinstances, and </A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. The TOOL Interpreter</A></H1>
+<P>
+A complete listing of the TOOL interpreter is appended to this problem
+set.  This section leads you through the most important parts,
+describing how they differ from the Scheme evaluator in section 4.1.
+<P>
+<H3><A NAME="SECTION00020100000000000000">EVAL and APPLY</A></H3>
+<P>
+We've named the eval procedure <TT>tool-eval</TT> so as not to confuse it
+with Scheme's ordinary <TT>eval</TT>.  The only difference between <TT>
+tool-eval</TT> and the <TT>eval</TT> in chapter 4 are the new cases added to
+handle the new special forms: <TT>define-generic-function</TT>, <TT>
+define-method</TT>, <TT>define-class</TT>, and <TT>make</TT>.  Each clause dispatches
+to the appropriate handler for that form.  Note that we have deleted
+<TT>lambda</TT>; all TOOL functions are defined with <TT>
+define-generic-function</TT>.<A NAME="tex2html4" HREF="footnode.html#381"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+<PRE>(define (tool-eval exp env)
+  (cond ((self-evaluating? exp) exp)
+        ((variable? exp) (lookup-variable-value exp env))
+        ((quoted? exp) (text-of-quotation exp))
+        ((assignment? exp) (eval-assignment exp env))
+        ((definition? exp) (eval-definition exp env))
+        ((if? exp) (eval-if exp env))
+        ;;we've omitted lambda
+        ;;((lambda? exp) 
+        ;;   (make-procedure (lambda-parameters exp) (lambda-body exp) env))
+        ((generic-function-definition? exp)
+         (eval-generic-function-definition exp env)) 
+        ((method-definition? exp) (eval-define-method exp env))
+        ((class-definition? exp) (eval-define-class exp env))
+        ((instance-creation? exp) (eval-make exp env))
+
+        ((begin? exp) 
+         (eval-sequence (begin-actions exp) env))
+        ((cond? exp) (tool-eval (cond-&gt;if exp) env))
+        ((application? exp)
+         (tool-apply (tool-eval (operator exp) env)
+                (list-of-values (operands exp) env)))
+        (else (error &quot;Unknown expression type -- EVAL &gt;&gt; &quot; exp))))</PRE>
+
+<P>
+<TT>Apply</TT> also gets an extra clause that dispatches to a
+procedure that handles applications of generic functions.
+<P>
+<PRE>(define (tool-apply procedure arguments)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure procedure arguments))
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
+          (extend-environment (procedure-parameters procedure)
+                              arguments
+                              (procedure-environment procedure))))
+        ((generic-function? procedure)
+         (apply-generic-function procedure arguments))
+        (else (error &quot;Unknown procedure type -- APPLY&quot;))))</PRE>
+
+<P>
+<H3><A NAME="SECTION00020200000000000000">New data structures</A></H3>
+<P>
+A <I>class</I> is represented by a data structure that contains the
+class name, a list of slots for that class, and a list of all the
+ancestors of the class.  For instance, in our cat example above, we
+would have a class with the name <TT>&lt;house-cat&gt;</TT>, slots <TT>
+(address size breed)</TT>, and superclasses <TT>(&lt;cat&gt; &lt;object&gt;)</TT>.  Note
+that the slot names include <I>all</I> the slots for that class (i.e.,
+including the slots for the superclass).  Similarly, the list of
+ancestors of a class includes the superclass and all of its ancestors.
+<P>
+A <I>generic function</I> is a data structure that contains the name of
+the function and a list of the methods defined for that function.
+Each method is a pair--the specializers and the resulting procedure
+to use.  The specializers are a list of classes to which the arguments
+must belong in order for the method to be applicable.  The procedure
+is represented as an ordinary Scheme procedure.
+<P>
+An <I>instance</I> is a structure that contains the class of the instance and
+the list of values for the slots.
+<P>
+See the attached code for details of the selectors and constructors
+for these data structures.
+<P>
+<H2><A NAME="SECTION00021000000000000000">Defining generic functions and methods</A></H2>
+<P>
+The special form
+<TT>(define-generic-function <I>name</I>)</TT>
+is handled by the following procedure:
+<P>
+<PRE>(define (eval-generic-function-definition exp env)
+  (let ((name (generic-function-definition-name exp)))
+    (let ((val (make-generic-function name)))
+      (define-variable! name val env)
+      (list 'defined 'generic 'function: name))))</PRE>
+
+<P>
+This procedure extracts the <I>name</I> portion of the expression and
+calls <TT>make-generic-function</TT> to create a new generic function.
+Then it binds <I>name</I> to the new generic function in the given
+environment.  The value returned is a message to the user, which will
+be printed by the read-eval-print loop.
+<P>
+<TT>Eval-define-method</TT> handles the special form
+<TT>(define-method <I>generic-function</I> (<I>params-and-classes</I>) . <I>body</I>)</TT>
+<P>
+For example
+<P>
+<PRE>(define-method say ((cat &lt;cat&gt;) (stuff &lt;number&gt;))
+          (newline)
+          (print '(cats never discuss numbers))
+          'done)</PRE>
+
+<P>
+In general here, <I>generic-function</I> is the generic function to
+which the method will be added, <I>params-and-classes</I> is a list of
+parameters for this method and the classes to which they must belong,
+and <I>body</I> is a procedure body, just as for an ordinary Scheme
+procedure.<A NAME="tex2html5" HREF="footnode.html#246"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A> The syntax procedures for this form include
+appropriate procedures to select out these pieces (see the code).
+<P>
+<TT>Eval-define-method</TT> first finds the generic function.  Notice
+that the <I>generic-function</I> piece of the expression must be
+evaluated to obtain the actual generic function.  <TT>
+Eval-define-method</TT> disassembles the list of <I>params-and-classes</I>
+into separate lists of parameters and classes.  The parameters, the
+<I>body</I>, and the environment are combined to form a procedure, just
+as in Scheme.  The classes become the specializers for this method.
+Finally, the method is installed into the generic function.
+<P>
+<PRE>(define (eval-define-method exp env)
+  (let ((gf (tool-eval (method-definition-generic-function exp) env)))
+    (if (not (generic-function? gf))
+        (error &quot;Unrecognized generic function -- DEFINE-METHOD &gt;&gt; &quot;
+               (method-definition-generic-function exp))
+        (let ((params (method-definition-parameters exp)))
+          (install-method-in-generic-function
+           gf
+           (map (lambda (p) (paramlist-element-class p env))
+                params)
+           (make-procedure (map paramlist-element-name params)
+                           (method-definition-body exp)
+                           env))
+          (list 'added 'method 'to 'generic 'function:
+                (generic-function-name gf))))))</PRE>
+
+<P>
+<H2><A NAME="SECTION00022000000000000000">Defining classes and instances</A></H2>
+<P>
+The special form
+<TT>
+(define-class <I>name</I> <I>superclass</I> . <I>slots</I>)
+</TT>
+is handled by
+<P>
+<PRE>(define (eval-define-class exp env)
+  (let ((superclass (tool-eval (class-definition-superclass exp)
+                               env)))
+    (if (not (class? superclass))
+        (error &quot;Unrecognized superclass -- MAKE-CLASS &gt;&gt; &quot;
+               (class-definition-superclass exp))
+        (let ((name (class-definition-name exp))
+              (all-slots (collect-slots
+                          (class-definition-slot-names exp)
+                          superclass)))
+          (let ((new-class
+                 (make-class name superclass all-slots)))
+            (define-variable! name new-class env)
+            (list 'defined 'class: name))))))</PRE>
+
+<P>
+The only tricky part here is that we have to collect all the slots from
+all the ancestor classes to combine with the slots declared for this
+particular class.  This is accomplished by the procedure <TT>
+collect-slots</TT> (see the code).
+<P>
+The final special form
+<TT>(make <I>class</I> <I>slot-names-and-values</I>)</TT>
+is handled by the procedure <TT>eval-make</TT>.  This
+constructs an instance for the specified class, with the designated slot
+values.  See the attached code for details.
+<P>
+<P>
+<B>REST STOP</B><BR> 
+<B>This is a lot to absorb, isn't it?</B>
+
+<P>
+<P>
+<H2><A NAME="SECTION00023000000000000000">Applying generic functions</A></H2>
+<P>
+Here is where the fun starts, and what all the preceding machinery was
+for.  When we apply a generic function to some arguments, we first
+find all the methods that are applicable, given the classes of the
+arguments.  This gives us a list of methods, of which we will use the
+first one.  (We'll see why the first one in a minute.)  We extract the
+procedure for that method and apply that procedure to the arguments.
+Note the subtle recursion here: <TT>apply-generic-function</TT> (below)
+calls <TT>tool-apply</TT> with the procedure part of the method.
+<P>
+<PRE>(define (apply-generic-function generic-function arguments)
+  (let ((methods (compute-applicable-methods-using-classes
+                  generic-function
+                  (map class-of arguments)))) 
+    (if (null? methods)
+        (error &quot;No method found -- APPLY-GENERIC-FUNCTION&quot;)
+        (tool-apply (method-procedure (car methods)) arguments))))</PRE>
+
+<P>
+To compute the list of ``applicable methods'' we first find all
+methods for that generic function that can be applied, given the list
+of classes for the arguments.  We then sort these according to an
+ordering called <TT>method-more-specific</TT>.  The idea is that the
+first method in the sorted list will be the most specific one, which
+is the the best method to apply for those arguments.
+<P>
+<PRE>(define (compute-applicable-methods-using-classes generic-function classes)
+  (sort
+   (filter
+    (lambda (method)
+      (method-applies-to-classes? method classes))
+    (generic-function-methods generic-function))
+   method-more-specific?))</PRE>
+
+<P>
+To test if a method is applicable, given a list of classes of the
+supplied arguments, we examine the method specializers and see
+whether, for each supplied argument, the class of the argument is a
+subclass of the class required by the specializer:
+<P>
+<PRE>(define (method-applies-to-classes? method classes)
+  (define (check-classes supplied required)
+    (cond ((and (null? supplied) (null? required)) true)
+          ;;something left over, so number of arguments does not match
+          ((or (null? supplied) (null? required)) false)
+          ((subclass? (car supplied) (car required))
+           (check-classes (cdr supplied) (cdr required)))
+          (else false)
+          ))
+    (check-classes classes (method-specializers method)))</PRE>
+
+<P>
+To determine subclasses, we use the class ancestor list: <TT>class1</TT>
+is a subclass of <TT>class2</TT> if <TT>class2</TT> is a member of the class
+ancestor list of <TT>class1</TT>:
+<P>
+<PRE>(define (subclass? class1 class2)
+  (or (eq? class1 class2)
+      (memq class2 (class-ancestors class1))))</PRE>
+
+<P>
+Finally, we need a way to compare two methods to see which one is
+``more specific.''  We do this by looking at the method specializers.
+<TT>Method1</TT> is considered to be more specific than <TT>method2</TT> if,
+for each class in the list of specializers, the class for <TT>
+method1</TT> is a subclass of the class for <TT>method2</TT>.  (See the
+procedure <TT>method-more-specific?</TT> in the attached code.)
+<P>
+<H2><A NAME="SECTION00024000000000000000">Classes for Scheme data</A></H2>
+<P>
+TOOL is arranged so that ordinary Scheme data objects--numbers,
+symbols, and so on--appear as TOOL objects.  For example, any number
+is an instance of a predefined class called <TT>&lt;number&gt;</TT>, which is
+a class with no slots, whose superclass is <TT>&lt;object&gt;</TT>.  The TOOL
+interpreter accomplishes this by having a special set of classes,
+called <TT>scheme-object-classes</TT>.  If a TOOL object is not an
+ordinary instance (i.e., an instance data structure as described
+above), the interpreter checks whether it belongs to one of the
+Scheme object classes by applying an appropriate test.  For example,
+anything that satisfies the Scheme predicate <TT>number?</TT> is considered to
+be an instance of <TT>&lt;number&gt;</TT>.  See the code for details.
+<P>
+<H2><A NAME="SECTION00025000000000000000">Initial environment and driver loop</A></H2>
+<P>
+When the interpreter is initialized, it builds a global environment
+that has bindings for <TT>true</TT>, <TT>false</TT>, <TT>nil</TT>, the
+pre-defined classes, and the initial set of generic functions listed
+at the end of section 1.  The driver loop is essentially the same as
+the <TT>driver-loop</TT> procedure in chapter 4 of the book.  One cute
+difference is that this driver loop prints values using the TOOL
+generic function <TT>print</TT>.  By defining new methods for <TT>
+print</TT>, you can change the way the interpreter prints data objects.
+<P>
+<HR><A NAME="tex2html32" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html30" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html24" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html33" HREF="node3.html">3. Programming assignment</A>
+<B>Up:</B> <A NAME="tex2html31" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html25" HREF="node1.html">1. Classesinstances, and </A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Apr 11 16:28:40 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+</HTML>

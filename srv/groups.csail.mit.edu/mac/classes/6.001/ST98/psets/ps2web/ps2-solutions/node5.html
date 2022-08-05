@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-solutions/node5.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:07 GMT -->
+<HEAD>
+<TITLE> Defining the Recursion</TITLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" link="#8e0000" vlink="#0000FF" >
+
+<BODY>
+<meta name="description" value=" Defining the Recursion">
+<meta name="keywords" value="solutions">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html65 HREF="node6.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.ai.mit.edu/latex2html/next_motif.gif"></A>   <A NAME=tex2html63 HREF="node4.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.ai.mit.edu/latex2html/up_motif.gif"></A>   <A NAME=tex2html57 HREF="node4.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.ai.mit.edu/latex2html/previous_motif.gif"></A>         <BR>
+<B> Next:</B> <A NAME=tex2html66 HREF="node6.html"> Base Case</A>
+<B>Up:</B> <A NAME=tex2html64 HREF="node4.html"> Computer Exercise 4</A>
+<B> Previous:</B> <A NAME=tex2html58 HREF="node4.html"> Computer Exercise 4</A>
+<BR> <HR> <P>
+<H2><A NAME=SECTION00041000000000000000> Defining the Recursion</A></H2>
+<P>
+The problem set text suggests solving the equation
+<P><A NAME=main>&#160;</A><IMG  ALIGN=BOTTOM ALT="" SRC="img2.gif"><P>
+<P>
+by recursively solving the equation
+<P><A NAME=recurse>&#160;</A><IMG  ALIGN=BOTTOM ALT="" SRC="img3.gif"><P>
+<P>
+but what is the relation between both?
+<P>
+The relation is given by the equation
+<P>
+<P><IMG  ALIGN=BOTTOM ALT="" SRC="img4.gif"><P>
+<P>
+which if we substitute into equation <A HREF="node5.html#main">1</A> will
+give us
+<P>
+<P><A NAME=substitute>&#160;</A><IMG  ALIGN=BOTTOM ALT="" SRC="img5.gif"><P>
+<P>
+Gathering all the terms involving b together, and all those
+involving r together, <BR> we can re-write Equation <A HREF="node5.html#substitute">4</A>
+to look like
+<P>
+<P><A NAME=rewrite>&#160;</A><IMG  ALIGN=BOTTOM ALT="" SRC="img6.gif"><P>
+<P>
+Comparing Equations <A HREF="node5.html#rewrite">5</A> and <A HREF="node5.html#recurse">2</A>, we can see
+that we can equate
+<P>
+<P><A NAME=reverse>&#160;</A><IMG  ALIGN=BOTTOM ALT="" SRC="img7.gif"><P>
+<P>
+But the problem suggests we first solve Equation <A HREF="node5.html#recurse">2</A>
+and use its solutions <BR> 
+to solve <A HREF="node5.html#main">1</A>, so we need to re-write Equation <A HREF="node5.html#reverse">6</A>
+to yield
+<P>
+<P><A NAME=final>&#160;</A><IMG  ALIGN=BOTTOM ALT="" SRC="img8.gif"><P>
+<P>
+That's all we need. Recursively solving Equation <A HREF="node5.html#recurse">2</A>
+will give us values for <IMG  ALIGN=BOTTOM ALT="" SRC="img9.gif"> and <IMG  ALIGN=MIDDLE ALT="" SRC="img10.gif">, <BR> 
+which we will plug into Equation <A HREF="node5.html#final">7</A> (with our current 
+value for the quotient <b>q</b>) <BR> 
+to produce the solution to the main equation <A HREF="node5.html#main">1</A>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Tony Ezzat <BR>
+Mon Feb  9 20:47:53 EST 1998</I>
+</ADDRESS>
+</BODY>

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-solutions/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:06 GMT -->
+<HEAD>
+<TITLE> Computer Exercise 2</TITLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" link="#8e0000" vlink="#0000FF" >
+
+<BODY>
+<meta name="description" value=" Computer Exercise 2">
+<meta name="keywords" value="solutions">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html32 HREF="node3.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.ai.mit.edu/latex2html/next_motif.gif"></A>   <A NAME=tex2html30 HREF="solutions.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.ai.mit.edu/latex2html/up_motif.gif"></A>   <A NAME=tex2html24 HREF="node1.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.ai.mit.edu/latex2html/previous_motif.gif"></A>         <BR>
+<B> Next:</B> <A NAME=tex2html33 HREF="node3.html"> Computer Exercise 3</A>
+<B>Up:</B> <A NAME=tex2html31 HREF="solutions.html">
+      Pset2 Solutions </A>
+<B> Previous:</B> <A NAME=tex2html25 HREF="node1.html"> Computer Exercise 1</A>
+<BR> <HR> <P>
+<H1><A NAME=SECTION00020000000000000000> Computer Exercise 2</A></H1>
+<P>
+
+<PRE>(define (choose-safe-prime digits)
+  (let ((q (choose-prime digits)))
+    (let ((p (+ (* 2 q) 1)))
+      (if (fast-prime? p 2) 
+          p
+          (choose-safe-prime digits)))))
+
+(define (find-generator safe-prime)
+  (let ((g (choose-random safe-prime))
+	(q (/ (- safe-prime 1) 2)))
+    (if (and (not (= 1 (expmod g 2 safe-prime)))
+             (not (= 1 (expmod g q safe-prime))))
+        g
+        (find-generator safe-prime))))
+
+(define p (choose-safe-prime 5))
+;Value: &quot;p --&gt; 169259&quot;
+
+(define g (find-generator p))
+;Value: &quot;g --&gt; 76223&quot;
+</PRE>
+
+<P>
+<b>Now let's test to see if we can encrypt and decrypt
+using our key system:</b>
+<P>
+<PRE>(define my-ks (generate-key-system 5))
+;Value: my-ks
+
+my-ks
+;Value: (98207 35168 39782 47741)
+
+(define encrypted-message 
+  (encrypt &quot;Chumbawumba!&quot; (key-system-&gt;public-key my-ks)))
+;Value: encrypted-message
+
+(decrypt encrypted-message my-ks)
+;Value: &quot;Chumbawumba!&quot;
+</PRE>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Tony Ezzat <BR>
+Mon Feb  9 20:47:53 EST 1998</I>
+</ADDRESS>
+</BODY>

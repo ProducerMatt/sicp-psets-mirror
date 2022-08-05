@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps12web/ps12-reg/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+<HEAD>
+<TITLE>Tutorial Preparation</TITLE>
+<META NAME="description" CONTENT="Tutorial Preparation">
+<META NAME="keywords" CONTENT="ps12-reg">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps12-reg.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html17" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html15" HREF="ps12-reg.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html9" HREF="ps12-reg.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html18" HREF="node2.html">To do in lab</A>
+<B>Up:</B> <A NAME="tex2html16" HREF="ps12-reg.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html10" HREF="ps12-reg.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">Tutorial Preparation</A></H1>
+<P>
+The following exercises should be prepared for discussion in tutorial.
+<P>
+<H4><A NAME="SECTION00010010000000000000">Tutorial Exercise 1</A></H4>
+<P>
+Define, in Scheme, two different procedures that compute the minimum
+of the absolute values of a non-empty list of numbers.  For example,
+<TT>(minabs (list 5 2 -3))</TT> evaluates to 2; <TT>(minabs (list -1 0
+-3 -7))</TT> evaluates to 0.  You should make sure you define everything
+in terms of the available primitives.  For each of your procedures,
+say what order of growth in time (number of machine operations) and
+space (stack depth) you expect them to use.  Pick your two procedures
+to have different orders of growth in space (i.e. iterative
+vs. recursive).
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps12&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00010020000000000000">Tutorial exercise 2</A></H4>
+<P>
+Implement each of your procedures from exercise 1 as a register
+machine, and show both the data paths and controllers for each
+machine.  For the data paths, a diagram is needed; for the
+controllers, a textual description in the manner of Chapter 5 is
+adequate.
+<P>
+When implementing register machines, you should observe the following
+caveats:
+<P>
+<UL>
+<LI> Every instruction is one of the following types: <TT>assign</TT>,
+<TT>branch</TT>, <TT>goto</TT>, <TT>save</TT>, <TT>restore</TT>.  You should not
+need to use <TT>perform</TT>.
+<LI> The only values that can be assigned to registers or tested in
+branches are constants, fetches from registers, or primitive
+operations applied to fetches from registers. No nested operations are
+permitted.  </UL>
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps12&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html17" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html15" HREF="ps12-reg.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html9" HREF="ps12-reg.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html18" HREF="node2.html">To do in lab</A>
+<B>Up:</B> <A NAME="tex2html16" HREF="ps12-reg.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html10" HREF="ps12-reg.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Mon Apr 27 14:24:27 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps12web/ps12-reg/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+</HTML>

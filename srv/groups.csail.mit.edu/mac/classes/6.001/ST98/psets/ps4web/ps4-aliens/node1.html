@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps4web/ps4-aliens/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:33 GMT -->
+<HEAD>
+<TITLE>1. Representing housing preferences</TITLE>
+<META NAME="description" CONTENT="1. Representing housing preferences">
+<META NAME="keywords" CONTENT="ps4-aliens">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps4-aliens.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html17" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html15" HREF="ps4-aliens.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html9" HREF="ps4-aliens.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html18" HREF="node2.html">2. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html16" HREF="ps4-aliens.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html10" HREF="ps4-aliens.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">1. Representing housing preferences</A></H1>
+<P>
+Each incoming freshthing has preferences for his/her/its living space.
+For example, the atmosphere should have the correct composition and
+the temperature range should be correct.  There are other kinds of
+preferences, such as the desirable spectral range of electromagnetic
+radiation in which the freshthing sees, and the diurnal phase that is
+appropriate for its work or study.
+<P>
+Some kinds of preferences are more important than others.  For example,
+having a roommate who prefers to be awake when you are asleep is merely
+annoying, but having to room with someone who breathes an atmosphere
+that is poisonous to you would be rather more problematic.  We will
+therefore organize the preferences into categories and specify an
+order of importance to the categories.  Every freshthing will pick
+housing preferences in each category.  The categories, in order of
+importance, and the initial possible choices are:
+<P>
+<UL>
+<LI> <B>Atmosphere:</B> methane, oxygen, sulfur, ethanol, etc.
+<LI> <B>Temperature:</B> 350K-370K, 290K-300K, 260K-270K, etc.
+<LI> <B>Spectrum:</B> infrared, visible, ultraviolet, etc.
+<LI> <B>Cycle:</B> day, night, random, etc.
+<P>
+</UL>
+<P>
+When a new freshthing interacts with the Housing Office, he/she/it
+indicates preferences for items in this list.  A freshthing may list
+as many preferences as it wishes, but it may not list a preference in
+a category without listing preferences in all the categories that are
+more important.  For example, it might list <EM>(methane, 260K-270K,
+infrared, random)</EM>, or <EM>(oxygen, 290K-300K, visible)</EM>, or <EM>
+(sulfur, 350K-370K, ultraviolet)</EM>.  But it may not list <EM>(sulfur,
+ultraviolet)</EM>, because that skips temperature, which is more important
+than spectrum.
+<P>
+Our goal is to implement a system that will take all the preferences
+from the incoming class, group together those students with similar
+needs, then use the results to figure out which students to group
+together and how much reconstruction of Random Hall will be required
+to convert rooms to the appropriate environments.
+<P>
+In order to keep track of the preferences, we will use a data
+structure called an <EM>association table</EM>.  Such a table associates
+a sequence of keys with a list of values.  In our application, the
+sequence of keys will be the preferences specified, and the
+list of values will the the list of freshthings who specified exactly
+those preferences.
+<P>
+We can regard such a table as a tree, as shown in
+figure&nbsp;<A HREF="node1.html#figtree">1</A>.  Each node of the tree (indicated by black dots
+in the figure) designates a list of values (indicated by boxes in the
+figure).  The key sequence to access any of the lists of values in the
+tree are the labels on the edges of the tree as we move from the root
+to the appropriate node.
+<P>
+For example, in figure&nbsp;<A HREF="node1.html#figtree">1</A>, if we follow the sequence of
+keys (<EM>methane</EM>, <EM>260K-270K</EM>), we find that the freshthing
+named Hexapod4 requires a methane atmosphere and a temperature range
+of of 260K-270K.  If we extend the key sequence to be (<EM>methane</EM>,
+p<EM>260K-270K</EM>, <EM>infrared</EM>), there is no freshthing who has
+exactly that set of preferences (as represented by the empty box). But
+if we extend the sequence further to be (<EM>methane</EM>, <EM>
+260K-270K</EM>, <EM>infrared</EM>, <EM>random</EM>), we find that these are the
+preferences for Hexapod1 and Hexapod2.  Similarly, we can examine the
+branch for freshthings who require a sulfur atmosphere, or oxygen, or
+ethanol.  Note the empty box at the top of the tree, which signifies
+that there are no freshthings who have expressed no preferences
+(although expressing no preferences would be an OK thing to do).
+<P>
+<P><A NAME="156">&#160;</A><A NAME="figtree">&#160;</A><IMG WIDTH=526 HEIGHT=405 ALIGN=BOTTOM ALT="figure154" SRC="img2.gif"><BR>
+<STRONG>Figure 1:</STRONG> Freshthing housing preferences, viewed as a tree structure<BR>
+<P>
+<P>
+We will represent tables using list structure.  A table is a list
+whose first element is the list of values at the node at the top of
+the table and whose remaining elements are the branches emanating from
+that node.  To make an empty table, we use empty lists for the keys
+and the branches:
+<P>
+
+<PRE>(define (make-table values list-of-branches)
+  (cons values list-of-branches))
+
+(define table-values car)
+(define table-branches cdr)
+
+(define (make-empty-table)
+  (make-table '() '()))</PRE>
+<P>
+A branch is a pair consisting of a key (the label on the branch) and a
+subtable (the node that the branch connects to):
+<P>
+
+<PRE>(define (make-branch key subtable)
+  (cons key subtable))
+
+(define branch-key car)
+(define branch-subtable cdr)</PRE>
+<P>
+The essential building block in our system is a method for adding
+a new value to a table, associating it with a specified sequence of keys:
+
+<PRE>(define (add-to-table val table keys)
+  (if (null? keys)          
+      ;; keys ran out so insert new value here.
+      (make-table (cons val (table-values table))
+                  (table-branches table))
+      ;; more keys to go, so descend deeper into tree.
+      (make-table (table-values table)  
+                  (insert-in-branches val 
+                                     (table-branches table) 
+                                     keys))))</PRE>
+<P>
+The subprocedure <TT>insert-in-branches</TT> checks the list of branches
+to find the one with the right key (i.e., the first key in the
+sequence), and adds the value to the structure for that branch:
+<P>
+
+<PRE>;; Assumes there is at least one key
+;; Search the branches looking for a match on the first key.
+;; Return the new list of branches with the appropriate subtable augmented. 
+(define (insert-in-branches val branches keys)
+  (cond ((null? branches)
+         ;; Make a new list with one new branch.
+         (list
+          (make-branch (car keys) 
+                       (add-to-table val
+                                     (make-empty-table)
+                                     (cdr keys)))))
+        ((eq? (car keys) (branch-key (car branches)))
+         ;; found the right branch to augment: Add the value to
+         ;; the subtable for that branch
+         (cons
+          (make-branch (branch-key (car branches))
+                       (add-to-table val
+                                     (branch-subtable (car branches))
+                                     (cdr keys)))
+          (cdr branches)))
+        (else (cons (car branches)
+                    (insert-in-branches val (cdr branches) keys)))))</PRE>
+<P>
+Notice the (tricky!) intertwined recursive structure here: <TT>
+add-to-table</TT> calls <TT>insert-in-branches</TT> to insert the element
+into the appropriate branch; <TT>insert-in-branches</TT> calls <TT>
+add-to-table</TT> to insert the element into the subtable for the
+appropriate branch.
+<P>
+The following procedure begins with a list of freshthings and their
+preferences (assumed in correct order and not skipping any) and builds
+up an association table, installing the freshthings one by one:
+<P>
+
+<PRE>(define (install table things)
+  ;; things is a list of freshthings
+  ;; each is a list of name and a list of attributes
+  (cond ((null? things)
+         table)
+        (else
+         (install (add-to-table (car (car things))
+                                table
+                                (cadr (car things)))
+                  (cdr things)))))</PRE>
+<P>
+For example, our initial galactic entering class of 1998 might be:
+<P>
+
+<PRE>(define entering-class
+  (install (make-empty-table)
+           '((hexapod1 (methane 260K-270K infrared random))
+             (hexapod2 (methane 260K-270K infrared random))
+             (hexapod3 (methane 260K-270K infrared night))
+             (hexapod4 (methane 260K-270K))
+             (amoeboid1 (sulfur 350K-370K))
+             (amoeboid2 (sulfur 350K-370K ultraviolet random))
+             (amoeboid3 (sulfur 350K-370K ultraviolet random))
+             (amoeboid4 (sulfur 350K-370K visible day))
+             (gnork (ethanol 290K-300K))
+             (gnorkette (ethanol 290K-300K ultraviolet))
+             (snork (ethanol 290k-300k))
+             (tork (ethanol 260K-270K))
+             (bork (ethanol 260K-270K))
+             (fred (oxygen 290K-300K visible))
+             (mary (oxygen 290K-300K visible day))
+             (mike (oxygen 290K-300K)))))</PRE>
+<P>
+The resulting structure, printed as a list is:
+
+<PRE>(()
+ (methane ()
+          (260k-270k (hexapod4)
+                     (infrared ()
+                               (random (hexapod2 hexapod1))
+                               (night (hexapod3)))))
+ (sulfur ()
+         (350k-370k (amoeboid1)
+                    (ultraviolet ()
+                                 (random (amoeboid3 amoeboid2)))
+                    (visible ()
+                             (day (amoeboid4)))))
+ (ethanol ()
+          (290k-300k (snork gnork)
+                     (ultraviolet (gnorkette)))
+          (260k-270k (bork tork)))
+ (oxygen ()
+         (290k-300k (mike)
+                    (visible (fred)
+                             (day (mary))))))</PRE>
+<P>
+This is in fact the table shown in figure&nbsp;<A HREF="node1.html#figtree">1</A>, with the
+branches for the ethanol and oxygen breathers included.
+<P>
+<HR><A NAME="tex2html17" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html15" HREF="ps4-aliens.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html9" HREF="ps4-aliens.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html18" HREF="node2.html">2. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html16" HREF="ps4-aliens.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html10" HREF="ps4-aliens.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Mon Feb 23 08:27:27 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps4web/ps4-aliens/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:34 GMT -->
+</HTML>

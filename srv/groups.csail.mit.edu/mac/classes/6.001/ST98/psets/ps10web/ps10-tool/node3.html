@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+<HEAD>
+<TITLE>3. Programming assignment</TITLE>
+<META NAME="description" CONTENT="3. Programming assignment">
+<META NAME="keywords" CONTENT="ps10-tool">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps10-tool.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html42" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html40" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html34" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html43" HREF="node4.html">4. Multiple Superclasses: To </A>
+<B>Up:</B> <A NAME="tex2html41" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html35" HREF="node2.html">2. The TOOL Interpreter</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Programming assignment</A></H1>
+<P>
+When you load the code for this problem set, the entire TOOL
+interpreter code (attached) will be loaded into Scheme.  However, in
+order to do the programming assignment, you will need to modify only a
+tiny bit of the interpreter.  This code has been separated out in the
+file <TT>ps10-mod.scm</TT>, so you can edit it conveniently.  (You may
+also need to define some auxiliary procedures.)
+<P>
+To start the TOOL interpreter, type <TT>(initialize-tool)</TT>.  This
+initializes the global environment and starts the read-eval-print
+loop.  To evaluate a TOOL expression, type the expression after the
+prompt, followed by <font size=-1><small>CTRL</small></font>-<TT>x</TT> <font size=-1><small>CTRL</small></font>-<TT>e</TT>.
+<P>
+In order to keep the TOOL interpreter simple, we have not provided any
+mechanism for handling errors.  Any error (such as an unbound
+variable) will bounce you back into Scheme's error handler.  To get
+back to TOOL, quit out of the error and restart the driver loop by
+typing <TT>(driver-loop)</TT>.  If you make an error that requires
+reinitializing the environment, you can rerun <TT>initialize-tool</TT>,
+but this will make you lose any new classes, generic functions, or
+methods you have defined.
+<P>
+<H4><A NAME="SECTION00030010000000000000">Computer exercise 1:</A></H4>
+ Show how to implement
+two-dimensional vector arithmetic in TOOL by extending the generic
+functions <TT>+</TT> and <TT>*</TT>, which are already predefined to work
+on numbers.  Define a class <TT>&lt;vector&gt;</TT> with slots <TT>xcor</TT> and
+<TT>ycor</TT>.  Arithmetic should be defined so that adding two vectors
+produces the vector sum, and multiplying two vectors produces the dot
+product
+<BR><IMG WIDTH=367 HEIGHT=17 ALIGN=BOTTOM ALT="displaymath311" SRC="img1.gif"><BR>
+Multiplying a number times a vector, or a vector times a number,
+should scale the vector by the number.  Adding a vector plus a number
+is not defined.  Also define a generic function length, such that the
+length of a vector is its length and the length of a number is its
+absolute value.  Also, add a <TT>print</TT> method for vectors so that
+TOOL will print vectors showing their xcor and ycor.  
+Turn in your
+definitions and a brief interaction showing that they work.
+Here are some
+useful definitions (not included in the problem set code) that
+illustrate one way to get started:
+<P>
+<PRE>(define-method - ((x &lt;number&gt;))
+  (- 0 x))
+
+(define-generic-function square)
+(define-method square ((x &lt;object&gt;))
+  (* x x))</PRE>
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps10&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030020000000000000">Computer exercise 2:</A></H4>
+ (This is really an exercise in
+reading code, not programming.)  Towards the end of section 1 of this
+problem set, there was an example showing the result of evaluating the
+expression <TT>(say socks 37)</TT>.
+Explain how <TT>apply-generic-function</TT>
+finds the
+correct <TT>say</TT> method when we ask the cat <TT>socks</TT> to say a
+number.  In particular, what are all the applicable methods?  In what
+order will they appear after they are sorted according to <TT>
+method-more-specific</TT>?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps10&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030030000000000000">Computer exercise 3:</A></H4>
+  One annoying thing about TOOL is that if
+you define a method before you've defined a generic function for that
+method, you will get an error.  For example, in the first example
+in section 1, we had to explicitly evaluate
+<P>
+<PRE>(define-generic-function 4-legged?)</PRE>
+
+before we could evaluate
+<PRE>(define-method 4-legged? ((thing &lt;object&gt;))
+  'Who-knows?)</PRE>
+
+If we hadn't done this, the second expression would have
+given the error that <TT>4-legged?</TT> is undefined.  Modify the TOOL
+interpreter so that, if the user attempts to define a method for a
+generic function that does not yet exist, TOOL will first
+automatically define the generic function.  One thing to consider: In
+which environment should the name of the generic function be bound:
+the global environment, the environment of the evaluation?  some other
+environment?  There is no ``right answer'' to this question--<I>
+you</I> are the language designer.  But whatever choice you make, write a
+brief paragraph justifying your choice.  In particular, include an
+example of a program for which the choice of environment matters,
+i.e., where the program would have a different behavior (or perhaps
+give an error) if the choice were different.  (Hint: The only
+procedure you should need to modify for this exercise is <TT>
+eval-define-method</TT>.)  Turn in, along with your design justification,
+your modified code together with a brief interaction showing that the
+modified interpreter works as intended.)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps10&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030040000000000000">Computer exercise 4:</A></H4>
+ Another inconvenience in TOOL is that we
+need to use <TT>get-slot</TT> in order to obtain slot values.  It would
+be more convenient to have TOOL automatically define selectors for
+slots.  For example, it would be nice to be able to get the x and y
+coordinates of a vector by typing <TT>(xcor v)</TT> and <TT>(ycor v)</TT>
+rather than <TT>(get-slot v 'xcor)</TT> and <TT>(get-slot v 'ycor)</TT>.
+Modify the interpreter to do this.  Namely, whenever a class is
+defined, TOOL should automatically define a generic function for each
+of its slot names, together with a method that returns the
+corresponding slot value for arguments of that class.  Turn in a
+listing of your code and an example showing that it works.  (Hint:
+The only part of interpreter you need to modify for this exercise is
+<TT>eval-define-class</TT>.)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps10&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030050000000000000">Lab exercise 5:</A></H4>
+ Give some simple example of defining some
+objects and methods (besides cats and vectors) that involve
+subclasses, superclasses, and methods, and which illustrate the
+modifications you made in exercises 3 and 4.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps10&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html42" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html40" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html34" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html43" HREF="node4.html">4. Multiple Superclasses: To </A>
+<B>Up:</B> <A NAME="tex2html41" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html35" HREF="node2.html">2. The TOOL Interpreter</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Apr 11 16:28:40 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:23 GMT -->
+</HTML>

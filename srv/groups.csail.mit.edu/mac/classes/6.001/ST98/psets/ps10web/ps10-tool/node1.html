@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+<HEAD>
+<TITLE>1. Classes, instances, and generic functions</TITLE>
+<META NAME="description" CONTENT="1. Classes, instances, and generic functions">
+<META NAME="keywords" CONTENT="ps10-tool">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps10-tool.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html22" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html20" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html14" HREF="ps10-tool.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html23" HREF="node2.html">2. The TOOL Interpreter</A>
+<B>Up:</B> <A NAME="tex2html21" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html15" HREF="ps10-tool.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">1. Classes, instances, and generic functions</A></H1>
+<P>
+The framework we'll be using in TOOL (which is the same as in many
+object-oriented systems) includes basically the same ideas as we've
+already seen, although with different terminology.  An object's
+behavior is defined by its <I>class</I>--the object is said to be an
+<I>instance</I> of the class.  All instances of a class have identical
+behavior, except for information held in a set of specified <I>
+slots</I>, which provides the local state for the instance.  Following
+Dylan, we'll use the convention of naming classes with names that are
+enclosed in angle brackets, for example <TT>&lt;account&gt;</TT> or <TT>
+&lt;number&gt;</TT>.<A NAME="tex2html2" HREF="footnode.html#150"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+The <TT>define-class</TT> special form creates a new class.  You specify
+the name of the class, the class's <I>superclass</I>, and the names for
+the slots.  In TOOL, every class has a superclass, whose behavior (and
+slots) it inherits.  There is a predefined class called <TT>&lt;object&gt;</TT>
+that is the most general kind of object.  Every TOOL class has <TT>
+&lt;object&gt;</TT> as an ancestor.  Once you have defined a class, you use the
+special form <TT>make</TT> to create instances of it.  <TT>Make</TT> takes
+the class as argument, together with a list that specifies values for
+the slots.  The order in which the slots and values are listed does
+not matter, since each slot is identified by name.  For example, we
+can specify that a ``cat'' is a kind of object that has a size and a
+breed, and then create an instance of <TT>&lt;cat&gt;</TT>.  Note the use of
+the <TT>get-slot</TT> procedure to obtain the value in a designated slot.
+<P>
+<PRE>Tool==&gt; (define-class &lt;cat&gt; &lt;object&gt; size breed)
+;;; Tool value: (defined class: &lt;cat&gt;)
+
+Tool==&gt; (define garfield (make &lt;cat&gt; (size 6) (breed 'weird)))
+;;; Tool value: ok
+
+Tool==&gt; (get-slot garfield 'breed)
+;;; Tool value: weird</PRE>
+
+<P>
+Tool doesn't have ordinary procedures.  Rather, it has <EM>
+generic-functions</EM>, which do different things depending upon the
+classes of their arguments.  A generic function is defined using the
+special form <TT>define-generic-function</TT>:
+<P>
+<PRE>Tool==&gt; (define-generic-function 4-legged?)
+;;; Tool value: (defined generic function: 4-legged?)</PRE>
+
+<P>
+You can think of a newly defined generic function as an
+empty table to be filled in with <I>methods</I>.  You use <TT>
+define-method</TT> to specify methods for a generic function that
+determine its behavior on various classes.
+<P>
+<PRE>Tool==&gt; (define-method 4-legged? ((x &lt;cat&gt;))
+           true)
+;;; Tool value: (added method to generic function: 4-legged?)
+
+Tool==&gt; (define-method 4-legged? ((x &lt;object&gt;))
+           'Who-knows?)
+;;; Tool value: (added method to generic function: 4-legged?)
+
+Tool==&gt; (4-legged? garfield)
+;;; Tool value: #t
+
+Tool==&gt; (4-legged? 'Hal)
+;;; Tool value: who-knows?</PRE>
+
+<P>
+The list in <TT>define-method</TT> following the generic function name is
+called the list of <I>specializers</I> for the method.  This is like an
+argument list, except that it also specifies the class of each
+argument.  In the first example above, we define a method for <TT>
+4-legged?</TT> that takes one argument named <TT>x</TT>, where <TT>x</TT> is a
+member of the class <TT>&lt;cat&gt;</TT>.  In the second example, we define
+another method for <TT>4-legged?</TT> that takes one argument named <TT>
+x</TT>, where <TT>x</TT> is a member of the class <TT>&lt;object&gt;</TT>.  Now <TT>
+4-legged?</TT> will return true if the argument is a cat, and will return
+<TT>who-knows?</TT> if the argument is an object.  Notice that <TT>
+garfield</TT> is an object as well as a cat (because <TT>&lt;object&gt;</TT> is the
+superclass of <TT>&lt;cat&gt;</TT>).  Yet, when we call <TT>4-legged?</TT> with
+<TT>garfield</TT> as an input, TOOL uses the method for <TT>&lt;cat&gt;</TT>, and
+not the method for <TT>&lt;object&gt;</TT>.  In general, TOOL uses the <I>
+most specific method</I> that applies to the inputs.<A NAME="tex2html3" HREF="footnode.html#186"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+In a similar way, we can define a new generic function <TT>say</TT> and
+give it a method for cats (and subclasses of cats):
+<P>
+<PRE>Tool==&gt; (define-generic-function say)
+;;; Tool value: (defined generic function: say)
+
+Tool==&gt; (define-method say ((cat &lt;cat&gt;) (stuff &lt;object&gt;))
+          (newline)
+          (print 'meow) ;print is TOOL's procedure for printing things
+          (newline)
+          (print stuff)
+          'done)
+;;; Tool value: (added method to generic function: say)
+
+Tool==&gt; (define-class &lt;house-cat&gt; &lt;cat&gt; address)
+;;; Tool value: (defined class: &lt;house-cat&gt;)
+
+Tool==&gt; (define socks                  ;note that a house cat is a cat, and therefore
+          (make &lt;house-cat&gt;    ;has slots for breed and size, as well
+                (size 'medium) ;as for address
+                (address '(1600 Pennsylvania Avenue Washington DC))))
+;;; Tool value: ok</PRE>
+
+<P>
+<PRE>Tool==&gt; (get-slot socks 'breed)
+;;; Tool value: *undefined*     ;we never initialized Socks's breed</PRE>
+
+<P>
+<PRE>Tool==&gt; (say garfield '(feed me))
+meow
+(feed me)
+;;; Tool value: done
+
+Tool==&gt; (say socks '(feed me))
+meow
+(feed me)
+;;; Tool value: done
+
+Tool==&gt; (say 'hal '(feed me))
+;No method found -- APPLY-GENERIC-FUNCTION</PRE>
+
+<P>
+In the final example, TOOL signals an error when we
+apply <TT>say</TT> to the symbol <TT>hal</TT>.  This is because <TT>hal</TT>
+is a symbol (not a cat) and there is no <TT>say</TT> method defined for
+symbols.
+<P>
+We can go on to define more subclasses of <TT>&lt;cat&gt;</TT>:
+<P>
+<PRE>Tool==&gt; (define-class &lt;show-cat&gt; &lt;cat&gt; awards)
+;;; Tool value: (defined class: &lt;show-cat&gt;)
+
+Tool==&gt; (define-method say ((cat &lt;show-cat&gt;) (stuff &lt;object&gt;))
+          (newline)
+          (print stuff)
+          (newline)
+          (print '(I am beautiful))
+          'done)
+;;; Tool value: (added method to generic function: say)
+
+Tool==&gt; (define Cornelius-Silverspoon-the-Third
+           (make &lt;show-cat&gt;
+                 (size 'large)
+                 (breed '(Cornish Rex))
+                 (awards '((prettiest skin)))))
+;;; Tool value: ok
+
+Tool==&gt; (say cornelius-silverspoon-the-Third '(feed me))
+(feed me)
+(i am beautiful)
+;;; Tool value: done</PRE>
+
+<P>
+<PRE>Tool==&gt; (define-method say ((cat &lt;cat&gt;) (stuff &lt;number&gt;))
+          (newline)
+          (print '(cats never discuss numbers))
+          'done)
+;;; Tool value: (added method to generic function: say)
+
+Tool==&gt; (say socks 37)
+(cats never discuss numbers)
+;;; Tool value: done</PRE>
+
+<P>
+As the final example illustrates, TOOL picks the appropriate method
+for a generic function by examining the classes of <EM>all</EM> the arguments
+to which the function is applied.  This differs from the
+message-passing model, where the dispatch is done by a single object.
+<P>
+Notice also that TOOL knows that 37 is a member of the class <TT>
+&lt;number&gt;</TT>.  In TOOL, <I>every</I> data object is a member of some
+class.  The classes <TT>&lt;number&gt;</TT>, <TT>&lt;symbol&gt;</TT>, <TT>&lt;pair&gt;</TT>, and
+<TT>&lt;procedure&gt;</TT> are predefined, with <TT>&lt;object&gt;</TT> as their
+superclass.  Also, <I>every</I> procedure is a generic procedure,
+to which you can add new methods.  The following generic procedures
+are predefined, each initially with a single method as indicated
+by the specializer:
+<P>
+<PRE>+         (&lt;number&gt; &lt;number&gt;)
+-         (&lt;number&gt; &lt;number&gt;)
+*         (&lt;number&gt; &lt;number&gt;)
+/         (&lt;number&gt; &lt;number&gt;)
+=         (&lt;number&gt; &lt;number&gt;)
+&gt;         (&lt;number&gt; &lt;number&gt;)
+&lt;         (&lt;number&gt; &lt;number&gt;)
+sqrt      (&lt;number&gt;)
+cons      (&lt;object&gt; &lt;object&gt;)
+car       (&lt;pair&gt;)
+cdr       (&lt;pair&gt;)
+true?     (&lt;object&gt;)
+false?    (&lt;object&gt;)
+not       (&lt;object&gt;)
+null?     (&lt;object&gt;)
+print     (&lt;object&gt;)
+get-slot  (&lt;object&gt; &lt;symbol&gt;)
+set-slot! (&lt;object&gt; &lt;symbol&gt; &lt;object&gt;)
+display   (&lt;object&gt;)
+newline   ()</PRE>
+
+<P>
+<HR><A NAME="tex2html22" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html20" HREF="ps10-tool.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html14" HREF="ps10-tool.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html23" HREF="node2.html">2. The TOOL Interpreter</A>
+<B>Up:</B> <A NAME="tex2html21" HREF="ps10-tool.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html15" HREF="ps10-tool.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Apr 11 16:28:40 EDT 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps10web/ps10-tool/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:22 GMT -->
+</HTML>

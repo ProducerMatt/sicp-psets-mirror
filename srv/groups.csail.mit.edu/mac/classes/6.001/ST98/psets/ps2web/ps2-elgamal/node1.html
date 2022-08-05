@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:38 GMT -->
+<HEAD>
+<TITLE>1. Background on public-key cryptography</TITLE>
+<META NAME="description" CONTENT="1. Background on public-key cryptography">
+<META NAME="keywords" CONTENT="ps2-elgamal">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps2-elgamal.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html31" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html29" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html23" HREF="ps2-elgamal.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html32" HREF="node2.html">2. Digital signatures</A>
+<B>Up:</B> <A NAME="tex2html30" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html24" HREF="ps2-elgamal.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">1. Background on public-key cryptography</A></H1>
+<P>
+People have been using secret codes for thousands of years.
+So it is surprising that in 1976, Whitfield Diffie and Martin
+Hellman at Stanford University discovered a major new conceptual
+approach to encryption and decryption: <I>public-key
+cryptography</I>.<A NAME="tex2html3" HREF="footnode.html#360"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+Cryptographic systems are typically based on <I>ciphers</I> (i.e.,
+codes) that use <I>keys</I> for encryption and decryption.  In
+traditional ciphers, the so-called <EM>symmetric ciphers</EM>, the key
+used to encrypt a message is also the key that decrypts the message.
+As a consequence, if you know how to <I>encrypt</I> messages with a
+particular key then you can easily <I>decrypt</I> messages that were
+encrypted with that key.
+<P>
+Diffie and Hellman's insight was to realize that there are
+cryptographic systems for which knowing the encryption key gives no
+help in decrypting messages.  This is of immense importance.  In
+traditional cryptographic systems, someone can send you coded messages
+only if the two of you share a secret key.  Since anyone who learns
+that key would be able to decrypt the messages, keys must be carefully
+guarded and transmitted only under tight security.  In Diffie and
+Hellman's system, you can tell your <I>encryption</I> key, or <EM>
+public key</EM> to anyone who wants to send you messages, and not worry
+about key security at all.  For even if everyone in the world knew
+your public key, no one could decrypt messages sent to you without
+knowing some additional secret information, which you keep private to
+yourself.  Diffie and Hellman called such a system a <I>public-key</I>
+cryptography system.
+<P>
+<H2><A NAME="SECTION00011000000000000000">Diffie-Hellman key agreement</A></H2>
+<P>
+The public-key system we will investigate in this problem set is based
+on the method of <EM>Diffie-Hellman key agreement</EM>, which Hal
+described in lecture on February 10.  This is a method by which two
+people can construct a shared secret that will be known only to the
+two of them, even though all the communication between them is public.
+<P>
+Recall the basic idea from lecture: If Alyssa and Ben wish to
+communicate<A NAME="tex2html4" HREF="footnode.html#146"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>  they agree (in public) on a large prime number <I>p</I>
+and a number <I>g</I> which is a generator for <I>p</I>. (For <I>g</I> to be a
+generator means that the powers <IMG WIDTH=128 HEIGHT=31 ALIGN=MIDDLE ALT="tex2html_wrap_inline509" SRC="img1.gif">, taken
+modulo <I>p</I>, produce all the integers <IMG WIDTH=116 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline513" SRC="img2.gif">, in some
+order.)
+<P>
+Alyssa picks a secret number <I>x</I> and computes <IMG WIDTH=102 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline517" SRC="img3.gif">.<A NAME="tex2html5" HREF="footnode.html#148"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+Ben
+picks a secret number <IMG WIDTH=9 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline539" SRC="img5.gif"> and computes <IMG WIDTH=102 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline541" SRC="img6.gif">.  Alyssa sends Ben <I>y</I>, and Ben sends Alyssa <IMG WIDTH=9 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline545" SRC="img7.gif">.  Alyssa now
+computes <IMG WIDTH=70 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline547" SRC="img8.gif"> and Ben computes <IMG WIDTH=70 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline549" SRC="img9.gif">.
+But these are the same number because
+<P>
+<BR><IMG WIDTH=416 HEIGHT=21 ALIGN=BOTTOM ALT="displaymath155" SRC="img10.gif"><BR>
+<P>
+Now that Alyssa and Ben have this shared number, call it <I>K</I>, they can
+use <I>K</I> as a key for sending and receiving messages using some ordinary
+symmetric cipher.
+<P>
+The essential point is that <EM>all</EM> communications between Alyssa
+and Ben could be public, and an eavesdropper would still not know <I>K</I>
+and so could not decrypt the messages.  All the eavesdropper would
+know is <I>p</I>, <I>g</I>, <I>y</I>, and <IMG WIDTH=9 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline545" SRC="img7.gif">. If <I>p</I> is a large prime, there
+is no efficient way to use these to compute <I>K</I>.
+<P>
+<H2><A NAME="SECTION00012000000000000000">ElGamal Encryption and Decryption</A></H2>
+<P>
+Suppose Alyssa wants to set up a system that allows anyone in the
+world to send her an encrypted message that only she can decrypt.  She can
+do this with a small variation of the secret-sharing scheme above.
+<P>
+Just as above, Alyssa picks a prime <I>p</I>, a generator <I>g</I>, and a secret
+number <I>x</I>, and she computes <IMG WIDTH=102 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline575" SRC="img11.gif">.  She keeps <I>x</I> secret to herself
+and publishes the values (<I>p</I>,<I>g</I>,<I>y</I>).  These published values form
+Alyssa's public key.
+<P>
+Suppose now that Ben (or anyone) wants to send Alyssa an encrypted
+message.  He gets Alyssa's public key, which has the values of <I>p</I>,
+<I>g</I>, and <I>y</I>.  Next he picks his own number <IMG WIDTH=9 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline539" SRC="img5.gif">.  From this,
+he computes <IMG WIDTH=102 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline589" SRC="img12.gif">, and he also computes
+<IMG WIDTH=109 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline591" SRC="img13.gif">.  Ben uses <I>K</I> as the key for encrypting the
+message to Alyssa using some symmetric algorithm.  He sends the
+encrypted text to Alyssa, along with <IMG WIDTH=9 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline545" SRC="img7.gif">.
+<P>
+When Alyssa receives an encrypted message, she takes the <IMG WIDTH=9 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline545" SRC="img7.gif">
+part that came with it, and computes <IMG WIDTH=109 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline599" SRC="img14.gif">.  (Remember:
+Alyssa, and only Alyssa, knows <I>x</I>.)  She now uses <I>K</I> as the key for
+decrypting the message.  Other people who see the message can't
+decrypt it: They know <I>p</I>, <I>g</I>, <I>y</I> and <IMG WIDTH=9 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline545" SRC="img7.gif">, but they can't
+compute <I>K</I> from this without knowing either <I>x</I> or <IMG WIDTH=9 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline539" SRC="img5.gif">.
+<P>
+This method of public-key encryption is known as <EM>ElGamal key
+agreement</EM><A NAME="tex2html6" HREF="footnode.html#176"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>  The method is also sometimes called <EM>
+half-certified Diffie-Hellman</EM>.  ``Half-certified'' here refers to the
+fact that Ben can be sure that he is sending a message to Alyssa (or
+to whomever published that key).  Alyssa, however, has no idea who
+really sent her the message, since anyone in the world can see her
+public key.
+<P>
+<H2><A NAME="SECTION00013000000000000000">Implementing encryption and decryption</A></H2>
+<P>
+Our main tools for implementing encryption and decryption are
+computing primes and doing fast modular exponentiation as in section
+1.2.6 of the textbook.
+<P>
+We have the procedure that computes a power of a number modulo another
+number:
+<P>
+
+<PRE>(define (expmod b e m)
+  (cond ((zero? e) 1)
+        ((even? e)
+         (modulo (square (expmod b (/ e 2) m)) m))
+        (else
+         (modulo (* b (expmod b (-1+ e) m)) m))))</PRE>
+
+<P>
+We also have the Fermat test:
+<P>
+
+<PRE>(define (fermat-test n)
+    (let ((a (choose-random n)))
+      (= (expmod a n n) a)))</PRE>
+
+<P>
+
+<PRE>(define (fast-prime? n times)
+    (cond ((= times 0) true)
+          ((fermat-test n) (fast-prime? n (- times 1)))
+          (else false)))</PRE>
+
+<P>
+To generate a prime, we pick a random value with a specified number of
+digits and start testing successive odd numbers from there until we
+find a prime.  We'll consider a number to be prime if it passes two
+rounds of the Fermat test.
+<P>
+
+<PRE>(define (choose-prime digits)
+  (let ((range (expt 10 (- digits 1))))
+    ;;start with some number between range and 10*range
+    (let ((start (+ range (choose-random (* 9 range))))) 
+    (search-for-prime (if (even? start) (+ start 1) start)))))</PRE>
+
+
+<PRE>(define (search-for-prime guess)
+  (if (fast-prime? guess 2)
+      guess
+      (search-for-prime (+ guess 2))))</PRE>
+
+<P>
+The procedure <TT>choose-random</TT> used here takes an arbitrary
+integer <I>n</I> and returns a number chosen at random between 2 and
+<I>n</I>-2, inclusive.  Picking random numbers in this range will be useful
+for several of the procedures in this problem set.
+<P>
+<H3><A NAME="SECTION00013100000000000000">Finding generators: safe primes</A></H3>
+<P>
+Unfortunately, it's not enough just to find a prime.  We also have to
+find a generator for the prime.  Finding a generator for an arbitrary
+prime can be complicated, but there is a certain kind of prime for
+which it is easy.  These are so-called <EM>safe primes</EM>.  A safe
+prime is a prime number <I>p</I> of the form 2<I>q</I>+1 where <I>q</I> is also
+prime.  The following theorem lets us compute generators for safe
+primes:<A NAME="tex2html8" HREF="footnode.html#187"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+<DL COMPACT><DT>
+<DD> If <I>p</I>=2<I>q</I>+1 is a safe prime, then for any number <IMG WIDTH=101 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline633" SRC="img15.gif"> either
+<IMG WIDTH=100 HEIGHT=31 ALIGN=MIDDLE ALT="tex2html_wrap_inline635" SRC="img16.gif">, or <IMG WIDTH=100 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline637" SRC="img17.gif">, or
+<I>g</I> is a generator for <I>p</I>.
+<P>
+</DL>
+<P>
+We can use these ideas as follows:
+<P>
+<UL>
+<LI> To find a safe prime, we search for a prime <I>q</I> and test if
+<I>p</I>=2<I>q</I>+1 is also prime.  If it is, we've found a safe prime. If it's
+not, we keep searching.
+<LI> To find a generator for a safe prime <I>p</I>=2<I>q</I>+1, we choose a random
+number <I>g</I> such that <IMG WIDTH=101 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline633" SRC="img15.gif"> and check whether <IMG WIDTH=15 HEIGHT=31 ALIGN=MIDDLE ALT="tex2html_wrap_inline653" SRC="img18.gif"> and
+<IMG WIDTH=15 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline655" SRC="img19.gif"> are both different modulo <I>p</I> from 1.  If so, <I>g</I> is a
+generator. If not, we try again with a new guess for
+<I>g</I>.<A NAME="tex2html7" HREF="footnode.html#371"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+</UL><H3><A NAME="SECTION00013200000000000000">Key systems and public keys</A></H3>
+<P>
+Given the above procedures, arranging to do encryption and decryption
+is straightforward.  Let's call the list of four numbers--<I>p</I>, <I>g</I>,
+<I>x</I>, and <I>y</I>--a <EM>key system</EM>.  The public part of this, namely,
+<I>p</I>, <I>g</I>, and <I>y</I>, we'll call a <EM>public key</EM>.
+<P>
+The following procedure constructs a key system according to the
+method described above: pick a safe prime <I>p</I>, pick a generator <I>g</I>, pick a
+random number <I>x</I>, and compute <IMG WIDTH=48 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline691" SRC="img21.gif"> modulo <I>p</I>:
+
+<PRE>(define (generate-key-system digits)
+  (let ((p (choose-safe-prime digits)))
+    (let ((g (find-generator p)))
+      (let ((x (choose-random p)))      ;x will be secret
+        (let ((y (expmod g x p)))       ;y will be public
+          (make-key-system p g x y))))))</PRE>
+
+The argument here specifies the number of digits (minus 1) for the
+prime.
+<P>
+The procedure <TT>make-key-system</TT> in the final line of the procedure
+is an example of a <EM>data constructor</EM>.  All it does is package the
+four numbers together into a structure called a <EM>list</EM>.  Once a
+key system has been constructed, we can select the individual pieces
+using <EM>data selectors</EM>: <TT>key-system-p</TT>, <TT>key-system-g</TT>,
+<TT>key-system-x</TT>, and <TT>key-system-y</TT>.  These constructors and
+selectors are all very simple procedures.  In this problem set we've
+defined all necessary constructors and selectors for you, so you don't
+have to think about them much.  We'll discuss constructors and
+selectors in lecture on February 19th.
+<P>
+Once we have a key system, we can extract the public parts to form the
+corresponding public key.
+<P>
+
+<PRE>(define (key-system-&gt;public-key key-system)
+  (make-public-key (key-system-p key-system)
+                   (key-system-g key-system)
+                   (key-system-y key-system)))</PRE>
+
+<P>
+Here <TT>make-public-key</TT> is another data abstraction we have
+provided for you, with selectors <TT>public-key-p</TT>, <TT>
+public-key-g</TT>, and <TT>public-key-y</TT>.
+<P>
+<H3><A NAME="SECTION00013300000000000000">Encrypting and decrypting</A></H3>
+<P>
+The final element we need in order to implement ElGamal public-key
+encryption is a symmetric cipher, which will use the shared key to
+encrypt and decrypt.  For this problem set, we've provided procedures
+<TT>symmetric-encrypt</TT> and <TT>symmetric-decrypt</TT>. <TT>
+Symmetric-encrypt</TT> takes a text string message and a numeric key, and
+encrypts the message using the key to produce a cipher-text.  Given
+the cipher-text and the same key, <TT>symmetric-decrypt</TT> will recover
+the message text.<A NAME="tex2html9" HREF="footnode.html#372"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+For example,
+<P>
+
+<PRE>(symmetric-encrypt &quot;My little secret&quot; 87)
+;Value: &quot;\234b\bJ6\025\205\r\253\271'\031/\213\264\v&quot;
+
+(symmetric-decrypt &quot;\234b\bJ6\025\205\r\253\271'\031/\213\264\v&quot; 87)
+;Value: &quot;My little secret&quot;</PRE>
+
+<P>
+The weird backslash numbers in the cipher-text are Scheme's way of
+printing character codes that do not correspond directly to printable
+characters.  (Our cipher produces 8-bit bytes, not all of which are
+printable characters.)
+<P>
+Putting this all together, given a message together with Alyssa's public key,
+we encrypt the message as described above.  Namely, we pick a
+random value for <IMG WIDTH=9 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline539" SRC="img5.gif"> (not to be confused with the <I>x</I> of Alyssa's key
+system, which only Alyssa knows), use Alyssa's <I>y</I> raised to the <IMG WIDTH=9 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline539" SRC="img5.gif">th
+power modulo <I>p</I> as the shared key for the symmetric cipher, and send the result
+together with <IMG WIDTH=102 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline705" SRC="img22.gif">.
+<P>
+
+<PRE>(define (encrypt message-text public-key)
+  (let ((p (public-key-p public-key))
+        (g (public-key-g public-key))
+        (y (public-key-y public-key)))
+    (let ((my-x (choose-random p)))
+      (make-encrypted-message
+       (expmod g my-x p)
+       (symmetric-encrypt message-text (expmod y my-x p))))))</PRE>
+
+<P>
+The procedure <TT>make-encrypted-message</TT> is another data
+constructor.  The associated selectors that retrieve the two pieces
+are <TT>encrypted-message-y</TT> and <TT>
+encrypted-message-cipher-text</TT>.
+<P>
+We'll leave it to you to implement the corresponding <TT>decrypt</TT>
+procedure, which takes an encrypted message and a key system, and
+returns the decrypted ciphertext (provided that the key system is the
+correct one).
+<P>
+<H2><A NAME="SECTION00014000000000000000">Cracking the system; The discrete logarithm problem</A></H2>
+<P>
+Suppose someone wants to decrypt a message not intended for them.
+Suppose this someone is the kind of someone who happens to have
+massive computational power available to devote to the
+problem.<A NAME="tex2html10" HREF="footnode.html#227"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>  They have to start with the public key of the
+recipient and recover the secret number <I>x</I>.  That is, given <I>p</I>, <I>g</I>,
+and <I>y</I> they must find the number <I>x</I> such that <IMG WIDTH=102 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline517" SRC="img3.gif">.  This
+is called the <EM>discrete log problem</EM>.<A NAME="tex2html11" HREF="footnode.html#385"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+How does one compute discrete logs?  One way is simply brute-force
+search: Try all the values for <I>x</I> between 2 and <I>p</I>-2 until you find
+the one that works.  Unfortunately for our ``someone,'' the
+computational burden here is vast.  Remember that if we use successive
+squaring, the time required to raise a number to a power up to <I>p</I> has
+order of growth <IMG WIDTH=59 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline731" SRC="img26.gif">, i.e., grows as the number of digits
+of <I>p</I>.  But to scan all the numbers less than <I>p</I> has order of growth
+<IMG WIDTH=33 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline737" SRC="img27.gif">.  Each time you add one more digit to your prime, you
+increase the computation for cracking discrete logs by a factor of 10,
+while you increase the computation required to do encryption and
+decryption by only a little bit.
+<P>
+Are there better algorithms than brute force search?  Yes, but they
+don't help a whole lot.  There's a method called <EM>Pohlig's rho
+algorithm</EM> which has order of growth <IMG WIDTH=48 HEIGHT=28 ALIGN=MIDDLE ALT="tex2html_wrap_inline739" SRC="img28.gif">, but this is
+still exponential in the number of digits in <I>p</I>.  The fastest
+algorithm known is called the <EM>number-field sieve</EM>, and it has
+order of growth
+<BR><IMG WIDTH=351 HEIGHT=19 ALIGN=BOTTOM ALT="displaymath236" SRC="img29.gif"><BR>
+which is not quite exponential in the number of digits, but still
+grows pretty damned fast.<A NAME="tex2html12" HREF="footnode.html#240"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+<HR><A NAME="tex2html31" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html29" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html23" HREF="ps2-elgamal.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html32" HREF="node2.html">2. Digital signatures</A>
+<B>Up:</B> <A NAME="tex2html30" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html24" HREF="ps2-elgamal.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sun Feb  8 17:25:50 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:02 GMT -->
+</HTML>

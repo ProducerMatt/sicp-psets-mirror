@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps6web/ps6-search/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:33 GMT -->
+<HEAD>
+<TITLE>2. Tutorial Exercises</TITLE>
+<META NAME="description" CONTENT="2. Tutorial Exercises">
+<META NAME="keywords" CONTENT="ps6-search">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps6-search.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html27" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html25" HREF="ps6-search.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html19" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html28" HREF="node3.html">3. Programming assignment: A </A>
+<B>Up:</B> <A NAME="tex2html26" HREF="ps6-search.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html20" HREF="node1.html">1. Searching a directed </A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. Tutorial Exercises</A></H1>
+<P>
+<H4><A NAME="SECTION00020010000000000000">Tutorial exercise 1:</A></H4>
+<P>
+Do exercise 3.2 of the textbook.
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020020000000000000">Tutorial exercise 2:</A></H4>
+<P>
+The following variation of <TT>make-df-strategy-1</TT> has a bug that
+causes it to not work, even on the <TT>test-data</TT>.  Explain what is
+wrong.  In particular, why does it matter where <TT>*to-be-visited*</TT>
+is declared?
+
+<PRE>
+(define (make-df-strategy-2 starting-point goal? neighbors)
+  (define (where-next? here)
+    (let ((*to-be-visited* '()))         ; Nodes to look at
+      (set! *to-be-visited*              ; Add on new nodes
+            (append (neighbors here) *to-be-visited*))
+      (cond ((goal? here) #T)            ;  We win!
+            ((null? *to-be-visited*) #F) ; Nowhere left to look
+            (else                        ; Visit next node
+             (let ((next (car *to-be-visited*)))
+               (set! *to-be-visited* (cdr *to-be-visited*))
+               next))))
+    where-next?)))</PRE>
+
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020030000000000000">Tutorial exercise 3:</A></H4>
+<P>
+The following partial definition mimics the graph of web pages at the
+6.001 web site.  Each node here is the URL of a web page and the
+neighbor nodes are the URLs referenced in the links on the page.
+
+<PRE>
+(define web
+  (list
+   (make-graph-entry
+    'http://mit.edu/6.001
+    '(http://mit.edu/6.001
+      http://mit.edu/6.001/SchemeImplementations
+      http://mit.edu/6.001/PSets)
+    '(... words extracted from http://mit.edu/6.001 ...))
+   (make-graph-entry
+    'http://mit.edu/6.001/SchemeImplementations
+    (http://mit.edu/6.001/getting-help
+     http://mit.edu/6.001/lab-use
+     *the-goal*)
+    '(... words extracted from http://mit.edu/6.001/SchemeImplementations ...))
+   (make-graph-entry
+    'http://mit.edu/6.001/getting-help
+    '(http://mit.edu/6.001
+      http://mit.edu/6.001/SchemeImplementations)
+    '(... words extracted from http://mit.edu/6.001/getting-help))
+   ...))</PRE>
+
+Demonstrate that 
+<TT>make-df-strategy-1</TT> fails on this graph.  What is the essential
+difference between the <TT>test-data</TT> and <TT>web</TT> examples that
+causes <TT>make-df-strategy-1</TT> to fail here?
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=tutorial-ex-03">
+Check the 6.001 discussion forum for tutorial-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html27" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html25" HREF="ps6-search.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html19" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html28" HREF="node3.html">3. Programming assignment: A </A>
+<B>Up:</B> <A NAME="tex2html26" HREF="ps6-search.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html20" HREF="node1.html">1. Searching a directed </A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Thu Feb 26 17:53:59 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps6web/ps6-search/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:33 GMT -->
+</HTML>

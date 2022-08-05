@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:20 GMT -->
+<HEAD>
+<TITLE>1. Getting started</TITLE>
+<META NAME="description" CONTENT="1. Getting started">
+<META NAME="keywords" CONTENT="ps1-intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps1-intro.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html27" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html25" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html19" HREF="ps1-intro.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html28" HREF="node2.html">2. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html26" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html20" HREF="ps1-intro.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">1. Getting started</A></H1>
+<P>
+The purpose of this section is to get you started using Scheme as
+quickly as possible.  Start by looking at the subject web page labeled
+<A NAME="tex2html3" HREF="http://swissnet.ai.mit.edu/6.001/using-scheme">``Using Scheme in 6.001''</A>.  You'll see there
+that the 6.001 Scheme system runs in the 6.001 Lab (34-501), on PCs
+running GNU/Linux, Windows NT4, or Windows 95 (sorry, no Macs or
+Athena); and that you can move among the different implementations as
+you require.  If you have a PC capable of running Scheme, we suggest
+that you install it there, since it will be convenient for you to work
+at home a lot of the time.  The 6.001 lab is probably the best place to
+work if you want help, since that is staffed by knowledgeable and
+friendly Lab Assistants.
+<P>
+Whether you're working with your machine or MIT's, the source of all
+useful information is the 6.001 web page:
+<B>
+<A NAME="tex2html2" HREF="http://swissnet.ai.mit.edu/6.001">http://mit.edu/6.001</A>
+</B>
+<P>
+<H2><A NAME="SECTION00011000000000000000">Starting scheme</A></H2>
+<P>
+The first thing to do is to get an implementation of Scheme and start
+using it:
+<P>
+<UL>
+<LI> <EM>In the 6.001 lab <IMG WIDTH=18 HEIGHT=2 ALIGN=BOTTOM ALT="tex2html_wrap_inline693" SRC="img1.gif"></EM> A good way to get started
+learning Scheme is to do this first section of the assignment in the
+Lab, where there are LAs to help you, and then install Scheme on your
+own PC and run through the section again to verify that your home
+system works just like the one in the lab.  Find a free lab computer
+and log in with the username <TT>u6001</TT>.  You will need to use a
+floppy disk in order to save your files.<A NAME="tex2html4" HREF="footnode.html#151"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<LI> <EM>On your home computer <IMG WIDTH=18 HEIGHT=2 ALIGN=BOTTOM ALT="tex2html_wrap_inline693" SRC="img1.gif"></EM> follow the instructions on
+the Web page for downloading and installing Scheme.  <EM>Important:</EM>
+The version of Scheme we are using this spring--Scheme 7.5a--is not
+the same version as the one used last fall. If you have an
+installation from the fall, get a new one. Some of the problem sets
+(PS2, for example) will not work on the old one.  Once you've
+installed the Scheme system you should be able to simply start it and
+do this part of the assignment.  If you are using your own computer,
+you'll also have to download the code for each weekly assignment,
+which you'll find on the web page.  You'll need to download the PS1
+code for doing the later parts of this assignment, but don't worry
+about that now.
+<P>
+</UL><H2><A NAME="SECTION00012000000000000000">Learning to use Edwin</A></H2>
+<P>
+In 6.001, we use a text-editing system called <EM>Edwin</EM>.  Edwin is a
+implementation in Scheme of the Emacs text editor.  If you've used
+Emacs before, you'll find Edwin virtually identical.  If you have never
+used Emacs before (or even if you have) spend about 15 minutes going
+through the on-line tutorial, which you start by typing <TT>C-h</TT>
+followed by <TT>t</TT>.  (<TT>C-h</TT> means ``control-<TT>h</TT>'': to type
+it, hold down the <font size=-1><small>CTRL</small></font> key and type <TT>h</TT>.  Release the <font size=-1><small>CTRL</small></font> key before typing <TT>t</TT>.)  You will probably get bored before
+you finish the tutorial. (It's too long, anyway.)  But at least skim
+all the topics so you know what's there.  You'll need to gain
+reasonable facility with the editor in order to complete the problem
+sets.<A NAME="tex2html5" HREF="footnode.html#411"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>  To get out of the tutorial, type <TT>C-x k</TT>,
+which will kill the buffer.
+<P>
+<H3><A NAME="SECTION00012100000000000000">Evaluating expressions</A></H3>
+<P>
+After you have learned something about Edwin, go to the Scheme buffer
+(i.e., the buffer named <TT>*scheme*</TT>).<A NAME="tex2html6" HREF="footnode.html#169"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A> As with any
+buffer, you can type Scheme expressions, or any other text into this
+buffer.  What distinguishes the Scheme buffer from other buffers is
+the fact that underlying this buffer is a Scheme evaluator.
+<P>
+Scheme programming consists of writing and evaluating <EM>
+expressions</EM>.  The simplest expressions are things like numbers.  More
+complex arithmetic expressions consist of the name of an arithmetic
+operator (things like +, -, *) followed by one or more other
+expressions, all of this enclosed in parentheses.  So the Scheme
+expression for adding 3 and 4 is <TT>(+ 3 4)</TT> rather than 3 +
+4.
+<P>
+Try typing a simple expression such as
+
+<PRE>1375</PRE>
+
+Typing this expression inserts it into the buffer.  To ask Scheme to
+evaluate it, we type <TT>C-x C-e</TT>, which causes the evaluator to read
+the expression immediately preceding the cursor, evaluate it
+(according to the kinds of rules described in lecture) and print out
+the result.  Try this.
+<P>
+Numbers are boring expressions to evaluate, since the printed
+representation of their value is the same as what you type.  To see
+examples of evaluating more expressions, try these:
+
+<PRE>-37
+
+(- 8 9)
+
+(&gt; 3.7 4.4)
+
+(- (if (&gt; 3 4)
+       7
+       10)
+   (/ 16 10))
+
+(* (- 25 10)
+   (+ 6 3))</PRE>
+
+Observe that some of the examples printed above are indented and
+displayed over several lines for readability.  An expression may be
+typed on a single line or on several lines; the Scheme interpreter
+ignores redundant spaces and line breaks.  It is to your
+advantage to format your work so that you (and others) can read it
+easily. It is also helpful in detecting errors introduced by
+incorrectly placed parentheses.  For example the two expressions
+
+<PRE>(* 5 (+ 2 (/ 4 2) (/ 8 3)))
+
+(* 5 (+ 2 (/ 4 2)) (/ 8 3))</PRE>
+
+<P>
+look deceptively similar but have different values. Properly indented,
+however, the difference is obvious.
+
+<PRE>(* 5 
+   (+ 2 
+      (/ 4 2) 
+      (/ 8 3)))
+
+(* 5 
+   (+ 2 
+      (/ 4 2)) 
+   (/ 8 3))</PRE>
+
+<P>
+Edwin provides several commands that ``pretty-print'' your code,
+indenting lines to reflect the inherent structure of the Scheme
+expressions (see Section B.2.1 of the <EM>Don't Panic</EM> manual).  Make
+a habit of typing <TT>C-j</TT> at the end of a line, instead of <font size=-1><small>RETURN</small></font>, when you enter Scheme expressions, so that the automatic
+indentation takes place.  <TT>Tab</TT> and <TT>M-q</TT> are other useful
+Edwin formatting commands.
+<P>
+While the Scheme interpreter ignores redundant spaces and carriage returns,
+it does not ignore redundant parentheses.  Try evaluating
+
+<PRE>((+ 3 4))</PRE>
+
+<P>
+<H3><A NAME="SECTION00012200000000000000">Buffers and files</A></H3>
+<P>
+One could simply type all one's work into the <TT>*scheme*</TT> buffer,
+but it is usually better to store versions of your code in a separate
+buffer, which you can then save in a file.
+<P>
+The most convenient way to do this is to split the screen to show two
+buffers at once--the \*scheme* buffer and a buffer for the file you
+are constructing.  You will need know how to split the screen (<TT>
+C-x 2</TT>) and how to move from one half to the other (<TT>C-x o</TT>).
+<P>
+Starting in the <TT>*scheme*</TT> buffer split the screen by typing
+<TT>C-x 2</TT>.  At this point both halves of the screen will show the
+same <TT>*scheme*</TT> buffer.  Now choose a file name ending with <TT>
+.scm</TT> and type tt C-x C-f<EM>file name</EM>.  The half of the screen
+you are in will now show a buffer for the new file.  You can type in
+this buffer and evaluate expressions in this buffer.  The results will
+appear in the <TT>*scheme*</TT> buffer.  If an error occurs during
+evaluation you must go to the <TT>*scheme*</TT> buffer to deal with the
+error.
+<P>
+To evaluate expressions, you can use any of several commands: you can
+use <TT>C-x C-e</TT> to evaluate the expression preceding the cursor,
+<TT>M-z</TT> to evaluate the current definition, or <TT>M-o</TT> to evaluate
+the entire buffer (this does not work in the <TT>*scheme*</TT> buffer.
+You may mark a region and use <TT>M-x eval-region</TT> to evaluate the
+marked region.  Each of these commands will cause the Scheme evaluator
+to evaluate the appropriate set of expressions.  Note that you can
+type and evaluate expressions in either buffer, but the values will
+always appear in the <TT>*scheme*</TT> buffer.  See the <EM>Don't Panic</EM>
+manual for more details.
+<P>
+As a simple example create a new buffer called <TT>ps1-test.scm</TT>.
+In this buffer create a definition for a simple procedure by typing
+in the following (verbatim):
+
+<PRE>(define square (lambda (x) (*x x)))</PRE>
+
+Now evaluate this definition by using either <TT>M-z</TT> or <TT>C-x C-e</TT>.
+Next try evaluating:
+<P>
+
+<PRE>square
+
+(square 4)</PRE>
+
+<P>
+In fact, if you typed in the definition exactly as indicated above,
+you should have hit an error at this point.  The system will now be
+offering you a chance to enter the debugger.  For now, go to the <TT>
+*scheme*</TT> buffer and type <TT>Q</TT> to quit the evaluation. (We'll
+discuss the debugger below in section 4).  Go back to your <TT>
+ps1-test.scm</TT> buffer, and edit the definition to insert a space
+between <TT>*</TT> and <TT>x</TT>.  Re-evaluate the definition, and try
+evaluating <TT>(square 4)</TT> again.
+<P>
+The system automagically maintains a special read-only buffer, called
+<TT>*transcript*</TT>, which keeps a history of your interactions with
+the Scheme evaluator.  You can extract pieces of this buffer to
+document examples of your work for problem sets.  To go to this buffer
+type <TT>C-x b *transcript*</TT>.  You can go back to any buffer with the
+<TT>C-x b</TT> command.
+<P>
+<H2><A NAME="SECTION00013000000000000000">Sending e-mail</A></H2>
+<P>
+That's it for this first part of the problem set, except for reporting
+the results.  Compose an email message containing your definition of
+square, together with an excerpt from the <TT>*transcript*</TT> buffer
+showing that it works.  If you are using the 6.001 lab, typing <TT>
+ctl-X m</TT> will open a mail buffer in which to compose your message.
+The system will ask for your own email address, so the recipient will
+know who sent the mail.
+You may insert work by copying from other buffers.  To send your
+completed message type <TT>ctl-C ctl-C</TT>.  If you're using your own
+machine, you can save your work in a file and then mail this using
+your favorite mailer.
+<P>
+Include in the message a brief, but warm
+and enthusiastic greeting to your tutor and to your recitation
+instructor.  As part of the message, say which Scheme implementation
+you are using: 6001 Lab or your own machine (with which
+operating system?).  If you don't know who your tutor and recitation
+instructor are, look on the 6.001 web page.  The point here is not
+only to make sure you can send mail, but also to enable your tutor to
+add your email return address to the recitation section email list.
+<P>
+You can learn more about using Scheme in 6.001 from the <EM>Don't
+Panic</EM> manual.  Also, at some point in the next couple of weeks, you
+should go back and run the Edwin tutorial again, to see what you
+glossed over the first time.
+<P>
+If you're a glutton for documentation, you can find an (almost)
+complete description of Scheme commands in the <EM>Scheme Reference
+Manual</EM>.  The <EM>Scheme User's Manual</EM> has some details on MIT
+Scheme and Edwin.  The <EM>Revised Report on the Algorithmic Language
+Scheme</EM> is the official (and not very readable) specification of the
+Scheme language.  These documents are available on the web
+page, and they are included with the Scheme implementations. But you
+shouldn't need to look at any of them, because the material
+will introduce new elements of Scheme as you need them.
+<P>
+<HR><A NAME="tex2html27" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html25" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html19" HREF="ps1-intro.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html28" HREF="node2.html">2. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html26" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html20" HREF="ps1-intro.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Jan 31 15:55:15 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:22 GMT -->
+</HTML>

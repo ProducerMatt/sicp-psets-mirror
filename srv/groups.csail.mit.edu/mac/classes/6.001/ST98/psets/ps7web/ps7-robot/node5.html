@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node5.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+<HEAD>
+<TITLE>5. Programming Assignment</TITLE>
+<META NAME="description" CONTENT="5. Programming Assignment">
+<META NAME="keywords" CONTENT="ps7-robot">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps7-robot.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html60" HREF="node6.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html58" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html52" HREF="node4.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html61" HREF="node6.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html59" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html53" HREF="node4.html">4. Tutorial Exercises</A>
+<BR> <P>
+<H1><A NAME="SECTION00050000000000000000">5. Programming Assignment</A></H1>
+<P>
+For this assignment you will need the ID number printed on your MIT ID
+card.  Be sure to have it with you when you do the problems.
+<P>
+To warm up, load the code for problem set 7 and start the simulation
+by typing <TT>(setup &lt;<EM>your name</EM>&gt;)</TT>. Play with the world a bit.
+One simple thing to do is to stay where you are and run the clock for
+a while with <TT>(run-clock &lt;<EM>ticks</EM>&gt;)</TT>.  Since the characters in
+our simulated building NE43 have a certain amount of restlessness,
+people should come walking by and say hi to you.  Try running the
+clock with <TT>*deity-mode*</TT> set to both true and false.  When it is
+set to true, you see everything that happens everywhere in the
+simulation.  When it is set to false, you see only what happen in the
+room you are in.  You'll probably want to set <TT>*deity-mode*</TT> it
+false most of the time.
+<P>
+<H4><A NAME="SECTION00050010000000000000">Computer exercise 1:</A></H4>
+<P>
+Walk the avatar to a room that has a thing called <TT>the-goal</TT> in
+it.  Have the avatar <TT>take the-goal</TT>, and <TT>lose</TT> it somewhere
+else.  Show a transcript of this session.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00051000000000000000">Searching the labyrinth</A></H2>
+<P>
+To solve the previous problem you did not really have to search for
+the goal: You had a map (from tutorial exercise 3) and you knew where
+the goal was, so you could plan a route and follow it directly.  But
+suppose that you are in a world with no map, as in the World Wide Web.
+As you saw in problem set 6, you can search such a graph if you can
+keep track of where you have already been.  You also need a bit
+more-see tutorial exercise 5.  Hint: You may want to look at the
+procedure <TT>reverse-exit</TT> in the file <TT>search-rooms.scm</TT>.
+<P>
+Rather than searching the humdrum world of building NE43, you are to
+explore a magic labyrinth.  If you enter the labyrinth unprepared, you
+are very likely to get very lost, because all the rooms have the same
+name and the same description.
+<P>
+You can explore the labyrinth using the same method you learned about
+in problem set 6.  Namely, you can do a graph traversal, marking where
+you've been.  Recall that exercise 6 implemented the marking by means
+of <TT>make-mark-procedures</TT>, which we used to construct two
+procedures, one for testing whether we've already visited a place, and
+one to mark the place as visited:
+<P>
+
+<PRE>(define mark-procedures (make-mark-procedures))
+(define deja-vu? (car mark-procedures))
+(define note-visited! (cadr mark-procedures))</PRE>
+
+<P>
+You'll find <TT>make-mark-procedures</TT> supplied for you in the file
+<TT>search-rooms.scm</TT>.  By applying <TT>deja-vu?</TT> and <TT>
+note-visited!</TT> to your location as you walk around, you should be able
+to search the labyrinth without getting terribly lost.
+<P>
+<H4><A NAME="SECTION00051010000000000000">Computer exercise 2:</A></H4>
+<P>
+Reinitialize the world for this exercise by running <TT>
+(start-exercise-2 &lt;<EM>your name</EM>&gt;)</TT>.  It makes the same NE43 world,
+with the addition of a randomly constructed labyrinth of twisty little
+passages, all alike.  This labyrinth is accessible through an exit,
+constructed at the location of the avatar, called <TT>Dis</TT>.
+Somewhere in the labyrinth there is a thing named <TT>diamond</TT>.  You
+should be able to use your mark procedures to help you find the
+diamond and bring it back into the world of NE43.  In point of fact,
+the maze we construct here is very small.  We don't want you to get
+lost--yet!  So it is likely you'll quickly stumble across the
+diamond, even without a search strategy.  But use the marks anyway,
+because you'll need to understand how this works for the rest of this
+problem set.  Turn in a transcript showing a record of your activity
+in exploring the labyrinth.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00052000000000000000">Dropping pebbles</A></H2>
+<P>
+The mark procedures we provided for you in exercise 2 maintain a list
+of (pointers to) the rooms you've visited.  But this is unrealistic,
+even in our fantasy magic world: What is the physical interpretation
+of carrying around a list of rooms to compare with your current
+location?  (Does <TT>eq?</TT>  make sense in the ``real world''?)  To be
+more realistic, we should mark the rooms in some other way.  For
+example, when we enter a room, we can drop some object that we can
+later recognize if we ever return to the room.
+<P>
+<H4><A NAME="SECTION00052010000000000000">Computer exercise 3:</A></H4>
+<P>
+Define a new class of object called a <TT>pebble</TT>, and define a new
+version of <TT>make-mark-procedures</TT> such that <TT>note-visited!</TT>
+works by constructing a pebble and dropping it at the place being
+visited.  The associated procedure <TT>deja-vu?</TT> checks to see if a
+pebble is present in the room visited.  The pebble should be a new
+subclass of <TT>thing</TT>.
+<P>
+Notice that two searches will be confused if we cannot distinguish the
+pebbles used in the first search from the pebbles used in the second
+search.  A simple way to deal with this is to name all the pebbles
+used in a given search with a fixed number, but to use different
+numbers for different searches (like using different colored pebbles
+for each search).  The number must be incremented each time a search
+is begun (when <TT>make-mark-procedures</TT> allocates the name).  Walk
+the avatar around NE43, dropping pebbles and recognizing them when you
+encounter them.  (Hint: Look through <TT>objtypes.scm</TT> to see how new
+classes of objects are defined.  Observe that for each class there is
+a <TT>make</TT> procedure, and an associated <TT>construct</TT> procedure,
+which is the procedure you call to actually construct the object.
+Also note that you should make your objects respond to a <TT>PEBBLE?</TT>
+message, so that you can use <TT>is-a</TT> to identify these as pebbles.)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00053000000000000000">A robotic assistant</A></H2>
+<P>
+You can now use your pebbles to search the labyrinth.  But you do not
+want to do this for large labyrinth.  Instead, you can program your
+robot to do the searching for you.  Of course, you have to construct a
+robot before you can use it.  Look at the definition of the <TT>
+robot</TT> object in <TT>objtypes.scm</TT>, to see how robots are constructed
+in general.  Then, look at the procedure <TT>start-robot-searching!</TT>
+in <TT>search-rooms.scm</TT> to see how to the robot's program gets
+coupled to the search strategy.
+<P>
+Look at the procedure <TT>setup-robot</TT> at the end of the file <TT>
+search-rooms.scm</TT> to see how to construct a robot and start it up.
+The existing <TT>setup-robot</TT> program will find the object called
+<TT>the-goal</TT>, just as you did in computer exercise 1.
+<P>
+<H4><A NAME="SECTION00053010000000000000">Computer exercise 4:</A></H4>
+<P>
+Play with the robot a bit.  Reinitialize the simulation with
+<TT>(setup &lt;<EM>your name</EM>&gt;)</TT> and run the robot until it finds <TT>
+the-goal</TT>.  Do this with <TT>*deity-mode*</TT> true and also false so you
+can see how the robot is working.  Now try <TT>(start-exercise-4
+&lt;<I>your name</I>&gt;)</TT>, set up the robot to find the <TT>diamond</TT> (which
+is somewhere in the labyrinth) than <TT>the-goal</TT>) and observe how
+this works.  There is nothing to turn in for this exercise.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00054000000000000000">Finding something of real value</A></H2>
+<P>
+For the next  part of your  adventure, you will search  the maze for a
+truly valuable object:  a magic scroll.  If  you can get your hands on
+the scroll, you can learn  a magic word that  you can use to get extra
+points   on  Quiz   2.   (We're not   kidding!)   This   magic word is
+personalized  to   you:   Each student  will   get   a different magic
+word.<A NAME="tex2html2" HREF="footnode.html#285"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+The magic scroll will be hidden inside a new labyrinth, which is a lot
+larger than the one for exercises 3 and 4.  There are also a few
+characters that wander aimlessly through the labyrinth, and do nothing
+in particular.  You <EM>might</EM> be able to search this labyrinth by
+hand, but we don't recommend trying.  Instead, you should use a robot
+to perform the search.
+<P>
+There is, however, a catch.<A NAME="tex2html3" HREF="footnode.html#287"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A> The magic scroll will work only in Jill's office.  So it's not
+enough to just send the robot searching for the scroll.  You'll have
+to modify the robot's program so that it not only finds the scroll,
+but brings it back to you so you can take it to Jill's office to read
+it.
+<P>
+<H4><A NAME="SECTION00054010000000000000">Computer exercise 5:</A></H4>
+<P>
+Reinitialize the the world for this exercise by running <TT>
+(start-exercise-5 &lt;<I>your name</I>&gt;)</TT>.  This creates a large labyrinth
+with the magic scroll hidden in it.  The magic scroll is a new kind of
+object of class <TT>scroll</TT> (so that it responds to the <TT>SCROLL?</TT>
+message), and whose name is <TT>magic-scroll</TT>.  Reprogram the robot
+to venture into the labyrinth and retrieve the scroll for you.  Take
+the scroll to Jill's office and ask the scroll to <TT>read</TT>, and
+follow the instructions.  If all works well, you'll obtain the magic
+word.  You'll need to have your MIT ID number handy.  Caution: You can
+read the scroll only once.  After that, its magic will be used up.
+Keep your magic word for the quiz, but turn in your modified robot
+program for this exercise.
+<P>
+<B>Warning:</B> Like all things magical, the scroll must be handled
+with great care.  It is content to be handled by a robot or an avatar.
+But if you try to ``cheat'' by ordering the scroll to move directly,
+the scroll's magic will be destroyed and you will have to restart the
+problem.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00054020000000000000">Exercise 6:</A></H4>
+<P>
+Suppose we had a poltergeist, who randomly wanders around the
+labyrinth.  The poltergeist picks up objects that are not <TT>owned</TT>
+and drops them in other places.  Would your search robot work if the
+world included a poltergeist?  If you think it would, explain.  If you
+think it would not, explain.  Does it make a difference to your answer
+whether pebbles are constructed as a subclass of <TT>thing</TT> vs. as a
+subclass of <TT>named-object</TT>?  You need not provide a running
+example to back up your explanation.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=computer-ex-06">
+Check the 6.001 discussion forum for computer-ex-06</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00055000000000000000">Optional Contest</A></H2>
+<P>
+Having read through to code for this problem set, you've seen that
+there are lots of possibilities to extend the world with new kinds of
+objects. (See, for example, the <TT>troll</TT> implementation in <TT>
+objtypes.scm</TT>.)  Create a world of your own, with some novel
+characters and an interesting story line.  Include a short narrative
+description of your work.  We will award prizes for the most
+interesting stories combined with the cleverest technical ideas.  Note
+that it is more impressive to implement a simple, elegant idea than to
+amass a pile of characters and places.
+<P>
+<P><P>
+<P>
+Turn in answers to the following questions along with your answers to
+the questions in the problem set:
+<P>
+<OL>
+<LI> About how much time did you spend on this homework assignment?
+(Reading and preparing the assignment plus computer work.)
+<LI> Which scheme system(s) did you use to do this assignment (for
+example: 6.001 lab, your own NT machine, your own Win95 machine, your
+own Linux machine)?
+<LI>
+We encourage you to work with others on problem sets as long as you
+acknowledge it (see the 6.001 General Information handout).
+<UL>
+<LI> If you cooperated with other students, LA's, or others, or found portions
+of your answers for this problem set in references other than the
+text (such as some of the archives), please indicate your
+consultants' names and your references.  Also,
+explicitly label all text and code you are submitting which is the same as
+that being submitted by one of your collaborators.
+<LI> Otherwise, write ``I worked alone using only the reference
+materials,'' and sign your statement.
+</UL></OL><HR><A NAME="tex2html60" HREF="node6.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html58" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html52" HREF="node4.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html61" HREF="node6.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html59" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html53" HREF="node4.html">4. Tutorial Exercises</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Wed Mar 11 23:54:42 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node5.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+</HTML>

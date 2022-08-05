@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:35 GMT -->
+<HEAD>
+<TITLE>4. The Debugging Tools</TITLE>
+<META NAME="description" CONTENT="4. The Debugging Tools">
+<META NAME="keywords" CONTENT="ps1-intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps1-intro.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html57" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html55" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html49" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html58" HREF="node5.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html56" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html50" HREF="node3.html">3. Programming assignment: Procedures </A>
+<BR> <P>
+<H1><A NAME="SECTION00040000000000000000">4. The Debugging Tools</A></H1>
+<P>
+This next part of the problem set is a self-teaching exercise.  There
+is nothing to turn in, and you do not need to do it right after
+finishing part 3.  We suggest that you take a half hour to go through
+this before you work on the next problem set.
+<P>
+During the semester, you will often need to debug programs.  This
+section contains an exercise to acquaint you with some of the features
+of Scheme to aid in debugging.  Learning to use the debugging features
+will save you much grief on later problem sets.  Additional
+information about the debugger can be found in <I>Don't Panic</I>, and
+by typing <TT>?</TT> in the debugger.
+<P>
+<H2><A NAME="SECTION00041000000000000000">The debugger</A></H2>
+<P>
+Use the Edwin <TT>M-x load-problem-set</TT> command to again load the
+code for problem set 1 (and ignore the graphics display windows).
+This will load definitions of the following three procedures <TT>p1</TT>,
+<TT>p2</TT> and <TT>p3</TT>:
+<P>
+
+<PRE>(define p1
+  (lambda (x y)
+    (+ (p2 x y) (p3 x y))))
+
+(define p2
+  (lambda (z w) (* z w)))
+
+(define p3
+  (lambda (a b) (+ (p2 a) (p2 b))))</PRE>
+
+<P>
+In the Scheme buffer, evaluate the expression <TT>(p1 1 2)</TT>.  This
+should signal an error, with the message:
+<P>
+
+<PRE>;The procedure #[compound-procedure P2] has been called with 1 argument
+;it requires exactly 2 arguments.
+;Type D to debug error, Q to quit back to REP loop:</PRE>
+
+<P>
+Don't panic.  Beginners have a tendency, when they hit an error, to
+quickly type <TT>Q</TT>, often without even reading the error message.
+Then they stare at their code in the editor trying to see what the bug
+is.  Indeed, the example here is simple enough so that you probably
+can find the bug by just reading the code.  Instead, however, let's
+see how Scheme can be coaxed into producing some helpful information
+about the error.
+<P>
+First of all, there is the error message itself.  It tells you that
+the error was caused by a procedure being called with one argument,
+which is the wrong number of arguments for that procedure.
+Unfortunately, the error message alone doesn't say where in the code
+the error occurred.  In order to find out more, you need to use the
+debugger.  To do this type <TT>D</TT> to start the debugger.
+<P>
+<H2><A NAME="SECTION00042000000000000000">Using the debugger</A></H2>
+<P>
+The debugger allows you to grovel around examining pieces of the
+execution in progress, in order to learn more about what may have
+caused the error.  When you start the debugger, it will create a new
+window showing two buffers.  The bottom buffer right now is empty, and
+top buffer should look like this:
+<P>
+
+<PRE>     COMMANDS:   ? - Help   q - Quit Debugger   e - Environment browser
+This is a debugger buffer:
+Lines identify stack frames, most recent first.
+   Sx means frame is in subproblem number x
+   Ry means frame is reduction number y
+The buffer below describes the current subproblem or reduction.
+-----------
+The *ERROR* that started the debugger is:
+  The procedure #[compound-procedure 119 p2] has been called with 1 argument;
+  it requires exactly 2 arguments.
+
+&gt;S0  (#[compound-procedure 119 p2] 2)
+    R0  (p2 b)
+ S1  (p2 b)
+    R0  (+ (p2 a) (p2 b))
+    R1  (p3 x y)
+ S2  (p3 x y)
+    R0  (+ (p2 x y) (p3 x y))
+    R1  (p1 1 2)
+ --more--</PRE>
+
+<P>
+You can select a frame by clicking on it with the mouse or by using
+the ordinary cursor line-motion commands to move from line to line.
+Notice that the information bottom buffer changes as the selected line
+changes.
+<P>
+The frames in the list in the top buffer represent the steps in the
+evaluation of the expression.  There are two kinds of
+steps--subproblems and reductions.  This idea will be discussed in
+lecture on February 10.  For now, you should think of a reduction step
+as transforming an expression into ``more elementary'' form, and think
+of a subproblem as picking out a piece of a compound expression to
+work on.
+<P>
+So, starting at the bottom of the list and working upwards, we see
+<TT>(p1 1 2)</TT>, which is the expression we tried to evaluate.  The
+next line up indicates that <TT>(p1 1 2)</TT> reduces to <TT>(+
+(p2 x y) (p3 x y))</TT>.  Above that, we see that in order to evaluate
+this expression the interpreter chose to work on the subproblem <TT>
+(p3 x y)</TT>, and so on, moving upwards until we reach the error: the
+call to <TT>(p2 b)</TT> from within the procedure <TT>p3</TT> has only one
+argument, and <TT>p2</TT> requires two arguments.<A NAME="tex2html11" HREF="footnode.html#414"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+Take a moment to examine the other debugger information (which will
+come in handy as your programs become more complex).  Specifically, in
+the top buffer, select the line
+
+<PRE>&gt;S2  (p3 x y)</PRE>
+
+<P>
+The bottom buffer should now look like this: 
+
+<PRE>                         SUBPROBLEM LEVEL: 2
+Expression (from stack):
+ Subproblem being executed highlighted.
+    (+ (p2 x y) (p3 x y))
+---------------------------------------------------------------------
+ENVIRONMENT named: (student)
+    has 79 bindings
+
+==&gt; ENVIRONMENT created by the procedure: P1
+      x = 1
+      y = 2
+---------------------------------------------------------------------
+;EVALUATION may occur below in the environment of the selected frame.</PRE>
+
+<P>
+The information here is in three parts.  The first shows the
+expression again, with the subproblem being worked on highlighted.
+The next major part of the display shows information about the <I>
+environments</I>.  We'll have a lot more to say about environments later
+in the semester, but for now notice the line
+
+<PRE>==&gt; ENVIRONMENT created by the procedure: P1</PRE>
+
+<P>
+This indicates that the evaluation of the current expression is
+within procedure <TT>p1</TT>.  Also we find the environment has two <I>
+bindings</I> that specify the particular values of <TT>x</TT> and <TT>y</TT>
+referred to in the expression, namely <TT>x = 1</TT> and <TT>y = 2</TT>.  At
+the bottom of the description buffer is an area where you can evaluate
+expressions in this environment (which is often useful in debugging).
+For example, try evaluating <TT>(+ x y)</TT>, and notice that you can do
+this, even though these values of <TT>x</TT> and <TT>y</TT> are local to
+this activation of <TT>P1</TT>.
+<P>
+Before quitting the debugger try one final experiment (you may have
+already done this).  Continue to scroll down through the stack past
+the line: <TT>R1 (p1 1 2)</TT> (you can also click the mouse on the line
+<TT>-more-</TT> to show the next subproblem).  You will then see
+additional frames that contain various bits of compiled code.  What
+you are looking at is some of the guts of the Scheme system--the part
+shown here is a piece of the interpreter's read-eval-print program.
+In general, backing up from any error will eventually land you in the
+guts of the system. (Yes: almost all of the system is itself a Scheme
+program.)
+<P>
+You can type <TT>q</TT> to return to the Scheme top level interpreter.
+<P>
+<H4><A NAME="SECTION00042010000000000000">Experiment 1:  More debugging</A></H4>
+<P>
+The code you loaded for problem set 1 also defined three other
+procedures, called <TT>fold</TT>, <TT>spindle</TT>, and <TT>mutilate</TT>.  One
+of these procedures contains an error.  Evaluate the expression <TT>
+(fold 1 2)</TT>.  What is the error?  How should the procedure be defined?
+Notice that you can examine the code for a procedure by using the
+<TT>pp</TT> command.  For example, evaluating the expression <TT>(pp
+fold)</TT> will print the definition of <TT>fold</TT>.
+<P>
+<H4><A NAME="SECTION00042020000000000000">Experiment 2: Still more debugging</A></H4>
+<P>
+The code you loaded also contains a buggy definition of a procedure
+meant to compute the factorials of positive integers:
+<IMG WIDTH=258 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline879" SRC="img15.gif">.  Evaluate the
+expression <TT>(fact 5)</TT> (which is supposed to return 120).  Use the
+debugger to find the bug, and correct the definition.
+<P>
+<H2><A NAME="SECTION00043000000000000000">The stepper</A></H2>
+<P>
+The stepper is another useful debugging tool that you should become
+acquainted with.  Go into the Scheme buffer and type the expression
+<TT>(+ (* 3 4) (* 5 6))</TT>, but
+instead of evaluating it with <TT>c-X c-E</TT>, type <TT>M-s</TT>.  The
+screen will split to show two windows.  The top is your Scheme buffer;
+the bottom is the <EM>Stepper buffer</EM>, which right now should read,
+
+<PRE>(+ (* 3 4) (* 5 6)) =&gt; ;waiting</PRE>
+
+``Waiting'' means that it's waiting for you to tell it to go on, which
+you do by pressing the space bar.  You'll see Scheme start to work on
+the subexpression <TT>(* 5 6)</TT>.  Continuing to press the space bar
+will show each element in the evaluation.  The various ``waiting''
+tokens will be replaced by the values as the evaluation proceeds.  At
+the end, you should be up at the top of the window again, with 42
+shown as the value of the call to the stepper.  At this point, you can
+get out of the stepper by moving back to the Scheme buffer.
+<P>
+Try stepping this same expression a few times until you see clearly
+what is going on.  Rather than always hitting the space bar, there are
+a couple of other stepper commands you can try (press <TT>?</TT> to see
+them listed):
+<UL>
+<LI> <TT>o</TT> -- step over the current expression:  Get
+the value of the current expression without stepping
+through the details.
+<LI> <TT>c</TT> -- contract:  After you've stepped through an
+expression, hide the details, showing only the result.
+<LI> <TT>e</TT> -- expand: Undo the contraction.
+</UL>
+<P>
+One more experiment: Try stepping through the evaluation of <TT>(p1 1
+2)</TT>, which is the expression you used above to learn about the
+debugger.  You will find that when you get to the evaluation of the
+expression that produces the error, you'll see <TT>
+#[unspecified-return-value]</TT> as the result--this should give you a
+hint that something has gone wrong.
+<P>
+In general, you use the debugger and stepper to home in on bugs from
+two different ``directions.''  If you have a program that signals an
+error, you can just let the error occur and use the debugger to try to
+figure out what happened; or you can step through the program up to
+the point where you see the error happen and try to figure out what is
+causing it.
+<P>
+Debugging can be frustrating.  The debugging tools are your friends.
+Call on them regularly.  People often wish that they never encountered
+bugs, and you'll sometimes hear ``theorists'' of computer
+science teaching to claim that if you plan your programs well, you
+won't have bugs.  We wonder if these ``theorists'' have ever written
+any programs:
+<P>
+<BLOCKQUOTE> Without erring, and transcending our error, we, as sometimes suggested
+by the Socratic irony, simply cannot become wise....Error is not a
+mere accident of untrained intellect, but a necessary stage or feature
+or moment <IMG WIDTH=18 HEIGHT=2 ALIGN=BOTTOM ALT="tex2html_wrap_inline693" SRC="img1.gif">--Josiah Royce <EM>Lectures on Modern Idealism</EM>
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE> What is most harmful is trying to preserve oneself from errors.-- Hegel
+</BLOCKQUOTE><HR><A NAME="tex2html57" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html55" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html49" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html58" HREF="node5.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html56" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html50" HREF="node3.html">3. Programming assignment: Procedures </A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Jan 31 15:55:15 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:36 GMT -->
+</HTML>

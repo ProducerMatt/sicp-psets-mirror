@@ -1,0 +1,205 @@
+;;6.001 Spring 98 
+;; Problem Set 4 solutions
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Computer Exercise 1 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (list-frosh table)
+  ;; Returns a flat list of all frosh in table (including frosh below in the tree)
+  
+  ;; Algorithm: recursively generate flat lists of frosh in
+  ;; each of the branches, then append these lists together
+  ;; along with the list of frosh at the top table
+  ;; to form one flat list of all frosh:
+  (accumulate append
+	      (table-values table)
+	      (map (lambda (branch)
+		     ;; returns flat list of frosh in branch
+		     (list-frosh (branch-subtable branch)))
+		   (table-branches table))))
+
+(list-frosh entering-class)
+;Value: (hexapod2 hexapod1 hexapod3 hexapod4 amoeboid3 amoeboid2 amoeboid4 amoeboid1 gnorkette snork gnork bork tork mary fred mike)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Computer Exercise 2 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (pick-frosh table conditions)
+  ;; Returns a flat list of frosh in table satisfying the given conditions
+
+  ;; Algorithm: if no conditions list all frosh; else, list frosh
+  ;; listed in the top-level node (they don't care about these
+  ;; conditions), and frosh in the branch labelled with the first
+  ;; condition who satisfy the remaining conditions
+  ;; (e.g. for the call (pick-frosh entering-class '(sulfur 350K-370K ultraviolet))
+  ;; we list the frosh listed at the top-level node (there are none),
+  ;; and the frosh in the branch labelled 'sulfur which can live with
+  ;; '(350K-370K ultraviolet)).  
+
+  (if (null? conditions)
+      (list-frosh table)
+      (append
+       (table-values table)
+       (let ((matching-branch (assoc (car conditions)
+				     (table-branches table))))
+	 (if (null? matching-branch)
+	     (make-empty-table) ;; no frosh below top node tolerate 1st condition
+	     (pick-frosh (branch-subtable matching-branch)
+			 (cdr conditions)))))))
+
+;; Test pick-frosh:
+
+(pick-frosh entering-class '(sulfur))
+;Value: (amoeboid3 amoeboid2 amoeboid4 amoeboid1)
+
+(pick-frosh entering-class '(methane 260K-270K))
+;Value: (hexapod2 hexapod1 hexapod3 hexapod4)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Computer exercise 3 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (wildcard-pick-frosh table conditions)
+  ;; Same as pick-frosh but allows wildcards for categories
+
+  ;; Algorithm: same as pick-frosh except if the first
+  ;; condition is a wildcard, not one but all sub-branches
+  ;; can contain frosh who can tolerate the conditions,
+  ;; so recursively get lists of these frosh from the sub-branches
+  ;; and append into one list, together with the "dont-care" frosh
+  ;; from the top-level table.
+  
+  (if (null? conditions)
+      (list-frosh table)
+      (accumulate
+       append
+       (table-values table)
+       (map (lambda (eligible-branch)
+	      (wildcard-pick-frosh
+	       (branch-subtable eligible-branch)
+	       (cdr conditions)))
+	    (filter
+	     (if (eq? (car conditions) '*)
+		 (lambda (branch) #t)
+		 (lambda (branch) (eq? (branch-key branch) (car conditions))))
+	     (table-branches table))))))
+
+(wildcard-pick-frosh entering-class '(* * * *))
+;Value: (hexapod2 hexapod1 hexapod3 hexapod4 amoeboid3 amoeboid2 amoeboid4 amoeboid1 gnorkette snork gnork bork tork mary fred mike)
+
+(wildcard-pick-frosh entering-class '(* 290K-300K))
+;Value: (gnorkette snork gnork mary fred mike)
+
+(wildcard-pick-frosh entering-class '(* 290K-300K *))
+;Value: (gnorkette snork gnork mary fred mike)
+
+(wildcard-pick-frosh entering-class '(* 290K-300K *))
+
+(wildcard-pick-frosh entering-class '(* 350K-370K * random))
+
+(length (wildcard-pick-frosh entering-class '(ethanol)))
+;Value: 5
+
+;; Five students displaced by no-ethanol policy
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Computer exercise 4 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (canonicalize-input freshthing)
+  ;; Converts a freshthing's preferences from format
+  ;; (name (category-1 preference-1) ... (category-n preference-n))
+  ;; with category-preference clauses listed in any order,
+  ;; e.g. (cxthlogtl (cycle night) (atmosphere sulfur) (spectrum ultraviolet))
+  ;; into the more restrictive format
+  ;; (name (preference-1 ... preference-n))
+  ;; with preferences listed from most to least important as
+  ;; specified by *order*, and wildcard '* substituted for peferences
+  ;; not specified, e.g. for the above example
+  ;; (cxthlogtl (sulfur * ultraviolet night))
+
+  ;; Other input formats are possible.
+
+  ;; Algorithm: map the *order* list into the list of preferences,
+  ;; mapping each category to the preference specified for that
+  ;; category, or to '* if no preference
+  (list
+   (car freshthing)
+   (map (lambda (category)
+	  (let ((pref-for-this-category
+		 (assoc category (cdr freshthing))))
+	    (if (null? pref-for-this-category)
+		'*
+		(second pref-for-this-category))))
+	*order*)))
+
+;; Test canonicalize-input
+
+(canonicalize-input
+ '(cxthlogtl (cycle night) (atmosphere sulfur) (spectrum ultraviolet)))
+;Value: (cxthlogtl (sulfur * ultraviolet night))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Computer Exercise 5 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+At each level of the tree, we add a branch that specifies the
+don't care or wild card option. If a fresthings does not specify some
+characteristics, he/she/it could be included under the don't care
+branch. Our tree would now look something like this:
+
+(()
+ (methane ()
+	  (260k-270k (hexapod4)
+		     (infrared ()
+			       (random (hexapod2 hexapod1))
+			       (night (hexapod3))))
+	  (* ()
+	     (ultraviolet ()
+			  (day (weirdo1)))
+	     (* ()
+		(* (weirdo2)))))
+ (...)
+ (* ()
+    (* ()
+       (* ()
+	  (day (gleep))))))
+
+Here, weirdo1 specified a methane atmosphere, no preference in temperature,
+and a spectrum of ultraviolet and a day cycle. Weirdo2 on the other hand,
+specified an atmosphere of methane, but no preference in the other
+characteristics. Gleep, Hal's friend, specified only a day cycle and no
+preferences in the other characteristics and would be introduced in the
+tree as shown.
+
+To implement this format, we need the following changes:
+
+Adding freshlings to the table:
+
+-- the input format for specifying freshman preferences should be the one
+used by wildcard-pick-frosh to specify conditions: e.g. (gleep (* * * day)) --
+canonicalize-input can be used to convert input into this format
+from a less restrictive format.
+
+-- no other changes are needed to aliens.scm, since the tree-building code
+treats * like any other preference for a category, and will create a
+sub-branch with the key of * when it sees a "preference" of * in a
+freshthing's prefs list.
+
+Picking freshlings from the table:
+
+-- when choosing table branches which may contain freshlings covered by
+a query, always include the * branch if it exists.  So, in wildcard-pick-frosh,
+when the first condition lists a specific preference (not a wildcard),
+at most two branches are eligible: the branch matching the preference
+(if there is such a branch), and the wildcard branch (if it exists).
+When the first condition in the query is a wildcard, the handling
+does not change: all branches, including the wildcard branch,
+are eligible.
+
+   
+
+
+

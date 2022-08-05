@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+<HEAD>
+<TITLE>2. Messages and Delegation</TITLE>
+<META NAME="description" CONTENT="2. Messages and Delegation">
+<META NAME="keywords" CONTENT="ps7-robot">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps7-robot.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html30" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html28" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html22" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html31" HREF="node3.html">3. Our World</A>
+<B>Up:</B> <A NAME="tex2html29" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html23" HREF="node1.html">1. The Object Simulation</A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. Messages and Delegation</A></H1>
+<P>
+Another idea that was described in lecture on March 19th is that of
+<EM>delegation</EM>, which is the use of one object's method by another
+object.  For example, when you read the code in <TT>objtypes.scm</TT>,
+you will see definitions of several different kinds of objects.  Among
+these are mobile objects (made by <TT>make-mobile-object</TT>) that can
+<TT>change-location</TT>, and persons (made by <TT>make-person</TT>).  When
+a mobile object moves from one place to another the lists of <TT>
+things</TT> at the old location and at the new location must be changed:
+The object is removed from the list at the old location and added to
+the list at the new location.
+<P>
+A person is a kind of mobile object.  When a person is constructed, an
+internal mobile object is also constructed to handle messages such as
+<TT>change-location</TT>.  The mobile object is bound to a variable that
+is visible only within the person object.
+<P>
+When a person moves from one place to another, it does so by using the
+<TT>change-location</TT> method from its internal mobile object.
+However, it is the person that moves.  Thus, it is the person that
+must be added or removed from the lists of things, not the mobile
+object from which the method was obtained.  To implement this behavior
+the <TT>change-location</TT> method needs to know the actual moving
+object, and this is what is passed to the method as <TT>self</TT>.
+<P>
+This mechanism implements an idea called <EM>delegation</EM>.  Indeed, to
+send a message to an object in this system we use <TT>ask</TT>.  For
+example, if <TT>me</TT> is an object, named Joe, and we want its name, we
+say:
+<P>
+
+<PRE>(ask me 'name) ==&gt; Joe</PRE>
+
+<P>
+What <TT>ask</TT> does here is get the <TT>name</TT> method from <TT>me</TT>
+and then call it with <TT>me</TT> as the argument (so the value of <TT>
+me</TT> will be bound to <TT>self</TT> in the method body).  The full <TT>
+ask</TT> procedure is defined in the file <TT>objsys.scm</TT>, but here is a
+simplified version that works for messages requiring no arguments:
+<P>
+
+<PRE>(define (ask object message)
+  ((get-method message object) object))
+
+(define (get-method message object)
+  (object message))</PRE>
+
+<P>
+Sometimes it is necessary to exercise more detailed control over
+inheritance.  For example, one kind of character you will encounter in
+this problem set is an <TT>avatar</TT>.  The avatar is a kind of person
+who must be able to do the sorts of things a person can do, such as
+<TT>move-to</TT> a new location.  However, the avatar must be able to
+intercept the <TT>move-to</TT> message, to do things that are special to
+the avatar, as well as to do what a person does when it receives a
+<TT>move-to</TT> message.  This is accomplished by explicit delegation.
+The avatar does whatever it has to, and in addition, it delegates to
+its internal person the processing of the <TT>move-to</TT> message, with
+the avatar as <TT>self</TT>.
+<P>
+One final note about our system.  If you look in <TT>objtypes.scm</TT>,
+you'll see that objects have an <TT>install</TT> method, which does some
+appropriate initialization for a newly created object.  For instance,
+if you create a new mobile object a at place, the object must be added
+to the list of things at the place.  As you'll see in the code, we
+define two procedures for each type of object--a maker and a
+constructor.  The constructor makes the object and then installs it.
+When you create objects in our simulation, you should do this using
+the constructor.  Thus, to make a new person, use <TT>
+construct-person</TT> rather than calling <TT>make-person</TT> directly.
+Also if you decide to extend the simulation by creating new classes
+and new kinds of objects, you'll find it convenient to maintain this
+discipline of defining separate maker and constructor procedures.
+<P>
+<HR><A NAME="tex2html30" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html28" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html22" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html31" HREF="node3.html">3. Our World</A>
+<B>Up:</B> <A NAME="tex2html29" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html23" HREF="node1.html">1. The Object Simulation</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Wed Mar 11 23:54:42 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+</HTML>

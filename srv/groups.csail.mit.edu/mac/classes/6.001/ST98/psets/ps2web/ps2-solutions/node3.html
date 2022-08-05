@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-solutions/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:06 GMT -->
+<HEAD>
+<TITLE> Computer Exercise 3</TITLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" link="#8e0000" vlink="#0000FF" >
+
+<BODY>
+<meta name="description" value=" Computer Exercise 3">
+<meta name="keywords" value="solutions">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html42 HREF="node4.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.ai.mit.edu/latex2html/next_motif.gif"></A>   <A NAME=tex2html40 HREF="solutions.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.ai.mit.edu/latex2html/up_motif.gif"></A>   <A NAME=tex2html34 HREF="node2.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.ai.mit.edu/latex2html/previous_motif.gif"></A>         <BR>
+<B> Next:</B> <A NAME=tex2html43 HREF="node4.html"> Computer Exercise 4</A>
+<B>Up:</B> <A NAME=tex2html41 HREF="solutions.html">
+       Pset2 Solutions</A>
+<B> Previous:</B> <A NAME=tex2html35 HREF="node2.html"> Computer Exercise 2</A>
+<BR> <HR> <P>
+<H1><A NAME=SECTION00030000000000000000> Computer Exercise 3</A></H1>
+<P>
+<b>We make use of the mathematical fact </b> <br>
+<center> <tt> ab mod p <IMG  ALIGN=BOTTOM ALT="" SRC="img1.gif"> (a mod p) (b mod p) mod p</tt> </center>
+<b>to speed up our verify procedure.</b>
+<P>
+<PRE>(define (verify message signature public-key)
+  (let ((r (signature-r signature))
+        (s (signature-s signature))
+        (p (public-key-p public-key))
+        (g (public-key-g public-key))
+        (y (public-key-y public-key)))
+    (and (&lt; 0 r p)                     
+	 (let ((h (modulo (message-digest message) p)))
+	   (= (expmod g h p)
+	      (modulo (* (expmod y r p)        ;; here is where we use the 
+                         (expmod r s p))       ;; mathematical fact.
+		      p))))))
+</PRE>
+<P>
+<b>Now let's verify the two example messages:</b>
+<P>
+<PRE>(verify m1-ex-3 s1-ex-3 pk-ex-3)
+;Value: #f
+
+(verify m2-ex-3 s2-ex-3 pk-ex-3)
+;Value: #t
+</PRE>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Tony Ezzat <BR>
+Mon Feb  9 20:47:53 EST 1998</I>
+</ADDRESS>
+</BODY>

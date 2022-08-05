@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:22 GMT -->
+<HEAD>
+<TITLE>2. Tutorial Exercises</TITLE>
+<META NAME="description" CONTENT="2. Tutorial Exercises">
+<META NAME="keywords" CONTENT="ps1-intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps1-intro.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html37" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html35" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html29" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html38" HREF="node3.html">3. Programming assignment: Procedures </A>
+<B>Up:</B> <A NAME="tex2html36" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html30" HREF="node1.html">1. Getting started</A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. Tutorial Exercises</A></H1>
+<P>
+Prepare these exercises for oral presentation in tutorial.
+<P>
+<H4><A NAME="SECTION00020010000000000000">Tutorial exercise 1:</A></H4>
+  Below is a sequence of expressions.
+Be prepared to indicate the result that is printed by the interpreter in
+response to each expression.  Be prepared to explain why.  Assume that
+the sequence is to be evaluated in the order in which it is presented.
+(Try to determine the answers to this exercise without actually trying
+these on a computer.)
+<P>
+
+<PRE>(&gt; 10 9.7)
+
++
+
+(define double (lambda (x) (* 2 x)))
+
+double
+
+(define c 4)
+
+c
+
+(double c)
+
+c
+
+(double (double (+ c 5)))
+
+(define times-2 double)
+
+(times-2 c)
+
+(define d c)
+
+(= c d)
+
+(if (= (* c 6) (times-2 d))
+    (&lt; c d)
+    (+ c d))    
+
+(cond ((&gt;= c 2) d)
+      ((= c (- d 5)) (+ c d))
+      (else (abs (- c d))))
+
+(define try (lambda (x) (x 3)))
+
+(try double)
+
+(try (lambda (z) (* z z)))</PRE>
+
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020020000000000000">Tutorial exercise 2:</A></H4>
+<P>
+What is the difference between the following two ways of defining <TT>cube</TT>?
+
+<PRE>(define cube (lambda (x) (* x x x)))
+
+(define (cube x) (* x x x))</PRE>
+
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020030000000000000">Tutorial exercise 3:</A></H4>
+<P>
+Do exercise 1.4 of the text.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=tutorial-ex-03">
+Check the 6.001 discussion forum for tutorial-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020040000000000000">Tutorial exercise 4:</A></H4>
+<P>
+Do exercise 1.6 of the text.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps01&amp;key=tutorial-ex-04">
+Check the 6.001 discussion forum for tutorial-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html37" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html35" HREF="ps1-intro.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html29" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html38" HREF="node3.html">3. Programming assignment: Procedures </A>
+<B>Up:</B> <A NAME="tex2html36" HREF="ps1-intro.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html30" HREF="node1.html">1. Getting started</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sat Jan 31 15:55:15 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps1web/ps1-intro/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:22 GMT -->
+</HTML>

@@ -1,0 +1,116 @@
+;; 6.001 Spring 1998
+;; Problem Set 8
+;; Solutions
+
+
+;;;;------------------------------
+;;;;Exercise 1
+
+;;put this together into a procedure that takes an input "message"
+;;stream and gets the output.
+
+(define (simulate-front-end phoneme-stream noise)
+  (stream-map
+   (lambda (sound)
+     (make-random-confusion sound noise))
+   phoneme-stream))
+
+
+(define (phoneme-input-stream)
+  (simulate-front-end (input-stream) 0))
+
+(define (noisy-phoneme-input-stream)
+  (simulate-front-end (input-stream) 1))
+
+(define (phoneme-stream-from-list list)
+  (simulate-front-end (list->stream list) 0))
+
+(define (noisy-phoneme-stream-from-list list)
+  (simulate-front-end (list->stream list) 1))
+
+;;;;------------------------------
+;;;Exercise 2
+
+(define (split-stream-at-silences stream)
+  (split-stream stream
+		(lambda (x) (eq? (weighted-data (car x)) '*))))
+
+
+;;;;------------------------------
+;;Exercise 3
+
+;;(define one-chunk
+;;     (stream-car
+;;      (split-stream-at-silences
+;;       (phoneme-stream-from-list '(c a t)))))
+
+;;(pp (all-choices one-chunk))
+
+
+(define (sensible? weighted-phoneme-list)
+  (word-in-dictionary? (map weighted-data weighted-phoneme-list)))
+
+;;;(pp (filter sensible? (all-choices one-chunk)))
+
+
+
+;;;transform a list of weighted elements such as ( (c .0323) (a .434) (t .045))
+;;;to the form ((c a t) prob) where prob is the product of the
+;;;individual weights
+
+;;;;------------------------------
+;;Exercise 4
+
+(define (combine-weighted weighted-elements)
+  (let ((names (map weighted-data weighted-elements))
+	(probs (map weighted-weight weighted-elements)))
+    (list names (accumulate * 1 probs))))
+
+
+;;(pp (map combine-weighted (filter sensible? (all-choices one-chunk))))
+
+;;;(pp (normalize-weights (map combine-weighted (filter sensible? (all-choices one-chunk)))))
+
+;;--------------------------------
+;;exercise 5
+
+
+(define (possible-words phoneme-possibilities-list)
+  (normalize-weights
+       (map combine-weighted
+	    (filter sensible? (all-choices phoneme-possibilities-list)))))
+
+(define (flag-unrecognized word-list)
+  (if (null? word-list)
+      (list (list '*unknown* 1.0))
+      word-list))
+
+;;--------------------------------
+;;exercise 6
+
+
+(define (recognize phoneme-stream)
+  (stream-map
+   flag-unrecognized
+   (stream-map
+    possible-words
+    (split-stream-at-silences phoneme-stream))))
+
+;;(stream-pp (recognize (phoneme-input-stream)))
+;;(stream-pp (recognize (noisy-phoneme-input-stream)))
+
+
+;;--------------------------------
+;;exercise 7
+
+(define (possible-phrases input-stream)
+  (map
+   combine-weighted
+   (all-choices (stream->list (recognize input-stream)))))
+
+
+;;;(pp (possible-phrases (phoneme-stream-from-list '(th e * d o g * r a n * b y * th e * c a t))))
+
+;;;(pp (possible-phrases (phoneme-input-stream)))
+
+

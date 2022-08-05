@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+<HEAD>
+<TITLE>4. Tutorial Exercises</TITLE>
+<META NAME="description" CONTENT="4. Tutorial Exercises">
+<META NAME="keywords" CONTENT="ps7-robot">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps7-robot.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html50" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html48" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html42" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html51" HREF="node5.html">5. Programming Assignment</A>
+<B>Up:</B> <A NAME="tex2html49" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html43" HREF="node3.html">3. Our World</A>
+<BR> <P>
+<H1><A NAME="SECTION00040000000000000000">4. Tutorial Exercises</A></H1>
+<P>
+You should prepare these exercises for oral presentation in tutorial.
+<P>
+<H4><A NAME="SECTION00040010000000000000">Tutorial exercise 1:</A></H4>
+<P>
+In the transcript above there is a line: <TT>(ask (ask me 'location)
+'name)</TT>.  What kind of value does <TT>(ask me 'location)</TT> return
+here?  What other messages, besides <TT>name</TT>, can you send to this
+value?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040020000000000000">Tutorial exercise 2:</A></H4>
+<P>
+Look through the code in <TT>objtypes.scm</TT> to discover which classes
+are defined in this system and how the classes are related.  For
+example, <TT>place</TT> is a subclass of <TT>named-object</TT>.  Be prepared
+to draw the tree of subclass relationships and the messages that can
+be sent to each kind of object, using a diagram like the one presented
+in lecture on March 19.  You will find such a diagram helpful (maybe
+indispensable) in doing the programming assignment.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040030000000000000">Tutorial exercise 3:</A></H4>
+<P>
+Look at the contents of the file <TT>setup.scm</TT>.  What places are
+defined?  How are they interconnected?  Who is in each place in the
+initial state?  Be prepared to draw a map.  You must be able to show
+the places, the exits that allow one to go from one place to a
+neighboring place, the persons, the things, and the initial place for
+each person or thing.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=tutorial-ex-03">
+Check the 6.001 discussion forum for tutorial-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040040000000000000">Tutorial exercise 4:</A></H4>
+<P>
+The avatar, as a person, may have possessions.  How does the avatar
+handle the request <TT>(ask me 'possessions)</TT>?  In particular, which
+method is used to respond to the request and which variable holds the
+list of possessions?  
+Be prepared to sketch a skeletal environment diagram
+to explain your answer.  Note that we are not asking you to draw a
+fully detailed environment diagram here--it is huge and useless!
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=tutorial-ex-04">
+Check the 6.001 discussion forum for tutorial-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040050000000000000">Tutorial exercise 5:</A></H4>
+<P>
+The file <TT>search-rooms.scm</TT> defines a search strategy maker that
+is similar to the search strategy maker you worked with in problem set 6.
+This week, you'll program a robot to follow this strategy to walk
+through a maze, searching for a valuable object.  One difference
+between the robot version and the one for exercise 6 is the use of
+path procedures (implemented with <TT>make-path-procedures</TT>).  What
+are these being used for?  Why is this necessary for a robot walking
+through a maze but not for a spider crawling the Web as in exercise 6?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps07&amp;key=tutorial-ex-05">
+Check the 6.001 discussion forum for tutorial-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html50" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html48" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html42" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html51" HREF="node5.html">5. Programming Assignment</A>
+<B>Up:</B> <A NAME="tex2html49" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html43" HREF="node3.html">3. Our World</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Wed Mar 11 23:54:42 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+</HTML>

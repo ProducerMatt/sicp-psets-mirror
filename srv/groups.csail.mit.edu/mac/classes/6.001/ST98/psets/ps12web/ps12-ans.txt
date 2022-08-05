@@ -1,0 +1,245 @@
+<pre>
+
+;; 6.001 Spring '98
+;; Problem Set 12 Solutions
+;; ========================
+
+
+
+Problem Set 12 Solutions
+
+Tutorial Exercises
+1a. Recursive
+
+First some helper functions:
+(define (min x y)
+	(if (> x y)
+		y
+		x))
+
+(define (abs x)
+	(if (> x 0)
+		x
+		(- 0 x)))
+
+
+(define (minabs lst)
+	(if (null? (cdr lst))
+		(abs(car lst))
+		(min (abs (car lst)) (minabs (cdr lst)))))
+
+Orders of growth:
+Time: theta(n)  Space: theta(n)
+
+ 1b. Iterative
+
+(define (minabs-iter lst)
+	(define (helper lst ans)
+		(if (null? lst)
+			ans
+			(helper (cdr lst) (min ans (abs(car lst))))))
+	(helper (cdr lst) (abs(car lst))))
+
+
+Orders of growth:
+Time: theta(n) 
+Space: theta(1)
+
+
+2. Register Machines
+
+2a. Recursive
+
+(define recurs-machine
+	(make-machine
+		'(result lst a b tmp continue)				;registers
+		standard-primitives						;operations
+		'(start
+				(assign continue (label recurs-done))		;continue<-done
+min-recurs-loop
+	(assign tmp (op cdr)(reg lst))				;(cdr lst)->tmp
+	(test (op null?) (reg tmp))					;(null? tmp)
+	(branch (label base-case))					;true->base-case
+	(save lst)							;lst>stack
+	(save continue)					;continue->stack
+	(assign lst (op cdr)(reg lst))	;cdring down the list
+	(assign continue (label after-min-recurs))
+	(goto (label min-recurs-loop))	;start the loop again
+base-case
+	(assign result (op car) (reg lst))
+	(test (op <) (reg result) (const 0))
+	(branch (label abs-result))
+	(goto (reg continue))
+abs-result
+	(assign result (op -) (const 0) (reg result))
+	(goto (reg continue))
+after-min-recurs
+	(restore continue)	;pop continue from stack
+	(restore lst)			;pop lst from stack
+setup-min-test
+	(assign a (op car) (reg lst))
+	(assign b (reg result))	;setting up registers for min test
+minabs1-machine
+	(test (op >) (reg a) (const 0)) ;(> a 0) test for abs value
+	(branch (label a-positive))
+	(assign a (op -) (const 0) (reg a)) ; -a -> a
+a-positive
+	(test (op >) (reg b) (const 0))  ;(> b 0) test for abs value
+	(branch (label b-positive))
+	(assign b (op -) (const 0) (reg b))  ; -b -> b
+b-positive
+	(test (op >) (reg a) (reg b))  ; (> a b)?
+	(branch (label a-greater)) 
+b-greater
+	(assign result (reg a))  ; b>a, so a is the desired result
+	(goto (label minabs1-done))
+a-greater
+	(assign result (reg b))  ; a>b, so b is the result
+minabs1-done
+	(goto (reg continue))
+recurs-done)))
+
+;;;;;;;;;;;;;;;
+(define standard-primitives (list (list '< <)(list '> >)
+				  (list '- -)(list '+ +)
+				  (list '* *)(list '/ /)
+				  (list 'car car)
+				  (list 'cdr cdr)
+				  (list '= =)
+				  (list 'null? null?)
+				  ))
+
+2b. Iterative
+
+(define iter-machine
+  (make-machine
+   '(result lst a b)
+   standard-primitives
+   '(start 
+     (assign result (op car) (reg lst))
+     (assign lst (op cdr) (reg lst))
+     minabs-iter-loop
+     (test (op null?) (reg lst))
+     (branch (label minabs-iter-done))
+     setup-minabs-test
+     (assign a (reg result))
+     (assign b (op car) (reg lst))
+     minabs-machine
+     (test (op >) (reg a) (const 0))
+     (branch (label a-positive))
+     (assign a (op -) (const 0) (reg a))
+     a-positive
+     (test (op >) (reg b) (const 0))
+     (branch (label b-positive))
+     (assign b (op -) (const 0) (reg b))
+     b-positive
+     (test (op >) (reg a) (reg b))
+     (branch (label a-greater))
+     b-greater
+     (assign result (reg a))
+     (goto (label minabs-machine-done))
+     a-greater
+     (assign result (reg b))
+     minabs-machine-done
+     (assign lst (op cdr) (reg lst))
+     (goto (label minabs-iter-loop))
+     minabs-iter-done)))
+
+Computer Exercises
+
+Exercise 1:
+Recursive
+n         1 2 3 4 5 7        Formula:
+- - -------------------------------------
+Pushes    0 2 4 6 8 12        2(n-1)
+Depth     0 2 4 6 8 12        2(n-1)
+
+Iterative
+n         1 2 3 4 5 7        Formula:
+- - -------------------------------------
+Pushes    0 0 0 0 0 0          0
+Depth     0 0 0 0 0 0          0
+
+
+Exercise 2A.
+
+Recursive
+n         1   2   3   5   10         Formula:
+- - ----------------------------------------------
+Pushes    8   21  34  60  125         13n-5
+Depth     3   6   9   15  30           3n
+
+
+
+Iterative 
+n         1   2   3   5   10         Formula:
+- - ----------------------------------------------
+Pushes    11  27  43  75  155         16n-5
+Depth     3   7   7   7   7            3, n=1
+						   7, n>1
+
+
+Exercise 2B.
+
+Recursive
+n         1   2   3   5   10         Formula:
+- - ----------------------------------------------
+Pushes    23  86  149 283 401         63n-40
+Depth     10  13  16  22  28           3n+7
+
+
+Iterative 
+n         1   2   3   5   10         Formula:
+- - ----------------------------------------------
+Pushes    36  113 190 344 729		  77n-41
+Depth     8   16  16  16  16           8, n=1
+                                      16, n>1
+
+
+
+Exercise 2C.
+See formulas above!
+
+Exercise 2D.
+Ratio of speed of hand-coded versus machine evaluated code:
+
+Compiled (2A)	-iterative: time, space: infinity
+			-recursive: time:6.5; space: 1.5
+
+Interpreted (2B)	-iterative: time, space: infinity
+			-recursive: time:31.5; space: 1.5
+
+Exercise 3A.
+Run the scheme expressions from tutorial exercises thorough the 
+Compiler and the interpreter, to generate long (3-4 pages) machine
+Language descriptions.
+
+Exercise 3B.
+
+A large number of optimizations are possible to improve the compiled
+code.  We will consider one here: in-lining of primitive procedures.
+
+For primitives, and compound procedures the compiler worries that the
+symbol might be bound to an arbitrary procedure, and checks whether
+they are primitive or not.  In either case, it makes a list of the
+arguments, even if there is only one.  Thus a call to null? for
+instance compiles to 12 instructions, of which only 9 get executed.
+In our hand-coded minabs-iter, it was all done in one instruction.
+
+The simplest fix would be to keep a list of "primitive" procedures and
+code them directly as calls to the primitives, as we did in max-iter.
+Unfortunately, this would not compile all valid code correctly.
+
+Exercise 4.
+
+This is a one-line fix!  In the definition of compile-assignment we
+need to change only one line, which is:
+
+(assign ,target (const ok)))))))) 
+
+Replace this line with this one: 
+
+(assign ,target (reg val))))))))
+
+
+</pre>

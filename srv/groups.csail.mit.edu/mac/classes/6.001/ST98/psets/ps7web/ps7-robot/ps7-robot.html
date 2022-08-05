@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/ps7-robot.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:00:36 GMT -->
+<HEAD>
+<TITLE>No Title</TITLE>
+<META NAME="description" CONTENT="No Title">
+<META NAME="keywords" CONTENT="ps7-robot">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps7-robot.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif">   <BR>
+<B> Next:</B> <A NAME="tex2html5" HREF="node1.html">1. The Object Simulation</A>
+<BR> <P>
+<P>
+<center>
+MASSACHVSETTS INSTITVTE OF TECHNOLOGY <BR> 
+Department of Electrical Engineering and Computer Science <BR> 
+6.001--Structure and Interpretation of Computer Programs <BR> 
+Spring Semester, 1998 <BR> 
+<P>
+<B>Problem Set 7</B>
+</center>
+<P>
+<UL>
+<LI> Issued:  Tuesday, March 17
+<LI> Tutorial preparation for: Week of March 30
+<LI> Written solutions due: Friday, April 3 in recitation
+<LI> Reading: Read
+      through section 3.3.3 before lecture on Thursday, 19 March.
+      Read section 3.5 before lecture on Tuesday, 31 March.
+<LI> Code:  The following code (attached) should be studied as part
+      of this problem set:
+       <UL>
+<LI> <TT>objsys.scm</TT>--support for an elementary object system
+<LI> <TT>objtypes.scm</TT>--a few nice object classes
+<LI> <TT>setup.scm</TT>--a building NE43 (Tech Square) world constructed using these classes
+<LI> <TT>search-rooms.scm</TT>--a searching program for a robot in this world
+        </UL></UL>
+<P>
+<B>Word to the wise:</B> This problem set is the most difficult one so
+far this semester.  But, perhaps paradoxically, it involves only a
+small amount of programming.  The trick lies in knowing <EM>which</EM>
+programs to write, and for that, you must understand the attached
+code, which is considerable.  You'll need to understand the general
+ideas of object-oriented programming and the implementation provided
+of an object-oriented programming system (in <TT>objsys.scm</TT>).  Then
+you'll need to understand the particular classes (in <TT>
+objtypes.scm</TT>) and world (in <TT>setup.scm</TT>) that we've constructed
+for you.  Finally, you'll need to review the searching strategy (in
+<TT>search-rooms.scm</TT>), which is a variation of the code you used
+last week in problem set 6.  In truth, this assignment in much more an
+exercise in <EM>reading</EM> and <EM>understanding</EM> code than in writing
+code, because reading significant amounts of code is a skill that you
+should master if you intend to go on in computer science.  The
+tutorial exercises will require you to do considerable digesting of
+code before you can start on them.  And we strongly urge you to study
+the code before you begin trying the programming exercises themselves.
+Diving in starting to program without understanding the code is a good
+way to get lost, will virtually guarantee that you'll be spending more
+time on this assignment than necessary.
+<P>
+<P>
+<P>
+<B>A maze of twisty little passages, all alike</B>
+
+<P>
+In this problem set we will try to master a powerful strategy for
+building simulations possible worlds, as discussed in lecture on March
+19.  The strategy will enable us to make modular simulations with
+enough flexibility to allow us to expand and elaborate the simulation
+as our conception of the world expands and becomes more elaborate.
+<P>
+One way to organize our thoughts about a possible world is to divide
+it up into discrete objects, where each object will have a behavior by
+itself, and it will interact with other objects in some lawful way.
+If it is useful to decompose a problem in this way then we can
+construct a computational world, analogous to the ``real'' world, with a
+computational object for each real object.
+<P>
+Each of our computational objects has some independent local state,
+and some rules (or programs) that determine its behavior.  One
+computational object may influence another by sending it messages.
+The program associated with an object describes how the object reacts
+to messages, and how its state changes as a consequence.
+<P>
+You may have heard about this idea in the guise of ``Object-Oriented
+Programming''(OOPs!).  Languages such as C++ and Java are organized
+around OOP.  Although OOP is helpful in many circumstances it has been
+oversold as a panacea for the software-engineering problem.  What we
+will try to understand here is the essence of the idea, rather than
+the accidental details of their expression in particular languages.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html6" HREF="node1.html#SECTION00010000000000000000">1. The Object Simulation</A>
+<LI> <A NAME="tex2html7" HREF="node2.html#SECTION00020000000000000000">2. Messages and Delegation</A>
+<LI> <A NAME="tex2html8" HREF="node3.html#SECTION00030000000000000000">3. Our World</A>
+<LI> <A NAME="tex2html9" HREF="node4.html#SECTION00040000000000000000">4. Tutorial Exercises</A>
+<LI> <A NAME="tex2html10" HREF="node5.html#SECTION00050000000000000000">5. Programming Assignment</A>
+<LI> <A NAME="tex2html11" HREF="node6.html#SECTION00060000000000000000">  About this document ... </A>
+</UL>
+<HR><A NAME="tex2html4" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif">   <BR>
+<B> Next:</B> <A NAME="tex2html5" HREF="node1.html">1. The Object Simulation</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Wed Mar 11 23:54:42 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/ps7-robot.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:00:43 GMT -->
+</HTML>

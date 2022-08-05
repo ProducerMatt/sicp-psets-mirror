@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:19 GMT -->
+<HEAD>
+<TITLE>4. Programming assignment</TITLE>
+<META NAME="description" CONTENT="4. Programming assignment">
+<META NAME="keywords" CONTENT="ps2-elgamal">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps2-elgamal.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html61" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html59" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html53" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html62" HREF="node5.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html60" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html54" HREF="node3.html">3. Tutorial exercises</A>
+<BR> <P>
+<H1><A NAME="SECTION00040000000000000000">4. Programming assignment</A></H1>
+<P>
+Begin by loading the code for problem set 2, using the Edwin command
+<TT>M-x load problem set</TT>.
+<P>
+<B>Note on debugging procedures that use randomness:</B> Many of the
+procedures you will be working with this assignment depend on selecting
+random numbers, and so will give different answers each time you run
+them.  Such procedures can be confusing to debug, since it's hard to
+tell whether things are changing due to your modifications or just due
+to selecting different random numbers.  To help you in debugging,
+we've provided a procedure <TT>reset-random!</TT> (which takes no
+arguments).  Whenever you run <TT>(reset-random!)</TT> the random number
+generator will be returned to its initial state.  This permits you to
+do repeatable experiments.
+<P>
+<H4><A NAME="SECTION00040010000000000000">Computer exercise 1:</A></H4>
+ Implement the <TT>decrypt</TT> procedure,
+which takes as arguments an encrypted message and a key system and
+produces the unencrypted message (assuming the key system is the
+correct one for decrypting the message).  For testing your procedure,
+we've provided a key-system <TT>ks-ex-1</TT> and a test encrypted
+message, <TT>enc-message-ex-1</TT>.  Turn in a listing
+of your procedure and demonstrate that you can decrypt the message.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040020000000000000">Computer exercise 2:</A></H4>
+ Define the procedures <TT>find-generator</TT>
+and <TT>choose-safe-prime</TT>, which you wrote for tutorial exercise 1.
+Test them by finding a safe prime (use size equal to 5) and a
+generator for it.  Once you think this is working, you should be able
+to run the procedure <TT>generate-key-system</TT>.  Generate a key system
+and the corresponding public key.  Demonstrate that you can use the
+public key to encrypt messages and then use the key system to decrypt
+them.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040030000000000000">Computer exercise 3:</A></H4>
+ Implement the <TT>verify</TT> procedure for
+ElGamal digital signatures.  To test your code, we've pre-defined a
+public key <TT>pk-ex-3</TT> and two signed messages: <TT>m1-ex-3</TT> with
+signature <TT>s1-ex-3</TT>, and <TT>m2-ex-3</TT> with signature <TT>
+s2-ex-3</TT>.  Determine which message is authentic.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040040000000000000">Computer exercise 4:</A></H4>
+ Define the procedure <TT>solve-ax+by=1</TT>.
+It takes two non-negative integer arguments <I>a</I> and <I>b</I> whose GCD is assumed to be
+1 and returns the list consisting of integers <I>x</I> and <I>y</I>.  Demonstrate that
+your procedure works by finding integers <I>x</I> and <I>y</I> that satisfy the
+equation: <BR><IMG WIDTH=371 HEIGHT=16 ALIGN=BOTTOM ALT="displaymath881" SRC="img42.gif"><BR> Don't forget to check
+your answer!  Once this is working, you should be able to generate a
+key system and use this to sign a message with the <TT>sign</TT>
+procedure.  Demonstrate that you can sign messages and then verify the
+signatures with the corresponding public key.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040050000000000000">Computer exercise 5:</A></H4>
+ Write a procedure <TT>
+find-discrete-log</TT> that solves the discrete log problem by brute-force
+search.  It should take as arguments values for <I>y</I>, <I>g</I>, and <I>p</I>, and
+return an <I>x</I> such that <IMG WIDTH=102 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline517" SRC="img3.gif">.  Once this has been
+defined, you should be able to run the supplied procedure <TT>
+crack-public-key</TT> that cracks a public key, returning the original key
+system.  Test your procedure by cracking the public key <TT>pk-ex-5</TT>
+of size 4, which is predefined in this problem set to be <I>p</I>=19079,
+<I>g</I>=362, <I>y</I>=6843.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040060000000000000">Computer exercise 6:</A></H4>
+ How long does it take to crack the ElGamal
+system?  To help you determine this, we've included a procedure called
+<TT>timed</TT>, which, if you place at the beginning of a combination,
+will evaluate the rest of the combination (as if the <TT>timed</TT>
+weren't there) and return the value along with the time required for
+the evaluation.  Thus, evaluating 
+
+<PRE>(timed crack-public-key pk)</PRE>
+
+will apply the procedure <TT>crack-public-key</TT> to the argument <TT>
+pk</TT> (or whatever argument you want to use) and return the result,
+together with the time (in seconds) required to do the computation.
+Crack some public keys of size 4.  Remember that all the random
+choices will result in a wide range of results, but you should be able
+to get some sort of average time.  How do you expect the time to crack
+the key to grow as the size of the prime increases?  Suppose you had a
+million times the computational resources that you are now using in
+working on this problem set, and that all these resources could be
+dedicated to cracking a single key.  How long would it take to crack a
+key of size 50?  Of size 100?  Give your answer in seconds, minutes,
+days, or years, whichever seems most appropriate.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-06">
+Check the 6.001 discussion forum for computer-ex-06</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00040070000000000000">Computer exercise 7:</A></H4>
+ It was a dark and stormy
+night.<A NAME="tex2html15" HREF="footnode.html#377"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A> A 6.001 lecturer
+sat hunched over his terminal.  Suddenly there was a crash as a rock
+flew through the window.  Attached to the rock was a note:
+<P>
+
+<PRE>Our network sniffer has just intercepted the following e-mail
+addressed to Dean Williams. -- A friend
+  13998
+  \232\211\351\216\3509m\025\327\234V\203v\354=F\tw\026\004~\335\264\234
+  \234\233bU\223b\206/\310\276\356\331\240\256I\262\360\317\266I\002\373
+  J\221eq&lt;\001\301\236\303\375\372\373OFj\331\000\325c&amp;z\306x\216\243\b
+  \341\250\006\026\367X\r\302\343b~\t\271\222rkE\030C\325\033\372z\3245n
+  \3506\025{[)\313+p\350x;%u\006\262\225\331\237\272K\202u1\257\331\305
+  \235e5(\327,\231\255\306\223\3345\370\262h\337\242.\211|\325\3736c\004
+  D84iOH\322eLl\000\267\036\371\313V(\376H\312\270\001\234\203\220b\330
+  \265\354\020k$= X&amp;\250? \372</PRE>
+
+<P>
+The Dean's office is working on better security, but due to
+reengineering, they have been unable to issue public keys of size
+greater than 5.  William's public key and the above cipher-text are
+defined for you as <TT>pk-ex-7</TT> and <TT>secret-ex-7</TT>.  Crack the key
+and decrypt the message.  It sounds ominous, doesn't it?  (Be patient
+in cracking the key, which may take a minute or two.  Note that this
+is a longer key than the ones you cracked in exercise 6.)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=computer-ex-07">
+Check the 6.001 discussion forum for computer-ex-07</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<P><P>
+<P>
+Turn in answers to the following questions along with your answers to
+the questions in the problem set:
+<P>
+<OL>
+<LI> About how much time did you spend on this homework assignment?
+(Reading and preparing the assignment plus computer work.)
+<LI> Which scheme system(s) did you use to do this assignment (for
+example: 6.001 lab, your own NT machine, your own Win95 machine, your
+own Linux machine)?
+<LI>
+We encourage you to work with others on problem sets as long as you
+acknowledge it (see the 6.001 General Information handout).
+<UL>
+<LI> If you cooperated with other students, LA's, or others, or found portions
+of your answers for this problem set in references other than the
+text (such as some of the archives), please indicate your
+consultants' names and your references.  Also,
+explicitly label all text and code you are submitting which is the same as
+that being submitted by one of your collaborators.
+<LI> Otherwise, write ``I worked alone using only the reference
+materials,'' and sign your statement.
+</UL></OL><HR><A NAME="tex2html61" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html59" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html53" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html62" HREF="node5.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html60" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html54" HREF="node3.html">3. Tutorial exercises</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sun Feb  8 17:25:50 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:20 GMT -->
+</HTML>

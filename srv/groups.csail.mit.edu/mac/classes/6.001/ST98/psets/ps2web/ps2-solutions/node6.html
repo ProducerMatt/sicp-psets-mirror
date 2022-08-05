@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-solutions/node6.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:16 GMT -->
+<HEAD>
+<TITLE> Base Case</TITLE>
+</HEAD>
+
+<body bgcolor="#FFFFFF" link="#8e0000" vlink="#0000FF" >
+
+<BODY>
+<meta name="description" value=" Base Case">
+<meta name="keywords" value="solutions">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html75 HREF="node7.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.ai.mit.edu/latex2html/next_motif.gif"></A>   <A NAME=tex2html73 HREF="node4.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.ai.mit.edu/latex2html/up_motif.gif"></A>   <A NAME=tex2html67 HREF="node5.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.ai.mit.edu/latex2html/previous_motif.gif"></A>         <BR>
+<B> Next:</B> <A NAME=tex2html76 HREF="node7.html"> Code</A>
+<B>Up:</B> <A NAME=tex2html74 HREF="node4.html"> Computer Exercise 4</A>
+<B> Previous:</B> <A NAME=tex2html68 HREF="node5.html"> Defining the Recursion</A>
+<BR> <HR> <P>
+<H2><A NAME=SECTION00042000000000000000> Base Case</A></H2>
+<P>
+The second problem that we need to solve is to determine
+how long to keep recursing. Equivalently, we can ask ``what
+is the base case?'' which we want our code to check for.
+The answer to that stems from the relationship between the
+recursion we are making and the GCD algorithm described in
+the book in section 1.2.5.
+<P>
+In that section, it is noted that ``It is possible to show
+that starting with any two positive integers and performing
+repeated reductions will always eventually produce a pair 
+where the second number is 0''. So this means that if we
+keep on recursing we will reach a point where we will be trying
+to solve an equation with b=0, since b is the ``second
+number'' in our case.
+<P>
+When b=0, what will ``a'' be? Since we are also assuming in 
+this exercise that a and b have GCD = 1, it must mean 
+a=1 when b=0.
+<P>
+Consequently, at this point in the recursion, we will really
+be trying to solve an equation x = 1, for which the
+answer is trivial!. The procedure returns a list where the
+value of x is 1, and the value of y can be anything you 
+want. (The fact that y can be anything is related to the
+fact that ax+by = 1 define a line.) In our case, we choose
+the value of y to be 0.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Tony Ezzat <BR>
+Mon Feb  9 20:47:53 EST 1998</I>
+</ADDRESS>
+</BODY>

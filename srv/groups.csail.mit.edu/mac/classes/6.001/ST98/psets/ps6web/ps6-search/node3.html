@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps6web/ps6-search/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:33 GMT -->
+<HEAD>
+<TITLE>3. Programming assignment: A web spider</TITLE>
+<META NAME="description" CONTENT="3. Programming assignment: A web spider">
+<META NAME="keywords" CONTENT="ps6-search">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps6-search.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html37" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html35" HREF="ps6-search.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html29" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html38" HREF="node4.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html36" HREF="ps6-search.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html30" HREF="node2.html">2. Tutorial Exercises</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Programming assignment: A web spider</A></H1>
+<P>
+Begin by loading the code for problem set 6.  This will define the
+search and data structure procedures listed above.  Just to make sure
+everything is working, evaluate
+<P>
+
+<PRE>
+(search test-data make-df-strategy-1 'a
+        (lambda (node) (eq? node 'l)))</PRE>
+
+<P>
+This should search the <TT>test-data</TT> graph until the searcher finds
+node <TT>l</TT>, and you should see the nodes visited in depth-first order.
+<P>
+<H4><A NAME="SECTION00030010000000000000">Computer exercise 1:</A></H4>
+<P>
+<TT>Make-df-strategy-1</TT> creates a depth-first search strategy
+procedure.  A breadth-first search strategy can be obtained by
+modifying <EM>only one line</EM> of the procedure <TT>
+make-df-strategy-1</TT>, leaving the total number of characters in the
+procedure unchanged!  Do this (name your procedure <TT>
+make-bf-strategy-1</TT>), demonstrate that it works on <TT>test-data</TT>,
+and write a short (but clear) explanation of why it works.
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00031000000000000000">Marking nodes</A></H2>
+<P>
+In tutorial exercise 3, you discussed a problem with <TT>
+make-df-strategy-1</TT>: it doesn't prevent visiting a node that has
+already been examined, and can therefore go into an infinite loop.  As
+you saw in lecture on Thursday, March 12, we we can fix the problem by
+using a pair of procedures:
+<P>
+<UL>
+<LI> <TT>(note-visited! <EM>node</EM>)</TT>: remembers that we've visited <EM>node</EM>
+<LI> <TT>(deja-vu? <EM>node</EM>)</TT>: test whether or not we've visited
+<EM>node</EM>
+</UL>
+<P>
+The implementations of the search strategy-maker procedures shown in
+lecture all use a global variable to store their state.  If we want to
+be able to run several searches concurrently (for example searching
+for different goals or using different strategies to see which
+finishes first) then it's important that we produce a new pair of
+procedures for each strategy procedure.  The following version of a
+depth-first strategy-maker does this:
+<P>
+
+<PRE>
+(define (make-df-strategy goal? neighbors)
+  (let ((mark-procedures (make-mark-procedures)))
+    (let ((deja-vu? (car mark-procedures))
+          (note-visited! (cadr mark-procedures))
+          (*to-be-visited* '()))
+      (define (try-node candidates)
+        (cond ((null? candidates) #F)
+              ((deja-vu? (car candidates))
+               (try-node (cdr candidates)))
+              (else
+               (set! *to-be-visited* (cdr candidates))
+               (car candidates))))
+      (define (where-next? here)
+        (note-visited! here)
+        (set! *to-be-visited*
+              (append (neighbors here) *to-be-visited*))
+        (if (goal? here)
+            #T
+            (try-node *to-be-visited*)))
+      where-next?)))</PRE>
+
+<P>
+Note the procedure used here: <TT>(make-mark-procedures)</TT> returns a
+list whose first element is a
+procedure that works like <TT>deja-vu?</TT> and whose second element is a
+procedure that works like <TT>note-visited!</TT>.
+<P>
+<H4><A NAME="SECTION00031010000000000000">Computer exercise 2:</A></H4>
+<P>
+Implement <TT>make-mark-procedures</TT>.  The procedure should be very
+short (less than a dozen lines of code), and you can make use of the
+built-in Scheme procedure <TT>memq</TT>.  Do not worry about efficiency.
+We're concerned here only with the correctness of the program and with
+making sure that you understand how to introduce the local state
+necessary to make the procedures work correctly.
+<P>
+To show that your implementation of <TT>make-mark-procedures</TT> works,
+use <TT>search</TT> and <TT>make-df-strategy</TT> to walk sample graph <TT>
+web</TT>.  Also modify your breadth-first search strategy maker from
+computer exercise 1 to create procedure <TT>make-bf-strategy</TT>, that
+makes sure that it visits nodes only once.  Demonstrate that this
+procedure works by showing that it can traverse <TT>web</TT>.  Give the
+order in which the nodes are visited for depth-first search and for
+breadth-first search.
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H2><A NAME="SECTION00032000000000000000">Indexing the web</A></H2>
+<P>
+Now let's turn to the problem of creating a full-text index of
+documents on the Web, like the one created by AltaVista.  We'll assume
+that we have a graph that represents the World Wide Web, using node
+names that correspond to URLs (as in the sample <TT>web</TT> given
+earlier).  Remember we're assuming that we have a procedure <TT>
+node-&gt;text</TT>, that gets us the alphabetized text at the node.  For
+example, <TT>((node-&gt;text web) 'http://mit.edu/6.001)</TT> yields the
+list (at least it did for the real 6.001 web page on February 9,
+1998):
+<P>
+
+<PRE>
+(11:08 1997 1998 339-0052 34-101 6.001 6.001-WEBMASTER@AI.MIT.EDU
+ 7 7-9PM 9 947-2394 ABOUT ALL AM AND ARE ASSIGNMENT ASSIGNMENTS
+ BY CALENDAR CAN CHANGE COLLABORATIVE COMMENTS COMPUTER COPYRIGHT
+ DEBUGGING DISCUSSION DO DOCUMENTATION FEB FEBRUARY FOR FORUM
+ GENERAL GET GETTING GUIDELINES HELP HOMEWORK HOW I IN INDIVIDUAL
+ INFORMATION INSTITUTE INTERPRETATION IS LAST LECTURE LINE
+ MASSACHUSETTS ME MODIFIED MONDAY MY OF ON ON-LINE ORAL OWN PM
+ POLICY PRESENTATIONS PREVIOUS PROBLEM PROGRAMS RECITATION
+ RECITATIONS RECORDS REMINDER RESERVED RIGHTS SCHEME SECTION
+ SECTIONS SEND SET SITE SOFTWARE SPECIAL SPRING STAFF STRUCTURE
+ SUBJECT TECHNOLOGY TELL TERMS THE THIS TO UP USE WEEKS WHAT
+ WHERE WHICH WORK WRITING)</PRE>
+
+<P>
+Let's create a data abstraction for the index.  It consists of three
+procedures:
+<P>
+<UL>
+<LI> <TT>(initialize-index!)</TT>: Clears any previous information from
+the index.
+<LI> <TT>(add-to-index! url list-of-words)</TT>: Add all of the words to the
+index, together with some information to indicate that they occur in
+this URL.
+<LI> <TT>(find-in-index word)</TT>: Returns a list of all the URLs that have
+been entered into the index as associated with that word.
+</UL>
+<P>
+Here's an example of how it should work:
+<P>
+
+<PRE>
+(define (index-document! web)
+  (let ((get-text (node-&gt;text web)))
+    (lambda (url)
+     ;; Fetch the text of the URL and insert it into index
+     (add-to-index! url (get-text url)))))
+
+(initialize-index!)
+((index-document! web)
+ 'http://mit.edu/6.001)  ; Index one document
+(find-in-index 'help)    ; What documents have &quot;help&quot; in them?
+   ==&gt; (http://mit.edu/6.001)
+(find-in-index '*magic*) ; Which documents have &quot;*magic*&quot; in them?
+   ==&gt; #F</PRE>
+
+<P>
+<H4><A NAME="SECTION00032010000000000000">Computer exercise 3:</A></H4>
+<P>
+Write the three procedures defined above.  Notice that you will need a
+variable shared by all three procedures.  Make sure that this variable
+is visible to only these three procedures and not to any other Scheme
+procedure.  (Hint: Your program won't be just three top-level
+definitions.)
+<P>
+<B>Note:</B> A professionally written version of these procedures would
+pay careful attention to the efficiency of the algorithm used, and
+would probably involve alphabetical order and complicated data
+structures.  You should <EM>not</EM> worry about this unless you find
+yourself with spare time on your hands -- and if you do have that
+time, you might want to look at the Scheme reference manual definition
+of <TT>sort</TT>, <TT>string&lt;?</TT>, and <TT>symbol-&gt;string</TT>.  Your tutor
+will thank you for making your solution easy to understand, even at
+the expense of performance (and, in later life, many of your
+colleagues will feel the same way!).
+<P>
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00032020000000000000">Computer exercise 4:</A></H4>
+<P>
+Now let's simulate what AltaVista's spider does: Crawl the entire web
+(use a goal procedure that always returns false) and produce a
+full-text index of everything you find.  Write a procedure, <TT>
+make-web-index</TT>, similar to the procedure <TT>search</TT>, that
+initializes the index, finds all the URLs that can be reached from a
+given initial URL, indexes them, and returns a procedure that can be
+used to find all the URLs of documents containing a given word.  Your
+procedure should use <TT>make-bf-strategy</TT> from computer exercise 2
+to actually crawl the web.
+<P>
+You can test your program by trying the following example.
+Which document(s) do you find?
+<P>
+
+<PRE>
+(define find-documents
+  (make-web-index web 'http://mit.edu/6.001))
+
+(find-documents 'collaborative)</PRE>
+
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00032030000000000000">Computer exercise 5:</A></H4>
+<P>
+Let's put everything together by comparing the performance of crawling
+the web versus using a full-text index of the web.  This won't be a
+full or fair comparison, but it should give you some ideas about
+tradeoffs in designing real systems that analyze the contents of the
+actual Web.  To investigate crawling, write two procedures:
+<P>
+<OL>
+<LI> <TT>(search-any web start-node word)</TT> searches the web
+(using <TT>make-bf-strategy</TT>) and returns the <EM>first</EM> document
+that it finds that contains the given word.  It should stop searching
+as soon as it finds such a document.
+<LI> <TT>(search-all web start-node word)</TT> searches the <EM>entire</EM> web
+(using <TT>make-bf-strategy</TT>) and returns <EM>all</EM> documents
+that contain the given word.
+</OL>
+<P>
+We'll compare this with the technique of indexing the web using <TT>
+make-web-index</TT> and <TT>find-documents</TT>.
+<P>
+We've provided a program, (<TT>generate-random-web <EM>size</EM>)</TT>, that
+you can use to create webs of different sizes (total number of nodes)
+with some randomly generated text.  Use this to build several webs.
+You don't have to make them too big; the procedure will in fact not
+build anything larger than size 200.  For each web, measure the amount
+of time it takes, starting from the node named <TT>*start*</TT>:
+<P>
+<UL>
+<LI> to use <TT>search-any</TT> to find a document containing the word ``help'';
+<LI> to use <TT>search-any</TT> to find a document containing a word
+that is not in the web: ``Chuckvest'';
+<LI> to use <TT>search-all</TT> to find all documents containing the word &quot;help&quot;;
+<LI> to run <TT>make-web-index</TT> to create an index for the web;
+<LI> to use <TT>find-documents</TT> to find all documents containing the word
+``help'', not including the time needed to create the index.
+<LI> to use <TT>find-documents</TT> to find all documents containing the word
+``Chuckvest'' (there won't be any), 
+not including the time needed to create the index.
+</UL>
+<P>
+To enable you to do timing, we've included the same <TT>timed</TT>
+procedure that you used in problem set 2.
+<P>
+Write a few short paragraphs explaining the measurements you made and
+what conclusions you might want to draw about searching and crawling
+the real Web.  If you were building a service to help people find
+information on the Web, what kinds of factors would you consider in
+deciding which method to use?
+
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps06&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<P><P>
+<P>
+Turn in answers to the following questions along with your answers to
+the questions in the problem set:
+<P>
+<OL>
+<LI> About how much time did you spend on this homework assignment?
+(Reading and preparing the assignment plus computer work.)
+<LI> Which scheme system(s) did you use to do this assignment (for
+example: 6.001 lab, your own NT machine, your own Win95 machine, your
+own Linux machine)?
+<LI>
+We encourage you to work with others on problem sets as long as you
+acknowledge it (see the 6.001 General Information handout).
+<UL>
+<LI> If you cooperated with other students, LA's, or others, or found portions
+of your answers for this problem set in references other than the
+text (such as some of the archives), please indicate your
+consultants' names and your references.  Also,
+explicitly label all text and code you are submitting which is the same as
+that being submitted by one of your collaborators.
+<LI> Otherwise, write ``I worked alone using only the reference
+materials,'' and sign your statement.
+</UL></OL><HR><A NAME="tex2html37" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html35" HREF="ps6-search.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html29" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html38" HREF="node4.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html36" HREF="ps6-search.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html30" HREF="node2.html">2. Tutorial Exercises</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Thu Feb 26 17:53:59 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps6web/ps6-search/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:33 GMT -->
+</HTML>

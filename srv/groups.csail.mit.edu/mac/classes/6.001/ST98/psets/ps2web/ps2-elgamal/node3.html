@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:19 GMT -->
+<HEAD>
+<TITLE>3. Tutorial exercises</TITLE>
+<META NAME="description" CONTENT="3. Tutorial exercises">
+<META NAME="keywords" CONTENT="ps2-elgamal">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps2-elgamal.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html51" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html49" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html43" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html52" HREF="node4.html">4. Programming assignment</A>
+<B>Up:</B> <A NAME="tex2html50" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html44" HREF="node2.html">2. Digital signatures</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Tutorial exercises</A></H1>
+<P>
+You should prepare these exercises for oral presentation in tutorial.
+<P>
+<H4><A NAME="SECTION00030010000000000000">Tutorial exercise 1:</A></H4>
+ Write the procedures <TT>
+choose-safe-prime</TT> and <TT>find-generator</TT>, which you will need for
+completing the computer part of this assignment.  <TT>
+Choose-safe-prime</TT> should take a <TT>digits</TT> input (as does <TT>
+choose-prime</TT>) and return a safe prime.  <TT>Find-generator</TT> should
+take a safe prime and return a generator for the prime.  Bring your
+written answers to your tutor, who will use them to help debug your
+coding style and suggest alternatives.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030020000000000000">Tutorial exercise 2:</A></H4>
+<P>
+For each of the cases below, give an expression involving <TT>foo</TT>
+whose evaluation will return the value 2.
+<P>
+
+<PRE>(define foo
+  (lambda (x) (* 2 x)))
+
+(define foo
+  (lambda (x) (x 1)))
+
+(define foo
+  (lambda (x) (lambda (y) (* x y))))
+
+(define (foo x)
+  (x (lambda (y) (* y 2))))</PRE>
+
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030030000000000000">Tutorial exercise 3:</A></H4>
+<P>
+Do exercise 1.26 of the text.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=tutorial-ex-03">
+Check the 6.001 discussion forum for tutorial-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030040000000000000">Tutorial exercise 4:</A></H4>
+<P>
+Do exercises 1.42 and 1.43 of the text.
+<P>
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps02&amp;key=tutorial-ex-04">
+Check the 6.001 discussion forum for tutorial-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html51" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html49" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html43" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html52" HREF="node4.html">4. Programming assignment</A>
+<B>Up:</B> <A NAME="tex2html50" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html44" HREF="node2.html">2. Digital signatures</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sun Feb  8 17:25:50 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:19 GMT -->
+</HTML>

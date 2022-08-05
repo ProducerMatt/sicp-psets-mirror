@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:08 GMT -->
+<HEAD>
+<TITLE>2. Digital signatures</TITLE>
+<META NAME="description" CONTENT="2. Digital signatures">
+<META NAME="keywords" CONTENT="ps2-elgamal">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps2-elgamal.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html41" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html39" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html33" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html42" HREF="node3.html">3. Tutorial exercises</A>
+<B>Up:</B> <A NAME="tex2html40" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html34" HREF="node1.html">1. Background on public-key </A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. Digital signatures</A></H1>
+<P>
+In their seminal 1976 paper, Diffie and Hellman suggested applying
+public-key cryptography to solving another important problem of secure
+communication: Suppose you want to send a message by electronic mail.
+How can people who receive the message be sure that it really comes
+from you--that it is not a forgery?  What is required is some scheme
+for marking a message in a way that can be easily verified, but cannot
+be forged.  Such a mark is called a <I>digital signature</I>.
+<P>
+In order to perform digital signatures, one generally makes use of
+some standard <EM>message-digest function</EM> (also called a <I>hash
+function</I>) that transforms an arbitrary length string into a single
+number of uniform length.  We've provided a procedure <TT>
+message-digest</TT> that performs this operation.  It takes an arbitrary
+string and returns a number between 0 and <IMG WIDTH=27 HEIGHT=15 ALIGN=BOTTOM ALT="tex2html_wrap_inline743" SRC="img30.gif"> as its
+result.<A NAME="tex2html14" HREF="footnode.html#247"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+A digital signature scheme consists of two procedures, one that signs
+messages and one that verifies signatures.  Signing a message uses the
+secret information in a key system. Verification uses the
+corresponding public key.  The idea is that anyone can have the public
+key and thus verify the signature, but only the person who knows the
+secret value <I>x</I> in the key system could have produced the signature.
+This is like the opposite of public-key encryption, where anyone can
+encrypt the message, but only the person with the secret can decrypt
+the message.  A verified signature attests to the facts that
+<UL>
+<LI> The message was signed by the person who knows the secret <I>x</I>
+(who is presumably the person who distributed the public key).
+<LI> The message that was received is the authentic message that was
+signed (i.e., it was not tampered with).
+</UL>
+<P>
+There are many (in fact, an infinite number) of signature schemes.
+The one we present, called <EM>ElGamal signatures</EM>, is closely
+related to ElGamal encryption as described above.
+<P>
+To sign a message <I>M</I> (which may itself be encrypted or not) Alyssa
+first applies the message digest function to <I>M</I> and reduces that
+modulo <I>p</I> to produce a number <I>h</I>.  Then she uses <I>h</I> together
+with the values <I>p</I>, <I>g</I>, <I>x</I> in her key system as follows:
+<P>
+<OL>
+<LI> Pick a random integer <I>k</I> between 2 and <I>p</I>-2 such that
+<IMG WIDTH=126 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline769" SRC="img31.gif">, and compute the <EM>inverse</EM> of <I>k</I> modulo <I>p</I>-1,
+i.e., find the  number <I>d</I> such that <IMG WIDTH=143 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline777" SRC="img32.gif">.
+<LI> Compute <IMG WIDTH=101 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline779" SRC="img33.gif">.
+<LI> Compute <IMG WIDTH=196 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline781" SRC="img34.gif">.
+<LI> The signature is the pair of numbers <I>r</I> and <I>s</I>, which are
+transmitted along with the message.
+</OL>
+<P>
+To verify a signed message <I>M</I>, <I>r</I>, <I>s</I>, using Alyssa's public key
+<I>p</I>, <I>g</I>, <I>y</I>:
+<P>
+<OL>
+<LI> Check that 0&lt;<I>r</I>&lt;<I>p</I>.  Otherwise, the signature is bad.
+<LI> Compute <I>h</I> by applying the digest function to <I>M</I> and reducing
+modulo <I>p</I>.
+<LI> Check whether <IMG WIDTH=177 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline807" SRC="img35.gif">.  If so, the signature is
+good.  If not, the signature is bad.<A NAME="tex2html13" HREF="footnode.html#255"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>
+<P>
+</OL>
+<P>
+The algebra that shows why this works is a bit messy, but it is
+straightforward to check.  (Trust us.)  The main point to remember is
+that anyone can verify a signature, but only the person with the
+secret <I>x</I> information from the key system can produce the signature.
+Notice that if we can crack someone's public key, we can then forge
+that person's digital signature.
+<P>
+<H3><A NAME="SECTION00020100000000000000">Implementing signing and verifying</A></H3>
+<P>
+Here is the procedure that signs a message, using the information in a
+key system to implement the steps above.
+<P>
+
+<PRE>(define (sign message key-system)
+  (let ((p (key-system-p key-system))
+        (g (key-system-g key-system))
+        (x (key-system-x key-system)))
+    (let ((h (modulo (message-digest message) p))
+          (k (good-k p)))
+      (let ((r (expmod g k p))
+            (d (invert-modulo k (- p 1))))
+        (let ((s (modulo (* d (- h (* x r))) (- p 1))))
+          (make-signature r s))))))</PRE>
+
+<P>
+<TT>Make-signature</TT> here is another data constructor, which combines
+the two parts into a structure.  You get the parts back using the
+selectors <TT>signature-r</TT> and <TT>signature-s</TT>.
+<P>
+<TT>Good-k</TT> finds a random number <I>k</I> with <IMG WIDTH=126 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline769" SRC="img31.gif">.  It's
+easy: just keep picking values for <I>k</I> until you find a good one:
+<P>
+
+<PRE>(define (good-k p)
+  (let ((k (choose-random p)))
+    (if (= (gcd k (- p 1)) 1)
+        k
+        (good-k p))))</PRE>
+
+<P>
+The only hard part is <TT>invert-modulo</TT>, which finds a number <I>d</I>
+such that <IMG WIDTH=109 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline823" SRC="img37.gif">.  We'll discuss that below.
+<P>
+We'll also leave it to you to implement the corresponding <TT>verify</TT>
+procedure, which takes the message (a string), a signature (i.e., a
+pair <I>r</I> and <I>s</I>), and a public key, and checks the signature.
+<P>
+<H3><A NAME="SECTION00020200000000000000">Modular inverses</A></H3>
+<P>
+The number <I>d</I> required for the signature must satisfy <IMG WIDTH=109 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline823" SRC="img37.gif">,
+where <I>m</I>=<I>p</I>-1.  Using the definition of equality modulo <I>m</I>, this
+means that <I>d</I> must satisfy the equation <I>em</I> + <I>dk</I>=1 where <I>e</I> is a
+(negative) integer.  One can show that a solution to this equation
+exists if and only if <IMG WIDTH=103 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline845" SRC="img38.gif">.  The following procedure
+generates the required value of <I>d</I>, assuming that we have another
+procedure available which, given two integers <I>a</I> and <I>b</I>, returns a
+pair of integers (<I>x</I>,<I>y</I>) such that <I>ax</I>+<I>by</I>=1.
+<P>
+
+<PRE>(define (invert-modulo k m)
+  (if (= (gcd k m) 1)
+      (let ((y (cadr (solve-ax+by=1 m k))))
+        (modulo y m))                   ;just in case y was negative
+      (error &quot;gcd not 1&quot; k m)))</PRE>
+
+<P>
+This procedure uses the Scheme primitive <TT>list</TT> data constructor.
+Given two (or more) items, <TT>list</TT> combines them into a single
+structure called a <EM>list</EM>.  The selector <TT>car</TT> returns the
+first item in the list, and the selector <TT>cadr</TT> returns the second
+item.  List structure will be formally introduced in lecture on
+February 19th, but the simple explanation here is all you need now for
+this problem set.
+<P>
+Solving <I>ax</I>+<I>by</I>=1 can be accomplished by a neat recursive trick that
+is closely related to the recursive GCD algorithm in section
+1.2.5 of the text.  Let <I>q</I> be the integer quotient of <I>a</I> by <I>b</I>, and let
+<I>r</I> be the remainder of <I>a</I> by <I>b</I>, so that <I>a</I>=<I>bq</I>+<I>r</I>.
+Now (recursively) solve the equation
+<BR><IMG WIDTH=292 HEIGHT=16 ALIGN=BOTTOM ALT="displaymath829" SRC="img39.gif"><BR>
+and use <IMG WIDTH=9 HEIGHT=11 ALIGN=BOTTOM ALT="tex2html_wrap_inline873" SRC="img40.gif"> and <IMG WIDTH=9 HEIGHT=23 ALIGN=MIDDLE ALT="tex2html_wrap_inline875" SRC="img41.gif"> to generate <I>x</I> and <I>y</I>.  We'll leave
+to you the details of how to write the actual procedure.  (Ask in
+recitation.)
+<P>
+<P>
+<HR><A NAME="tex2html41" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html39" HREF="ps2-elgamal.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html33" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html42" HREF="node3.html">3. Tutorial exercises</A>
+<B>Up:</B> <A NAME="tex2html40" HREF="ps2-elgamal.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html34" HREF="node1.html">1. Background on public-key </A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sun Feb  8 17:25:50 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:19 GMT -->
+</HTML>

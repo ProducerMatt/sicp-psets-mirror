@@ -1,0 +1,13 @@
+HTTrack3.49-2 launched on Sat, 06 Aug 2022 17:58:26 at https://groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ +ftp://ftp.ai.mit.edu/*
+(httrack https://groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ +ftp://ftp.ai.mit.edu/* -O srv/ -c128 -%c128 -%I )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+17:58:26	Warning: 	* security warning: maximum number of simultaneous connections limited to 8 to avoid server overload
+17:58:26	Warning: 	* security warning: maximum number of connections per second limited to 5.000000 to avoid server overload
+
+HTTrack Website Copier/3.49-2 mirror complete in 4 minutes 10 seconds : 267 links scanned, 266 files written (7143921 bytes overall) [7179044 bytes received at 28716 bytes/sec], 69151 bytes transferred using HTTP compression in 19 files, ratio 30%, 16.4 requests per connection
+(No errors, 2 warnings, 0 messages)

@@ -1,0 +1,511 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/footnode.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:02 GMT -->
+<HEAD>
+<TITLE>Footnotes</TITLE>
+<META NAME="description" CONTENT="Footnotes">
+<META NAME="keywords" CONTENT="ps2-elgamal">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps2-elgamal.css">
+</HEAD>
+<BODY LANG="EN" >
+<DL> <DT><A NAME="129">...Cryptography</B></A><DD>This problem set is
+based on an earlier 6.001 problem set originally written in 1987 by
+Ruth Shyu and Eric Grimson and revised in 1992 by David LaMacchia and
+Hal Abelson.  There was a major revision by Hal Abelson for 1998
+(changing the method of encryption from RSA to ElGamal).
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="360">...cryptography</I>.</A><DD>The first publication of this idea appeared in
+W. Diffie and M. Hellman, ``New directions in cryptography,'' <I>
+IEEE Transactions on Information Theory</I>, IT-22:6, 1976, pp 644-654,
+and Diffie and Hellman have been credited with the invention.  In
+December 1997, however, the British Communications Electronics
+Security Group (part of British intelligence), published a memo
+describing how the technique was invented by CESG's Malcolm Williamson
+in 1973, but kept secret.  See James Ellis, ``The Story of Non-Secret
+Encryption,''
+<A NAME="tex2html2" HREF="http://www.cesg.gov.uk/ellisint.htm">http://www.cesg.gov.uk/ellisint.htm</A>.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="146">...communicate</A><DD>Note for those people familiar with the
+literature on cryptography: Alyssa P. Hacker and Ben Bitdiddle hold
+the patent on imaginary characters in 6.001.  The management has
+accordingly notified Alice and Bob that they may not participate in
+this problem set.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="148">....</A><DD>The notation <IMG WIDTH=92 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline519" SRC="img4.gif"> (read ``<I>r</I> is congruent
+to <I>s</I> modulo <I>p</I>) means that <I>r</I> and <I>s</I> produce the same value when
+they are reduced modulo <I>p</I>, i.e., that <I>r</I> and <I>s</I> have the same
+reminder modulo <I>p</I>.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="176">...agreement</EM></A><DD>This method, and the digital signature method
+discussed below, are based on work during the early 80s by
+cryptographer Taher ElGamal.  ElGamal currently works as a security
+expert for Netscape.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="371">...<I>g</I>.</A><DD>There's a bit of number theory we've sloughed over that
+guarantees that these algorithms are reasonable.  Given a safe prime,
+the odds that a randomly picked <I>g</I> is a generator are about 1 in 2.
+Given a prime <I>q</I>, the odds that 2<I>q</I>+1 is also prime are about 1 in
+<IMG WIDTH=25 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline669" SRC="img20.gif">.  So trying random guesses is likely to succeed without too
+long a wait.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="187">...primes:</A><DD>We won't include the proof here, since this is not a
+number theory class.  Just take the result on faith.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="372">...text.</A><DD>The particular symmetric cipher used here,
+<EM>Blowfish</EM>, was invented by cryptographer Bruce Schneier.  We
+won't show you the code for this, which is buried in the guts of the
+Scheme system.  For a description of the algorithm see Schneier's book
+<EM>Applied Cryptography</EM>, second edition, Wiley, 1996.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="227">...problem.</A><DD>Typical someones who come to mind here are certain
+government agencies, international crime rings, and MIT
+undergraduates.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="385">...problem</EM>.</A><DD>Actually, if you're
+reading very closely, you'll see that we've made an unwarranted
+assumption.  What you really need is to solve the so-called <EM>
+Diffie-Hellman problem</EM>: given <IMG WIDTH=69 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline719" SRC="img23.gif"> and <IMG WIDTH=69 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline721" SRC="img24.gif">, compute <IMG WIDTH=77 HEIGHT=32 ALIGN=MIDDLE ALT="tex2html_wrap_inline723" SRC="img25.gif">.  As far as anyone knows, the
+only way to do this is to compute discrete logs, and for many classes
+of primes the discrete log problem and the Diffie-Hellman problem have
+been proved equivalent.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="240">...fast.</A><DD>As a consequence of this, the
+encryption you are implementing in this problem set really is a
+high-grade security method.  For instance, the encryption system PGP
+5.0 uses ElGamal encryption with a suggested prime size of around 300
+digits.  If anyone has the ability to crack something like that, they
+aren't talking.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="255">...bad.</A><DD>Note that when checking
+this condition we can compute each term modulo <I>p</I> before multiplying
+and comparing, because <IMG WIDTH=291 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline811" SRC="img36.gif">.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="247">...result.</A><DD>There are tremendous subtleties in designing a good
+message-digest function.  One property it should have is that it
+should be computationally infeasible to find two strings that hash to
+the same value.  The particular function used here, called MD5, was
+invented by Ron Rivest of MIT.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE><DT><A NAME="377">...night.</A><DD>...with apologies to Baron Bulwer-Lytton and to Radia
+Perlman, Michael Speciner, and Charles Kaufman, who begin their
+outstanding book <EM>Network Security</EM> like this.
+<PRE>.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+</PRE> </DL>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Sun Feb  8 17:25:50 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps2web/ps2-elgamal/footnode.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:02:08 GMT -->
+</HTML>

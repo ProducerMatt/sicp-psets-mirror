@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+<HEAD>
+<TITLE>3. Our World</TITLE>
+<META NAME="description" CONTENT="3. Our World">
+<META NAME="keywords" CONTENT="ps7-robot">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps7-robot.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html40" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html38" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html32" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html41" HREF="node4.html">4. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html39" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html33" HREF="node2.html">2. Messages and Delegation</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Our World</A></H1>
+<P>
+Our world is built by the <TT>setup</TT> procedure that you will find in
+the file <TT>setup.scm</TT>.  You are the deity of this world.  When you
+call <TT>setup</TT> with your name, you create the world.  It has rooms,
+corridors, and people from building NE43, and it has an avatar (a
+manifestation of you, the deity, as a person in the world).  The
+avatar is under your control. It goes under your name and is also the
+value of the globally-accessible variable <TT>me</TT>.  Each time the
+avatar moves, simulated time passes in the world, and the various
+other creatures in the world take a time step.  The way this works is
+that there is a clock that sends a <TT>clock-tick</TT> message to all
+autonomous persons.  (The avatar is not an autonomous person; it is
+directly under your control.)  In addition, you can cause time to pass
+by explicitly calling the clock.  If the global variable <TT>
+*deity-mode*</TT> is true you will see everything that happens in the
+world; if <TT>*deity-mode*</TT> is false you will only see things
+happening in the same place as the avatar.
+<P>
+To make it easier to use the simulation we have included a convenience
+procedure, <TT>thing-named</TT> for referring to an object at the
+location of the avatar.  This procedure is defined at the end of the
+file <TT>setup.scm</TT>.
+<P>
+Here is a sample run of the system.  Rather than describing what's
+happening, we'll leave it to you to examine the code that defines the
+behavior of this world and interpret what is going on.
+<P>
+
+<PRE>(setup 'George-Spelvin)
+---Tick 0---
+You are in a wild long corridor 
+You see nothing in here. 
+The exits are: up in-408 in-430 in-429 in-428 . 
+;Value: ready
+
+(ask (ask me 'location) 'name)
+;Value: ne43-4th
+
+(ask me 'go 'in-428)
+george-spelvin says -- Hi gjs 
+---Tick 1---
+You are in a cluttered laboratory office 
+You see: gjs sicp chalk . 
+The exits are: south out . 
+;Value: ok
+
+(ask (thing-named 'chalk) 'owner)
+;Value: nobody
+
+(ask me 'take (thing-named 'chalk))
+george-spelvin says -- I take chalk 
+;Value: #t
+
+(ask me 'go 'out)
+george-spelvin says -- Hi becky 
+---Tick 2---
+You are in a wild long corridor 
+You see: chalk becky . 
+The exits are: up in-408 in-430 in-429 in-428 . 
+;Value: ok
+
+(ask me 'go 'in-429)
+george-spelvin says -- Hi hal 
+---Tick 3---
+You are in a carefully arranged office 
+You see: chalk hal sicp chalk quiz2 . 
+The exits are: north out . 
+;Value: ok
+
+(ask (thing-named 'quiz2) 'owner)
+;Value: #[compound-procedure 12]
+
+(ask (ask (thing-named 'quiz2) 'owner) 'name)
+;Value: hal
+
+(ask me 'take (thing-named 'quiz2))
+hal says -- I lose quiz2 
+hal says -- Yaaaah! I am upset! 
+george-spelvin says -- I take quiz2 
+;Value: #t
+
+(run-clock 5)
+---Tick 4---
+gjs says -- Hi george-spelvin hal 
+---Tick 5---
+---Tick 6---
+---Tick 7---
+---Tick 8---
+;Value: done
+
+(set! *deity-mode* #t)
+;Value: ()
+
+(run-clock 3)
+---Tick 9---
+---Tick 10---
+eric moves from ne43-7th to ne43-4th 
+At ne43-4th : eric says -- Hi gjs jim 
+gjs moves from ne43-4th to ne43-7th 
+---Tick 11---
+becky moves from ne43-430 to ne43-4th 
+At ne43-4th : becky says -- Hi eric jim 
+jill moves from ne43-711 to ne43-7th 
+At ne43-7th : jill says -- Hi gjs 
+;Value: done</PRE>
+
+<P>
+<H2><A NAME="SECTION00031000000000000000">The Robot</A></H2>
+<P>
+We have provided you with an interesting kind of autonomous person, a
+robot.  A robot can be created at any place that you have access to.
+The robot will sit around, and do nothing in particular, unless it is
+given a method to execute on clock ticks.  In the file <TT>
+search-rooms.scm</TT> we provide the kernel of a program that will direct
+a robot to explore a world, looking for a thing with a given name.  At
+the end of the file is an example where the robot is constructed at
+the location of the avatar, and it is programmed to look for an object
+whose name is <TT>the-goal</TT>.
+<P>
+<HR><A NAME="tex2html40" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html38" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html32" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html41" HREF="node4.html">4. Tutorial Exercises</A>
+<B>Up:</B> <A NAME="tex2html39" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html33" HREF="node2.html">2. Messages and Delegation</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Wed Mar 11 23:54:42 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+</HTML>

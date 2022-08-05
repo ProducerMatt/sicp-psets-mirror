@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:31 GMT -->
+<HEAD>
+<TITLE>1. The Object Simulation</TITLE>
+<META NAME="description" CONTENT="1. The Object Simulation">
+<META NAME="keywords" CONTENT="ps7-robot">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps7-robot.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html20" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html18" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html12" HREF="ps7-robot.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html21" HREF="node2.html">2. Messages and Delegation</A>
+<B>Up:</B> <A NAME="tex2html19" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html13" HREF="ps7-robot.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00010000000000000000">1. The Object Simulation</A></H1>
+<P>
+Consider the problem of simulating the activity of a few interacting
+agents wandering around a simple world of rooms and corridors.  Real
+people are very complicated; we do not know enough to simulate their
+behavior in any detail.  But for some purposes (for example, to make
+an adventure game) we may simplify and abstract this behavior.
+<P>
+Let's start with the simplest stuff first.  We'll define some basic
+classes of objects, using the simple object system described in
+lecture on March 19.  The objects in our computational world all have
+names.  An object will give you a method to find out its name if you
+send it the <TT>name</TT> message.  We can make a named object using the
+procedure <TT>make-named-object</TT>.  A named object is a procedure that
+takes a message and returns the method that will do the job you
+want.<A NAME="tex2html1" HREF="footnode.html#333"><IMG  ALIGN=BOTTOM ALT="gif" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/foot_motif.gif"></A>  For example,
+if we call the method obtained from a named object by the message <TT>
+name</TT> we will get the object's name.
+<P>
+
+<PRE>(define (make-named-object name)
+  (lambda (message)
+    (case message
+      ((NAMED-OBJECT?) (lambda (self) #T))
+      ((NAME) (lambda (self) name))
+      ((SAY)
+       (lambda (self list-of-stuff)
+         (if (not (null? list-of-stuff))
+             (display-message list-of-stuff))
+         'NUF-SAID))
+      ((INSTALL) (lambda (self) 'INSTALLED))
+      (else (no-method)))))
+
+(define foo (make-named-object 'george))
+
+((foo 'name) foo) ==&gt; george</PRE>
+
+<P>
+The first formal parameter of every method is <TT>self</TT>.  The
+corresponding argument must be the object that needs the job done.
+This was explained in lecture, and we will see it again below.
+<P>
+A named object has a method for four different messages.  It will give
+a method that confirms that it is indeed a <TT>named-object</TT>; it will
+give a method to return its <TT>name</TT>; it will give a method for the
+message <TT>say</TT> that will print out some stuff; and it will give a
+method for <TT>install</TT>ation that does nothing.
+<P>
+A <TT>place</TT> is another kind of computational object.  A place has
+has a <TT>neighbor-map</TT> of exits to neighboring places, and it has
+<TT>things</TT> that are located at the place.  Notice that it is
+implemented as a message acceptor that intercepts some messages.  If
+it cannot handle a particular message itself, it passes the message
+along to a private, internal named-object that it has made for itself
+to deal with such messages.  Thus, we may think of a place as a kind
+of named-object except that it also handles the messages that are
+special to places.  This kind of arrangement is described in various
+ways in object-oriented jargon, e.g., ``the <TT>place</TT> class <TT>
+inherits</TT> from the <TT>named-object</TT> class,'' or ``<TT>place</TT> is a
+<EM>subclass</EM> of <TT>named-object</TT>,'' or <TT>named-object</TT> is a
+<EM>superclass</EM> of <TT>place</TT>.''
+<P>
+
+<PRE>(define (make-place name . characteristics)
+  (let ((neighbor-map    '())
+        (things       '())
+        (named-obj (make-named-object name)))
+    (lambda (message)
+      (case message
+        ((PLACE?) (lambda (self) #T))
+        ((THINGS) (lambda (self) things))
+        ((CHARACTERISTICS) (lambda (self) characteristics))
+        ((NEIGHBOR-MAP)
+         (lambda (self) neighbor-map))
+        
+        ...other message handlers...
+
+        (else     ; Pass the unhandled message on.
+         (get-method message named-obj))))))</PRE>
+
+<P>
+Where:
+<P>
+
+<PRE>(define (get-method message object)
+  (object message))</PRE>
+
+<P>
+<HR><A NAME="tex2html20" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html18" HREF="ps7-robot.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html12" HREF="ps7-robot.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html21" HREF="node2.html">2. Messages and Delegation</A>
+<B>Up:</B> <A NAME="tex2html19" HREF="ps7-robot.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html13" HREF="ps7-robot.html">No Title</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Wed Mar 11 23:54:42 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps7web/ps7-robot/node1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:32 GMT -->
+</HTML>

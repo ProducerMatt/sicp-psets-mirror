@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps8web/ps8-speech/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:23 GMT -->
+<HEAD>
+<TITLE>2. Tutorial Exercises</TITLE>
+<META NAME="description" CONTENT="2. Tutorial Exercises">
+<META NAME="keywords" CONTENT="ps8-speech">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps8-speech.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html26" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html24" HREF="ps8-speech.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html18" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html27" HREF="node3.html">3. Programming Assignment</A>
+<B>Up:</B> <A NAME="tex2html25" HREF="ps8-speech.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html19" HREF="node1.html">1. Background</A>
+<BR> <P>
+<H1><A NAME="SECTION00020000000000000000">2. Tutorial Exercises</A></H1>
+<P>
+You should prepare these exercises for oral presentation in tutorial.
+<P>
+<H4><A NAME="SECTION00020010000000000000">Tutorial exercise 1:</A></H4>
+<P>
+The following procedure <TT>all-choices</TT> (which you will use in doing
+this problem set) takes as argument a list of <I>n</I> lists <IMG WIDTH=105 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline459" SRC="img2.gif"> and returns a list whose elements are all possible lists
+of the form <IMG WIDTH=103 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline461" SRC="img3.gif">, where <IMG WIDTH=16 HEIGHT=17 ALIGN=MIDDLE ALT="tex2html_wrap_inline463" SRC="img4.gif"> is chosen from
+<IMG WIDTH=18 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline465" SRC="img5.gif">, <IMG WIDTH=16 HEIGHT=17 ALIGN=MIDDLE ALT="tex2html_wrap_inline467" SRC="img6.gif"> is chosen from <IMG WIDTH=18 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline469" SRC="img7.gif">, ..., <IMG WIDTH=18 HEIGHT=17 ALIGN=MIDDLE ALT="tex2html_wrap_inline471" SRC="img8.gif"> is chosen from <IMG WIDTH=20 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline473" SRC="img9.gif">.
+(Mathematicians call this operation the <EM>Cartesian product</EM> of the
+input lists.)  For example, <TT>(all-choices '((1 2) (a b c)))</TT>
+should return
+
+<PRE>((1 a) (1 b) (1 c) (2 a) (2 b) (2 c))</PRE>
+
+<P>
+
+<PRE>(define (all-choices possibilities-list)
+  (if (null? possibilities-list)
+      '(())
+      (let ((rest (all-choices (cdr possibilities-list))))
+        (flatten
+         (map
+          (lambda (choice-for-first)
+            (map (lambda (follow-on)
+                   (cons choice-for-first follow-on))
+                 rest))
+          (car possibilities-list))))))</PRE>
+
+<P>
+Explain how this procedure works.  In general, how many possible
+choices will there be as a function of the input list?  How could you
+modify the procedure to produce a stream of choices rather than a
+list of choices.  (Assume that the argument is still a list.)
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=tutorial-ex-01">
+Check the 6.001 discussion forum for tutorial-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020020000000000000">Tutorial exercise 2:</A></H4>
+<P>
+Using <TT>cons-stream, stream-map, stream-filter</TT>, create expressions
+that define an infinitely long stream of 1's and an infinitely
+long stream of the positive integers.  Be prepared to explain why your
+expressions work.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=tutorial-ex-02">
+Check the 6.001 discussion forum for tutorial-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020030000000000000">Tutorial exercise 3:</A></H4>
+<P>
+Using the same tools, create an expression that defines an
+infinitely long stream of the powers of 2 (i.e. 1, 2, 4, 8, 16,
+...).
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=tutorial-ex-03">
+Check the 6.001 discussion forum for tutorial-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020040000000000000">Tutorial exercise 4:</A></H4>
+<P>
+Do exercise 3.54 from the text.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=tutorial-ex-04">
+Check the 6.001 discussion forum for tutorial-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00020050000000000000">Tutorial exercise 5:</A></H4>
+<P>
+Do exercise 3.55 from the text.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps08&amp;key=tutorial-ex-05">
+Check the 6.001 discussion forum for tutorial-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<HR><A NAME="tex2html26" HREF="node3.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html24" HREF="ps8-speech.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html18" HREF="node1.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html27" HREF="node3.html">3. Programming Assignment</A>
+<B>Up:</B> <A NAME="tex2html25" HREF="ps8-speech.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html19" HREF="node1.html">1. Background</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Fri Mar 27 14:32:25 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps8web/ps8-speech/node2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:31 GMT -->
+</HTML>

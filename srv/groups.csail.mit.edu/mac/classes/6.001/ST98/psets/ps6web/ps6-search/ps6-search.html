@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps6web/ps6-search/ps6-search.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:00:43 GMT -->
+<HEAD>
+<TITLE>No Title</TITLE>
+<META NAME="description" CONTENT="No Title">
+<META NAME="keywords" CONTENT="ps6-search">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps6-search.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif">   <BR>
+<B> Next:</B> <A NAME="tex2html4" HREF="node1.html">1. Searching a directed </A>
+<BR> <P>
+<P>
+<center>
+MASSACHVSETTS INSTITVTE OF TECHNOLOGY <BR> 
+Department of Electrical Engineering and Computer Science <BR> 
+6.001--Structure and Interpretation of Computer Programs <BR> 
+Spring Semester, 1998 <BR> 
+<P>
+<B>Problem Set 6</B>
+</center>
+
+<P>
+<UL>
+<LI> Issued:  Tuesday, March 10
+<LI> Tutorial preparation for: Week of March 16
+<LI> Written solutions due: Friday, March 20 in recitation
+<LI> Reading: Read
+      sections 3.1 and 3.3.1 before lecture on March 12.  Read section 3.2
+      before lecture on March 17.
+</UL>
+<P>
+<B>Searching the World Wide Web </B>
+
+<P>
+This problem set explores some issues that arise in constructing a
+``spider'' or an ``autonomous agent'' that crawls over the documents
+in the World Wide Web.  For our purposes, the Web is a very large (and
+growing!) collection of documents.  Each document contains some text
+and also links to other documents, in the form of URLs.
+<P>
+In this problem set we'll be working with programs that can start with
+an initial document and follow the references to other documents to do
+useful things.  For example, we could
+construct an index of all the words occurring in documents, and make
+this available to people looking for information on the web (as in
+Digital Equipment Corporation's AltaVista system at
+<A NAME="tex2html1" HREF="http://altavista.digital.com/">http://AltaVista.digital.com</A>).
+<P>
+Just in case you aren't fluent with the details of HTTP, URLs, URIs,
+HTML, XML, XSL, HTTP-NG, DOM, and the rest of the alphabet soup that
+makes up the technical details of the Web, here's a simplified version
+of what goes on behind the scenes:
+<P>
+<OL>
+<LI>
+The Web consists of a very large number of things called documents,
+identified by names called URLs.  For example, the 6.001 home page has
+the URL <TT>http://mit.edu/6.001</TT>. The URL contains the name of a
+protocol (HTTP in this case) that can be used to fetch the document,
+as well as the information needed by the protocol to specify which
+document is intended (<TT>mit.edu/6.001</TT> in this case).
+<LI>
+By using the HTTP protocol, a program (most commonly a browser but any
+program can do this--and ``autonomous agents'' and spiders are
+examples of such programs that aren't browsers) can retrieve a
+document whose URL starts with <TT>HTTP:</TT>.  The document is
+returned to the program, along with information about how it is
+encoded, for example, ASCII or Unicode text, HTML, images in GIF or
+JPG or MPEG or PNG or some other format, an Excel or Lotus
+spreadsheet, etc.
+<LI>
+Documents encoded in HTML form can contain a mixture of text, images,
+formatting information, and links to other documents.  Thus, when a
+browser (or other program) gets an HTML document it can extract the
+links from it, yielding URLs for other documents in the Web.  If these
+are in HTML format, then they can be retrieved and will yield yet
+more links, and so on.
+<LI>
+A <EM>spider</EM> is a program that starts with an initial set of URLs,
+retrieves the corresponding documents, adds the links from these
+documents to the set of URLs and keeps on going.  Every time it
+retrieves a document, it does some (hopefully useful) work in
+addition to just finding the embedded links.
+<LI>
+One particularly interesting kind of spider constructs an
+<EM>index</EM> of the documents it has seen.  This index is similar to
+the index at the end of a book: it has certain key words and phrases,
+and for each entry it lists all of the URLs that contain that word or
+phrase.  There are many kinds of indexes, and the art/science of
+deciding what words or phrases to index and how to extract them is at
+the cutting edge of research (it's part of the discipline called
+<EM>information retrieval</EM>).  We'll talk about <EM>full text
+indexing</EM>, which means that every word in the document (except,
+perhaps, the very common words like ``and,'' ``the,'' ``a,'' and
+``an'') is indexed.
+</OL><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html5" HREF="node1.html#SECTION00010000000000000000">1. Searching a directed graph</A>
+<LI> <A NAME="tex2html6" HREF="node2.html#SECTION00020000000000000000">2. Tutorial Exercises</A>
+<LI> <A NAME="tex2html7" HREF="node3.html#SECTION00030000000000000000">3. Programming assignment: A web spider</A>
+<LI> <A NAME="tex2html8" HREF="node4.html#SECTION00040000000000000000">  About this document ... </A>
+</UL>
+<HR><A NAME="tex2html3" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif">   <BR>
+<B> Next:</B> <A NAME="tex2html4" HREF="node1.html">1. Searching a directed </A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Thu Feb 26 17:53:59 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps6web/ps6-search/ps6-search.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:00:48 GMT -->
+</HTML>

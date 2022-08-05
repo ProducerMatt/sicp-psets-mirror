@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps4web/ps4-aliens/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:35 GMT -->
+<HEAD>
+<TITLE>3. Programming assignment: So what can room with what?</TITLE>
+<META NAME="description" CONTENT="3. Programming assignment: So what can room with what?">
+<META NAME="keywords" CONTENT="ps4-aliens">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="ps4-aliens.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html37" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html35" HREF="ps4-aliens.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html29" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html38" HREF="node4.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html36" HREF="ps4-aliens.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html30" HREF="node2.html">2. Tutorial Exercises</A>
+<BR> <P>
+<H1><A NAME="SECTION00030000000000000000">3. Programming assignment: So what can room with what?</A></H1>
+<P>
+Our ultimate goal in this problem set is to help the Housing Office
+determine what incoming freshthings can be put in the same room, and
+to determine what dorms will need to be converted to a different
+environment (note that some of them may already have an appropriate
+atmosphere for some of these new students!).
+<P>
+Begin by loading the code for problem set 4.  This defines the
+procedures listed above, and the list <TT>*order*</TT> and the initial
+database <TT>entering-class</TT>.  The loaded code also defines <TT>
+map</TT>, <TT>filter</TT>, and <TT>accumulate</TT> from the book, which you may
+find useful in doing the exercises below.  In grading problem sets,
+we will be considering the elegance of your code, not only whether or
+not it ``works.''  So it will be to your advantage to use aggregate
+operations when they are appropriate.  In fact, some of the exercises
+below will be very cumbersome to write (and debug!) if you do not use
+the aggregate operators.  It would be a good idea to reread pages
+112-118 of the book, and to look again at exercise 2.35 before
+starting in on these programming exercises.
+<P>
+<H4><A NAME="SECTION00030010000000000000">Computer exercise 1:</A></H4>
+ Implement a procedure that, given a
+table, returns the list of all the freshthings in the table.  Note
+that the result should be a single flat list (not a list with sublists).
+Test your procedure by finding all the freshthings in <TT>entering-class</TT>.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=computer-ex-01">
+Check the 6.001 discussion forum for computer-ex-01</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030020000000000000">Computer exercise 2:</A></H4>
+<P>
+Implement a procedure that takes as argument a table and a list of
+conditions and returns the list of all freshthings in the table who
+could live under those conditions.  Assume that if a freshthing does
+not list a preference in a category, then he/she/it will be
+comfortable with any choice.
+<P>
+For instance, with our sample entering class, if the list of
+conditions is <EM>(sulfur, 350K-370K, ultraviolet)</EM>, your procedure
+should return all freshthings who could live with a sulfur atmosphere,
+a 350K-370K temperature range, and ultraviolet light--namely,
+Amoeboid1, Amoeboid2, and Amoeboid3.  Note that this result does not
+include Amoeboid4, since Amoeboid4 specified visible light; but the
+result does include Amoeboid1, since Amoeboid1 did not specify any
+preference for spectrum.  Assume that the list of conditions starts
+with an atmosphere preference, lists the preferences in order of
+importance, and does not skip over any categories. That is, the list
+could be <EM>(methane)</EM> or <EM>(methane, 260K-270K, infrared,
+random)</EM>, but not <EM>(260K-270K)</EM> or <EM>(methane, infrared,
+random)</EM>.  Turn in a listing of your procedure together with some
+tests to demonstrate that it works.
+<P>
+By the way, the Boston Licensing Board has just informed MIT that it
+will not allow students to live in ethanol-atmosphere housing in the
+future. How would you use your procedure to find out how many students
+could be displaced by this ruling?
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=computer-ex-02">
+Check the 6.001 discussion forum for computer-ex-02</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030030000000000000">Computer exercise 3:</A></H4>
+<P>
+Generalize your answer to exercise 2 so that the list of conditions
+can include the symbol <TT>*</TT> to indicate that a category is skipped over.
+For example, using <EM>(sulfur, *, visible)</EM> should return all freshthings
+except those who specified an atmosphere other than sulfur or a
+spectrum other than visible--namely, Amoeboid1 and Amoeboid4.
+Similarly, <EM>(*, *, ultraviolet)</EM> should return the list of all
+freshthings who can live in an ultraviolet spectrum, i.e., all
+freshthings except those who specified a preference for a spectrum
+other than ultraviolet.  (There are 10 such freshthings in our sample
+entering class.)
+<P>
+Note that the preferences must still list the categories in order and
+include a <TT>*</TT> for each category that is skipped over.  Using your
+program, find all the freshthings who could live with an ultraviolet
+spectrum and a night cycle.  Find all the freshthings who could live
+with a day cycle.
+<P>
+In this problem, especially, it will really help to think in terms of
+aggregate operations.  If you don't do this, it is easy to get lost in
+a maze of list operations.  So plan your work carefully.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=computer-ex-03">
+Check the 6.001 discussion forum for computer-ex-03</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030040000000000000">Computer exercise 4:</A></H4>
+<P>
+Implement the <TT>canonicalize-input</TT> procedure you designed for
+tutorial exercise 5, and turn in the procedure together with some
+tests to show that it works.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=computer-ex-04">
+Check the 6.001 discussion forum for computer-ex-04</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<H4><A NAME="SECTION00030050000000000000">Computer exercise 5:</A></H4>
+<P>
+Our system currently requires freshthings to indicate their
+preferences for categories using our ordering of importance
+(atmosphere, temperature, spectrum, cycle).  But this is too rigid.
+For instance, my friend Gleep, from the second planet around Proxima
+Centauri, is comfortable over a reasonably wide range of temperatures
+and atmospheres, but Gleep really needs to be strongly illuminated
+with visible light because he is photosynthetic. Wouldn't it be better
+to allow freshthings to give only the characteristics that actually
+matter to them, independent of order?
+<P>
+Discuss how you would redesign the system to permit this.  The new
+system will need to accept input from freshthings, enter this into the
+table, and access the table to find all freshthings who can live
+under various conditions (as in exercise 3 above).
+<P>
+Write a clear but brief (one or two page) explanation describing which
+parts of the system need to be changed, and how.  This is a very
+open-ended question and there are lots of ways to go about this.  In
+grading, we will be more interested in the clarity of your explanation
+than in details of coding.  For example, you should describe any new
+procedures that must be written and any old procedures that must be
+modified and give precise prescriptions of how they should behave.
+<P>
+If you want to implement some or all of your design, that's fine, but
+you need not write any code at all for this problem, provided you give
+a clear explanation of how the new system will work and a clear
+description of what code needs to be written.  ``Clear'' means that
+another person, say another student in the class, could read your
+description and write the actual code without difficulty.
+<table border=3 bordercolor=red>
+<tr>
+<td align=center><font size=-1><a
+href="http://db.photo.net/bboard/cc.tcl?topic=6001ps04&amp;key=computer-ex-05">
+Check the 6.001 discussion forum for computer-ex-05</a>
+<tr>
+<td align=center>
+<font size=-1>
+Look <a href="http://swissnet.ai.mit.edu/6001/discussion-forum.html">here</a>
+for information about the forum.
+</table>
+<P>
+<P><P>
+<P>
+Turn in answers to the following questions along with your answers to
+the questions in the problem set:
+<P>
+<OL>
+<LI> About how much time did you spend on this homework assignment?
+(Reading and preparing the assignment plus computer work.)
+<LI> Which scheme system(s) did you use to do this assignment (for
+example: 6.001 lab, your own NT machine, your own Win95 machine, your
+own Linux machine)?
+<LI>
+We encourage you to work with others on problem sets as long as you
+acknowledge it (see the 6.001 General Information handout).
+<UL>
+<LI> If you cooperated with other students, LA's, or others, or found portions
+of your answers for this problem set in references other than the
+text (such as some of the archives), please indicate your
+consultants' names and your references.  Also,
+explicitly label all text and code you are submitting which is the same as
+that being submitted by one of your collaborators.
+<LI> Otherwise, write ``I worked alone using only the reference
+materials,'' and sign your statement.
+</UL></OL><HR><A NAME="tex2html37" HREF="node4.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/next_motif.gif"></A> <A NAME="tex2html35" HREF="ps4-aliens.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/up_motif.gif"></A> <A NAME="tex2html29" HREF="node2.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="http://swissnet.ai.mit.edu/latex2html-lib/icons/previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html38" HREF="node4.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html36" HREF="ps4-aliens.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html30" HREF="node2.html">2. Tutorial Exercises</A>
+<P><ADDRESS>
+<I>Hal Abelson <BR>
+Mon Feb 23 08:27:27 EST 1998</I>
+</ADDRESS>
+</BODY>
+
+<!-- Mirrored from groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ps4web/ps4-aliens/node3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 06 Aug 2022 23:01:35 GMT -->
+</HTML>
