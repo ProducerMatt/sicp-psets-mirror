@@ -8,9 +8,8 @@ correctly links to the pdfs on the FTP site, but fails to download them; wget
 correctly downloads them, but fails to link them.
 
 ## Redbean
-**x86_64 machine required, Windows/MacOS/Linux/BSD compatible.**
-
-To put in a Redbean that you can serve from anywhere:
+To put in a [Redbean](https://redbean.dev/) that you can serve [from any x64 
+operating system](https://justine.lol/ape.html):
 ``` sh
 # Download Cosmo binaries
 ./build.sh init
