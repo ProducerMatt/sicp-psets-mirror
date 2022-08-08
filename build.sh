@@ -1,5 +1,5 @@
 #!/bin/sh
-OUT="sicp-psets.com" # Change me!
+OUT="sicp.com" # Change me!
 OUT_CMD="./${OUT} -SSS" # called with "build.sh run"
 
 #OUT_CMD="./${OUT} -SSS" # extra-sandboxed version of redbean

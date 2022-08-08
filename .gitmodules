@@ -1,0 +1,6 @@
+[submodule "pdf"]
+	path = pdf
+	url = https://github.com/DiamondBond/sicp-pdf
+[submodule "html"]
+	path = html
+	url = https://github.com/sarabander/sicp
