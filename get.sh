@@ -3,8 +3,7 @@
 httrack \
   https://groups.csail.mit.edu/mac/classes/6.001/ST98/psets/ \
   +ftp://ftp.ai.mit.edu/* \
-  -O srv/ \
-  -%I
+  -O srv/
 
 # BUG:  pdfs fetched from the ftp server are 0 bytes.
 #       try the wget script to get them

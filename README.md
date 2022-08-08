@@ -25,7 +25,10 @@ any x64 operating system](https://justine.lol/ape.html):
 ./build.sh init
 # Pack srv/ into sicp-psets.com
 ./build.sh pack
-# sicp-psets.com is a now portable webserver containing the mirror!
+# BUG: If you encounter a crash on trying to pack, get a copy of zip.com
+#      compiled with MODE=asan from the Cosmopolitan monorepo.
+
+# sicp.com is a now portable webserver containing the mirror!
 # Move it to any compatible computer you want to serve from.
 # To serve sandboxed:
 ./sicp-psets.com -SSS

@@ -35,6 +35,8 @@ _Init () {
     _Fetch "sqlite.com" "$SQLITE_URL";
     chmod +x "sqlite.com"
     umask $u;
+    echo "If you experience a crash with zip.com, acquire a version with MODE=asan
+            from the Cosmopolitan monorepo."
 }
 _Pack () {
     # TODO: skip if no changed files in srv since last update?
