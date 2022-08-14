@@ -39,7 +39,7 @@ _Init () {
             from the Cosmopolitan monorepo."
 }
 _Pack () {
-    # TODO: skip if no changed files in srv since last update?
+    # TODO: skip if no changed files in docs since last update?
     #       test if directory exists and has anything in it, if not fail
     cp -f $STOCK $OUT
     chmod u+w $OUT
@@ -48,7 +48,7 @@ _Pack () {
     # NOTE: zip's structure is dependent on the relative paths of the files.
     #       so calling from the root of the source file's directory is important
     #       if you want files like `.lua` to be in the right place.
-    cd srv/
+    cd docs/
     ../zip.com -r "../$OUT" `ls -A`
     cd ..
 }
@@ -67,7 +67,7 @@ case "$1" in
     * )
         echo "a builder for redbean projects"
         echo "- '$0 init': fetch redbean, zip and sqlite"
-        echo "- '$0 pack': pack "./srv/" into a new redbean, overwriting the old"
+        echo "- '$0 pack': pack "./docs/" into a new redbean, overwriting the old"
         echo "- '$0 run': pack, then execute with a customizable command"
         ;;
 esac

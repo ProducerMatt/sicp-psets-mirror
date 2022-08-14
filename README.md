@@ -2,9 +2,9 @@
 
 This repo contains a mirror of the SICP problem sets. It also contains the
 texinfo, html5 and pdf versions, at
-`srv/{sicp.info.gz,html5/index.xhtml,sicp.pdf}` respectively.
+`docs/{sicp.info.gz,html5/index.xhtml,sicp.pdf}` respectively.
 
-The website's contents can be found in `srv/`. Point any webserver at it to
+The website's contents can be found in `docs/`. Point any webserver at it to
 serve the contents.
 
 It starts with an amalgamation of the website rip provided by httrack and wget. httrack
@@ -23,7 +23,7 @@ any x64 operating system](https://justine.lol/ape.html):
 ``` sh
 # Download Cosmo binaries
 ./build.sh init
-# Pack srv/ into sicp-psets.com
+# Pack docs/ into sicp-psets.com
 ./build.sh pack
 # BUG: If you encounter a crash on trying to pack, get a copy of zip.com
 #      compiled with MODE=asan from the Cosmopolitan monorepo.

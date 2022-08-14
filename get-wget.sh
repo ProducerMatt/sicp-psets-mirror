@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # BUG: links to ftp server are broken despite being correctly downloaded
-pushd srv-wget
+pushd docs-wget
 wget                     \
   --mirror               \
   --convert-links        \
